@@ -15,7 +15,7 @@ const dir = process.argv[1];
 const has = (f) => fs.existsSync(path.join(dir, f));
 const read = (f) => fs.readFileSync(path.join(dir, f), "utf8").replace(/^export /gm, "");
 const opt = (f) => (has(f) ? "\n" + read(f) : "");
-const places = read("places.js") + opt("places_abroad.js") + opt("deities.js")
+const places = read("places.js") + opt("places_abroad.js") + opt("deities.js") + opt("local_rivers.js")
   + "\n" + read("ui.js") + opt("ui_i18n.js") + opt("names_i18n.js");
 const page = read("template.html").replace("/*ENGINE*/", () => read("engine.js"))
   .replace("/*SANDHYA*/", () => read("sandhya.js")).replace("/*PLACES*/", () => places);

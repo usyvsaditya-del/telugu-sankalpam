@@ -53,7 +53,16 @@ trust it. Each one says what it would take and the main risk.
   svaras wrong.
 - **Deity images** only from temple-approved or public-domain sources (e.g. Raja Ravi Varma);
   most temples do not permit photos of the moolavirat.
-- **Telugu script** as an optional view, if users ask for it.
+- **Languages, phase two.** The page is in English, Telugu, Tamil, Kannada and Hindi; the mantras
+  and the sankalpam are still in English letters. The plan is to re-key them once in IAST, have them
+  reviewed, and then render Telugu, Kannada and Devanagari exactly, plus Tamil with Grantha letters.
+- **Calendar by language.** Choosing a language changes only the words. Each community also counts
+  differently, and these would be separate calendar options:
+  - Tamil families use solar months, and the Tamil year turns at Chithirai 1, not Ugadi.
+  - Hindi-speaking families mostly use purnimanta months, so their Krishna paksha carries the next
+    month's name.
+  - North Indian panchangams name the year by a different count. For 2026 that may be Raudra
+    rather than Parabhava; this is unverified.
 
 ## Open questions for the review
 - Who reviews the mantra text and the kshetra wordings before wider sharing? The scripture
@@ -63,4 +72,11 @@ trust it. Each one says what it would take and the main risk.
 - Hyderabad comes out "Srisailasya Uttara" by the map (344°, close to Vayavya). Which does your
   family say? The line can now be edited either way.
 - Default sankalpam inside sandhya: Short (as now) or Full?
-- Go live on telugu-sankalpam.web.app after review, and a custom domain later?
+- A custom domain for the site later?
+- Word choices a native reader should confirm:
+  - Tamil paksha: வளர்பிறை/தேய்பிறை or சுக்ல/கிருஷ்ண.
+  - Kannada paksha: ಕೃಷ್ಣ or ಬಹುಳ.
+  - Telugu yoga forms: శుభం or శుభ.
+  - Telugu karanas: తైతుల/గరజి or తైతిల/గరజ.
+  - Tamil Vishti: பத்திரை or விஷ்டி.
+  - Telugu: సంకటహర చతుర్థి or చవితి.

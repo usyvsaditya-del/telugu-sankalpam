@@ -470,7 +470,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     vara: (i) => (L() ? L().vara[i] : NAMES.vara[i]),
     varaShort: (i) => (L() ? L().varaShort[i] : NAMES.varaShort[i]),
     masa: (i) => (L() ? L().masa[i] : NAMES.masa[i]),
-    masaPlain: (i) => (L() ? L().masa[i] : NAMES.masaSankalpa[i]),
+    masaPlain: (i) => (L() ? (L().masaStem?.[i] ?? L().masa[i]) : NAMES.masaSankalpa[i]), // stem form, as in "Karthika Bahula Chavithi"
     rashi: (i) => (L() ? L().rashi[i] : NAMES.rashi[i]),
     ritu: (i) => (L() ? L().ritu[i] : NAMES.ritu[i]),
     ayana: (en) => (L() ? L().ayana[en] || en : en),
@@ -479,7 +479,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     mark: (m) => {
       if (!L()) return m.name;
       const mk = L().marks, sk = m.name.match(/^(.*) Sankramanam$/);
-      if (sk) return `${nm.rashi(NAMES.rashi.indexOf(sk[1]))} ${mk.Sankramanam}`;
+      if (sk) { const r = NAMES.rashi.indexOf(sk[1]); return L().sankramana?.[r] ?? `${nm.rashi(r)} ${mk.Sankramanam}`; }
       return mk[m.name] || m.name;
     },
   };
@@ -514,7 +514,9 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 
   // India rows: [name, state, lat, lon, kind] at IST. Abroad rows: [name, country, lat, lon, kind, IANA zone].
   const places = [
-    ...PLACES.map(([name, state, lat, lon, kind]) => ({ name, state, lat, lon, kind, tz: 5.5 })),
+    ...PLACES.map(([name, state, lat, lon, kind]) => ({ name, state, lat, lon, kind, tz: 5.5,
+      localRiver: typeof LOCAL_RIVERS !== 'undefined' ? LOCAL_RIVERS[name] : undefined,
+      deity: typeof DEITIES !== 'undefined' && DEITIES[name] ? DEITIES[name].deity : undefined })),
     ...(typeof PLACES_ABROAD !== 'undefined' ? PLACES_ABROAD : [])
       .map(([name, state, lat, lon, kind, zone]) => ({ name, state, lat, lon, kind, zone, abroad: true })),
   ];

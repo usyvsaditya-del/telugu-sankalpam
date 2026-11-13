@@ -520,8 +520,25 @@ const RIVER_CITIES = {
   narmadapuram: 'Narmadayah dakshine tire', maheshwar: 'Narmadayah uttare tire', kota: 'Charmanvatyah tire',
   cuttack: 'Mahanadyah dakshine tire', sambalpur: 'Mahanadyah purve tire', srinagar: 'Vitastayah tire',
   shirdi: 'Krishna Godavaryor madhya pradese', nanded: 'Godavaryah tire', sangli: 'Krishnayah tire',
-  ratnagiri: '', ganpatipule: '', nellore: 'Pinakinyah dakshine tire',
+  ratnagiri: '', ganpatipule: '',
 };
+
+// The town's own river, from local_rivers.js (the page attaches it to each place as `localRiver`:
+// { river, sk, bank }). Sanskrit genitive for the bank phrase; a sangamam lists both rivers.
+const MASC_RIVERS = { Brahmaputra: 'Brahmaputrasya', Shona: 'Shonasya', Sona: 'Shonasya', Sindhu: 'Sindhoh' };
+function riverGen(sk) {
+  if (MASC_RIVERS[sk]) return MASC_RIVERS[sk];
+  if (/i$/.test(sk)) return sk.replace(/i$/, 'yah'); // Pinakini → Pinakinyah, Krishnaveni → Krishnavenyah
+  if (/a$/.test(sk)) return `${sk}yah`;              // Ganga → Gangayah
+  return null;                                       // other stems: "<name> nadi tire"
+}
+export function localRiverPhrase(lr) {
+  if (!lr) return '';
+  const names = lr.sk.split(' and ');
+  if (names.length > 1) return `${names.join(' ')} sangame`;
+  const gen = lr.bank ? riverGen(names[0]) : null;
+  return gen ? `${gen} ${lr.bank} tire` : `${names[0]} nadi tire`;
+}
 // Traditional names, already in the locative ("in Pragjyotishapura").
 // Karnavati for Ahmedabad is left out on purpose: the identification is disputed and the renaming is
 // a live political question. Families who say it can type it in.
@@ -554,6 +571,7 @@ function regionLine(place) {
 export function northRiverLine(place) {
   const key = baseName(place).toLowerCase();
   if (key in RIVER_CITIES) return RIVER_CITIES[key];
+  if (place.localRiver) return localRiverPhrase(place.localRiver);
   const { lat, lon } = place;
   const g = interp(NORTH_RIVERS.Ganga, lon), y = interp(NORTH_RIVERS.Yamuna, lon);
   if (g != null && y != null && lat < g && lat > y) return 'Ganga Yamunayor madhye';
@@ -568,6 +586,10 @@ export function northRiverLine(place) {
   if (n != null && lat > n && lat - n <= 1.6) return 'Narmadayah uttare tire'; // within ~175 km of the river
   return '';
 }
+// A kshetram names its deity, as in "… Sri Subrahmanya Swami sannidhau". The page attaches the
+// presiding deity from deities.js as `deity`; only pilgrimage places, and only when you are there.
+const deityLine = (place) => (place.kind === 'pilgrimage' && place.deity && !place.noPreset
+  ? `${place.deity.replace(/\s*\([^)]*\)/g, '').replace(/ and /g, ' ').trim()} sannidhau` : '');
 const cityLine = (place) => CITY_NAMES[baseName(place).toLowerCase()] || kshetraLine(place);
 // Places with no state (e.g. "my location" far from a listed place) go by latitude alone.
 const inDeccan = (place) => (place.state ? DECCAN.includes(place.state) : place.lat <= 22)
@@ -645,11 +667,20 @@ export function deshaFor(place) {
   if (k) return { preset: true, text: k.text };
   if (!inDeccan(place)) {
     return { preset: false, north: true,
-      text: [regionLine(place), northRiverLine(place), cityLine(place)].filter(Boolean).join(', ') };
+      text: [regionLine(place), northRiverLine(place), cityLine(place), deityLine(place)].filter(Boolean).join(', ') };
   }
+  // Deccan: the Telugu river band, then the town's own river — unless the town's river is the
+  // band's river (Rajahmundry, Vijayawada …), where the town's line says it more exactly.
   const key = baseName(place).toLowerCase();
+  let river;
+  if (key in RIVER_CITIES) river = RIVER_CITIES[key];
+  else {
+    const band = riverLine(place.lat, place.lon, place.state), own = localRiverPhrase(place.localRiver);
+    const same = own && ['Godavari', 'Krishna', 'Kaveri'].some((r) => place.localRiver.sk.includes(r) && band.includes(r.slice(0, 5)));
+    river = [same ? '' : band, own].filter(Boolean).join(', ');
+  }
   return { preset: false, text: [`Srisailasya ${srisailamDirection(place.lat, place.lon).name} pradese`,
-    key in RIVER_CITIES ? RIVER_CITIES[key] : riverLine(place.lat, place.lon, place.state), cityLine(place)].filter(Boolean).join(', ') };
+    river, cityLine(place), deityLine(place)].filter(Boolean).join(', ') };
 }
 
 export const VENUES = { home: 'swagruhe', temple: 'devalaye', river: 'punya nadi tire' };
