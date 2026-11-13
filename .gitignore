@@ -1,0 +1,13 @@
+# Built outputs: re-create them with `sh build.sh`
+panchangam.html
+site/public/index.html
+site/public/manifest.webmanifest
+
+# Firebase's local files: the deploy cache, and debug logs that can hold request details
+site/.firebase/
+firebase-debug.log
+*.log
+
+# Mac and tooling clutter
+.DS_Store
+node_modules/

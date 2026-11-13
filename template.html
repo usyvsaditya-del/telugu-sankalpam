@@ -1,0 +1,1231 @@
+<title>Telugu Panchangam</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: a temple-silk masthead (maroon pattu band with gold zari borders) over three tabs:
+   Panchangam (lunar-month calendar + day sheet), Sankalpam, Sandhyavandanam (step-by-step).
+   Ground is sandal paste with faint kolam dots; kumkum marks what to avoid, turmeric what is good. */
+:root {
+  --ground: #f8f0e1;      /* sandal paste */
+  --dots: rgb(184 137 43 / .16);
+  --paper: #fffaf2;
+  --ink: #2a1215;         /* deep maroon-brown */
+  --muted: #76595a;
+  --line: #e7d4b2;
+  --maroon: #5c0f18;      /* pattu band */
+  --on-maroon: #fbeedb;
+  --gold: #c0912f;        /* zari */
+  --gold-ink: #8a6418;
+  --kumkum: #b3121f;
+  --turmeric: #9a6a07;
+  --mantra-bg: #fdf5e6;
+  --sukla: #fffaf2;
+  --bahula: #efe2c8;
+  --moon-lit: #fff3d1;
+  --moon-dark: #4a2a2e;
+  --moon-rim: #c9a96a;
+  --font-display: "Rozha One", "Iowan Old Style", Georgia, serif;
+  --font-read: "Spectral", "Iowan Old Style", Georgia, serif;
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mantra-size: 18px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #160a0c; --dots: rgb(217 169 74 / .10); --paper: #221215; --ink: #f3e6d2; --muted: #bba291;
+    --line: #4a2f24; --maroon: #3f0a11; --on-maroon: #f6e7cf; --gold: #d9a94a; --gold-ink: #e3b862;
+    --kumkum: #f07a6e; --turmeric: #e3b04f; --mantra-bg: #2a171a; --sukla: #261518; --bahula: #1b0d10;
+    --moon-lit: #f6e9c4; --moon-dark: #3a2226; --moon-rim: #6b5030; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #160a0c; --dots: rgb(217 169 74 / .10); --paper: #221215; --ink: #f3e6d2; --muted: #bba291;
+  --line: #4a2f24; --maroon: #3f0a11; --on-maroon: #f6e7cf; --gold: #d9a94a; --gold-ink: #e3b862;
+  --kumkum: #f07a6e; --turmeric: #e3b04f; --mantra-bg: #2a171a; --sukla: #261518; --bahula: #1b0d10;
+  --moon-lit: #f6e9c4; --moon-dark: #3a2226; --moon-rim: #6b5030; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background-color: var(--ground); background-image: radial-gradient(var(--dots) 1.2px, transparent 1.6px);
+  background-size: 22px 22px; color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.5; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.inner { max-width: 1200px; margin: 0 auto; }
+
+/* masthead */
+.mast { background: var(--maroon); color: var(--on-maroon); }
+.zari { height: 12px; border-top: 2px solid var(--gold); background-color: var(--maroon);
+  background-image: linear-gradient(135deg, var(--gold) 26%, transparent 26%), linear-gradient(225deg, var(--gold) 26%, transparent 26%);
+  background-size: 14px 12px; }
+.zari.up { border-top: 0; border-bottom: 2px solid var(--gold);
+  background-image: linear-gradient(45deg, var(--gold) 26%, transparent 26%), linear-gradient(315deg, var(--gold) 26%, transparent 26%);
+  background-position: 0 100%; }
+.mast-in { padding-block: 14px 16px; }
+.invoc { text-align: center; margin: 0 0 6px; font-family: var(--font-read); font-style: italic; color: var(--gold); letter-spacing: .06em; font-size: 14px; }
+.mast-row { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; }
+.brand { display: flex; gap: 12px; align-items: center; min-width: 0; }
+.brand svg { width: 44px; height: 44px; flex: none; }
+.brand h1 { font-family: var(--font-display); font-weight: 400; font-size: 34px; line-height: 1; margin: 0; color: var(--on-maroon); letter-spacing: .01em; }
+.brand p { margin: 4px 0 0; font-size: 12.5px; color: var(--gold); letter-spacing: .04em; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.tab { border: 1px solid var(--gold); background: transparent; color: var(--on-maroon); border-radius: 999px; padding: 7px 16px;
+  cursor: pointer; font-weight: 500; font-size: 14px; }
+.tab[aria-selected="true"] { background: var(--gold); color: var(--maroon); }
+
+.place { position: relative; }
+.place-btn { display: inline-flex; gap: 8px; align-items: center; background: rgb(255 255 255 / .08); color: var(--on-maroon);
+  border: 1px solid var(--gold); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+.place-btn small { color: var(--gold); }
+.picker { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; width: min(360px, calc(100vw - 32px)); color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px; box-shadow: 0 14px 40px rgb(0 0 0 / .25); }
+.picker input { width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--ground); }
+.near-btn { width: 100%; margin-top: 8px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--ground);
+  cursor: pointer; text-align: left; font-size: 14px; }
+.near-msg { margin: 6px 4px 0; font-size: 12px; color: var(--muted); }
+.picker ul { list-style: none; margin: 8px 0 0; padding: 0; max-height: min(320px, 45vh); overflow-y: auto; }
+.picker li button { width: 100%; text-align: left; background: none; border: 0; padding: 7px 8px; border-radius: 6px; cursor: pointer;
+  display: flex; justify-content: space-between; gap: 8px; }
+.picker li button:hover, .picker li button:focus-visible { background: var(--ground); }
+.picker li small { color: var(--muted); white-space: nowrap; }
+.picker .grp { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 8px 8px 2px; }
+
+main { padding-block: 24px 40px; }
+.panel h2.sec-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(26px, 4.4vw, 38px); margin: 0; line-height: 1.15;
+  text-wrap: balance; color: var(--maroon); }
+:root[data-theme="dark"] .panel h2.sec-title { color: var(--gold-ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .panel h2.sec-title { color: var(--gold-ink); } }
+.rule { height: 8px; width: 120px; margin: 8px 0 14px; background:
+  radial-gradient(circle, var(--gold) 3px, transparent 3.5px) center / 8px 8px no-repeat,
+  linear-gradient(var(--gold), var(--gold)) left center / 52px 1px no-repeat,
+  linear-gradient(var(--gold), var(--gold)) right center / 52px 1px no-repeat; }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; }
+.note { font-size: 12.5px; color: var(--muted); }
+.lbl { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* panchangam tab */
+.p-grid { display: grid; gap: 24px; }
+@media (min-width: 980px) { .p-grid { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); align-items: start; } }
+.month-head { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; }
+.nav { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); background: var(--paper); cursor: pointer; font-size: 18px; color: var(--gold-ink); }
+.mtitle { text-align: center; min-width: 0; }
+.mtitle h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 5.4vw, 50px); margin: 0; line-height: 1.05; color: var(--maroon); }
+:root[data-theme="dark"] .mtitle h2 { color: var(--gold-ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mtitle h2 { color: var(--gold-ink); } }
+.mtitle .adhika { color: var(--kumkum); }
+.mtitle p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.mtools { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; align-items: center; margin: 14px 0 10px; font-size: 12px; color: var(--muted); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.sw { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--line); display: inline-block; }
+.pill-btn { border: 1px solid var(--gold); background: var(--paper); border-radius: 999px; padding: 5px 12px; cursor: pointer; font-size: 12px; color: var(--gold-ink); }
+
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.wd { text-align: center; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 4px 0; }
+.day { position: relative; min-height: 104px; border: 1px solid var(--line); border-radius: 8px; padding: 6px 6px 8px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; background: var(--sukla); min-width: 0; }
+.day.bahula { background: var(--bahula); }
+.day .gd { align-self: flex-start; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.day .gd b { font-weight: 600; color: var(--ink); }
+.day .tn { font-family: var(--font-read); font-size: 13.5px; font-weight: 500; line-height: 1.15; overflow-wrap: anywhere; }
+.day .nk { font-size: 11px; color: var(--muted); line-height: 1.2; overflow-wrap: anywhere; }
+.day .mk { font-size: 10.5px; color: var(--kumkum); font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
+.day .dot { display: none; width: 5px; height: 5px; border-radius: 50%; background: var(--kumkum); }
+.day.today { box-shadow: inset 0 0 0 2px var(--kumkum); }
+.day.today .gd b { color: var(--kumkum); }
+.day.sel { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+.day.today.sel { box-shadow: inset 0 0 0 2px var(--kumkum), 0 0 0 2px var(--gold); }
+.day svg { width: 26px; height: 26px; flex: none; }
+@media (max-width: 620px) {
+  .day { min-height: 74px; padding: 4px 2px 6px; }
+  .day .nk, .day .mk { display: none; }
+  .day .dot { display: block; }
+  .day .tn { font-size: 11px; }
+  .day svg { width: 20px; height: 20px; }
+}
+
+.sheet { padding: 20px; display: grid; gap: 18px; min-width: 0; }
+.sheet-head { display: flex; gap: 14px; align-items: center; }
+.sheet-head svg { width: 56px; height: 56px; flex: none; }
+.sheet-head h3 { font-family: var(--font-display); font-weight: 400; font-size: 25px; margin: 0; line-height: 1.15; }
+.sheet-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12px; font-weight: 600; color: var(--kumkum); border: 1px solid currentColor; border-radius: 999px; padding: 2px 10px; }
+.sun { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.sun div { background: var(--ground); border-radius: 10px; padding: 10px 12px; border: 1px solid var(--line); }
+.big { font-size: 20px; font-variant-numeric: tabular-nums; font-weight: 500; }
+.sec h4 { margin: 0 0 6px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-ink); font-weight: 600; }
+dl.rows { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 16px; }
+dl.rows dt, dl.rows dd { padding: 8px 0; border-top: 1px solid var(--line); margin: 0; }
+dl.rows dt { color: var(--muted); font-size: 13px; }
+dl.rows dd { font-variant-numeric: tabular-nums; }
+.seg { display: block; }
+.seg + .seg { color: var(--muted); font-size: 13px; }
+.seg time { color: var(--muted); }
+.now { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--paper); background: var(--kumkum);
+  border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: 2px; }
+dd.bad { color: var(--kumkum); }
+dd.good { color: var(--turmeric); }
+.link-btn { background: none; border: 0; padding: 0; color: var(--gold-ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: 14px; }
+
+/* shared form + text */
+.form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+@media (max-width: 520px) { .form { grid-template-columns: minmax(0, 1fr); } }
+.form label { display: grid; gap: 3px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); min-width: 0; }
+.form .wide { grid-column: 1 / -1; }
+.form input[type=text], .form select { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--paper); font-size: 15px; text-transform: none; letter-spacing: 0; color: var(--ink); }
+.form .check { display: flex; gap: 8px; align-items: center; text-transform: none; letter-spacing: 0; font-size: 14px; color: var(--ink); }
+.seg-ctl { display: inline-flex; border: 1px solid var(--gold); border-radius: 999px; overflow: hidden; }
+.seg-ctl button { border: 0; background: var(--paper); padding: 5px 12px; font-size: 13px; cursor: pointer; color: var(--ink); }
+.seg-ctl button[aria-pressed="true"] { background: var(--gold); color: var(--maroon); }
+.mantra { font-family: var(--font-read); font-size: var(--mantra-size); line-height: 1.75; background: var(--mantra-bg);
+  border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 0; max-width: 70ch; overflow-wrap: break-word; }
+.mantra .v { color: var(--kumkum); font-weight: 600; }
+.row-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* sankalpam tab */
+.s-wrap { display: grid; gap: 18px; max-width: 860px; }
+.s-card { padding: 20px; display: grid; gap: 14px; }
+
+/* sandhya tab */
+.kinds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.kind { border: 1px solid var(--line); background: var(--paper); border-radius: 12px; padding: 12px; cursor: pointer; text-align: left; display: grid; gap: 2px; min-width: 0; }
+.kind b { font-family: var(--font-display); font-weight: 400; font-size: 21px; line-height: 1.1; }
+.kind small { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.kind[aria-selected="true"] { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+.kind .now { justify-self: start; margin: 2px 0 0; }
+@media (max-width: 480px) { .kind { padding: 10px 8px; } }
+.when { padding: 12px 16px; display: grid; gap: 4px; }
+.when.late { border-color: var(--kumkum); }
+.when .warn { color: var(--kumkum); font-weight: 600; }
+details.me { padding: 4px 16px; }
+details.me summary { cursor: pointer; padding: 10px 0; font-weight: 500; color: var(--gold-ink); }
+details.me .form { padding-bottom: 14px; }
+.size { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; color: var(--muted); }
+.size button { width: 34px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); cursor: pointer; }
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.step { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; padding: 16px; }
+.st-num { width: 34px; height: 34px; border-radius: 50%; background: var(--gold); color: var(--maroon); display: grid; place-items: center;
+  font-family: var(--font-display); font-size: 17px; }
+.st-body { display: grid; gap: 8px; min-width: 0; }
+.st-body h3 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.15; }
+.how { margin: 0; color: var(--muted); font-size: 14px; max-width: 70ch; }
+.step.ref { padding-block: 10px; }
+.step.ref .st-num { background: transparent; border: 1px solid var(--gold); color: var(--gold-ink); }
+.japa { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.bead { position: relative; width: 132px; height: 132px; border-radius: 50%; border: 0; background: var(--mantra-bg); cursor: pointer;
+  display: grid; place-items: center; touch-action: manipulation; }
+.bead svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.bead .cnt { font-family: var(--font-display); font-size: 38px; line-height: 1; color: var(--maroon); font-variant-numeric: tabular-nums; }
+:root[data-theme="dark"] .bead .cnt { color: var(--gold-ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bead .cnt { color: var(--gold-ink); } }
+.bead small { display: block; color: var(--muted); font-size: 12px; }
+.bead .in { position: relative; text-align: center; }
+.japa-ctl { display: grid; gap: 8px; }
+.timer { margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; color: var(--gold-ink); }
+.timer.late { color: var(--kumkum); font-weight: 600; }
+
+/* pranayamam: a lamp that grows as you breathe in, rests while you hold, shrinks as you breathe out */
+.prana { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px 16px; align-items: center; }
+.breath { position: relative; width: 116px; height: 116px; display: grid; place-items: center; }
+.b-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px dashed var(--gold); opacity: .55; }
+.b-core { width: 100%; height: 100%; border-radius: 50%; transform: scale(.45);
+  background: radial-gradient(circle at 40% 35%, var(--moon-lit), var(--gold) 70%); box-shadow: 0 0 24px rgb(240 180 70 / .35); }
+.prana-info { display: grid; gap: 2px; min-width: 0; }
+.prana-info b { font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.prana-info span { color: var(--muted); font-size: 13px; }
+.prana-ctl, .prana .note { grid-column: 1 / -1; margin: 0; }
+.prana-ctl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* mudras: the current name in the middle of a filling ring, the full order beneath */
+.mudra { display: grid; gap: 10px; justify-items: center; }
+.m-stage { position: relative; width: 176px; height: 176px; display: grid; place-items: center; }
+.m-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.m-in { position: relative; display: grid; gap: 4px; text-align: center; padding: 0 20px; }
+.m-idx { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.m-name { font-family: var(--font-display); font-weight: 400; font-size: 24px; line-height: 1.1; color: var(--maroon); overflow-wrap: anywhere; }
+:root[data-theme="dark"] .m-name { color: var(--gold-ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .m-name { color: var(--gold-ink); } }
+.m-ctl { display: flex; gap: 10px; align-items: center; }
+.m-list { margin: 0; font-size: 13px; color: var(--muted); text-align: center; max-width: 60ch; line-height: 1.8; }
+.m-list .on { color: var(--kumkum); font-weight: 600; }
+@keyframes mswap { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) { .m-name.swap { animation: mswap .45s ease-out; } .m-ring { transition: stroke-dashoffset .4s; } }
+.sheet { scroll-margin-top: 12px; }
+
+/* place card: India drawn as its 499 places (lamps), zooming onto the chosen one; the kshetra's deity below */
+.side { display: grid; gap: 16px; min-width: 0; align-content: start; }
+.placecard { overflow: hidden; }
+.map-wrap { position: relative; height: 230px; background: var(--maroon); }
+.map-wrap canvas { display: block; width: 100%; height: 100%; }
+.map-label { position: absolute; left: 14px; right: 56px; bottom: 12px; display: grid; gap: 2px; color: var(--on-maroon);
+  text-shadow: 0 1px 3px rgb(0 0 0 / .6); pointer-events: none; }
+.map-label b { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.05; }
+.map-label span { font-size: 12px; color: var(--gold); font-variant-numeric: tabular-nums; letter-spacing: .03em; }
+.replay { position: absolute; right: 10px; top: 10px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold);
+  background: rgb(0 0 0 / .25); color: var(--on-maroon); cursor: pointer; font-size: 18px; }
+.map-wrap.abroad { height: auto; padding: 18px 14px 16px; }
+.map-wrap.abroad .map-label { position: static; }
+.deity { display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 14px; align-items: center; padding: 14px 16px;
+  border-top: 2px solid var(--gold); }
+@media (prefers-reduced-motion: no-preference) { .deity { animation: rise .6s ease-out; } }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.medallion svg { width: 68px; height: 68px; display: block; }
+.deity h3 { font-family: var(--font-display); font-weight: 400; font-size: 21px; margin: 2px 0 0; line-height: 1.15; }
+.deity p { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tag { font-size: 11.5px; border: 1px solid var(--gold); color: var(--gold-ink); border-radius: 999px; padding: 1px 8px; }
+
+/* phones: compact masthead, today first, tabs in a bottom bar within thumb reach,
+   16px inputs (no iPhone zoom on focus) and 44px touch targets */
+@media (max-width: 979px) { .p-grid > .side { order: -1; } }
+@media (max-width: 640px) {
+  body { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+  .map-wrap { height: 210px; }
+  .mast-in { padding-block: 10px 12px; }
+  .invoc { font-size: 12px; margin-bottom: 4px; }
+  .brand svg { width: 34px; height: 34px; }
+  .brand h1 { font-size: 27px; }
+  .brand p { font-size: 11.5px; }
+  .place { width: 100%; }
+  .place-btn { width: 100%; min-height: 44px; justify-content: space-between; }
+  .picker { left: 0; right: 0; width: auto; }
+  .tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;
+    background: var(--maroon); border-top: 2px solid var(--gold);
+    padding: 7px max(10px, env(safe-area-inset-right, 0px)) calc(7px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px)); }
+  .tab { min-height: 48px; border-radius: 10px; padding: 6px 4px; font-size: 14px; }
+  .tab-long { display: none; }
+  .cal { gap: 3px; }
+  .day .tn { font-size: clamp(9px, 2.6vw, 11px); white-space: nowrap; overflow-wrap: normal; letter-spacing: -.01em; }
+  .kind b { font-size: 16px; hyphens: manual; }
+  main { padding-block: 16px 24px; }
+  .form input[type=text], .form select, .picker input { font-size: 16px; min-height: 44px; }
+  .seg-ctl button { min-height: 40px; padding: 8px 14px; font-size: 14px; }
+  .pill-btn { min-height: 40px; padding: 8px 14px; font-size: 13px; }
+  .link-btn { min-height: 40px; }
+  .sheet { padding: 16px; }
+  .step { grid-template-columns: 28px minmax(0, 1fr); gap: 10px; padding: 14px 12px; }
+  .st-num { width: 28px; height: 28px; font-size: 15px; }
+  .st-body h3 { font-size: 20px; }
+  .mantra { padding: 12px 13px; }
+  .bead { width: 160px; height: 160px; }
+  .bead .cnt { font-size: 46px; }
+  .japa { justify-content: center; }
+  .size button { width: 44px; height: 40px; }
+  .nav { width: 44px; height: 44px; }
+}
+footer { padding-block: 8px 40px; color: var(--muted); font-size: 12.5px; }
+footer p { max-width: 80ch; margin: 0 0 6px; }
+footer a { color: var(--gold-ink); text-underline-offset: 3px; overflow-wrap: anywhere; }
+footer .dedication { margin: 22px auto 0; text-align: center; max-width: none; font-family: var(--font-read); font-style: italic;
+  font-size: 16px; color: var(--ink); }
+footer .dedication::before { content: ""; display: block; width: 120px; height: 8px; margin: 0 auto 12px; background:
+  radial-gradient(circle, var(--gold) 3px, transparent 3.5px) center / 8px 8px no-repeat,
+  linear-gradient(var(--gold), var(--gold)) left center / 52px 1px no-repeat,
+  linear-gradient(var(--gold), var(--gold)) right center / 52px 1px no-repeat; }
+@media (prefers-reduced-motion: no-preference) { .day, .kind, .tab { transition: background-color .15s, box-shadow .15s; } }
+</style>
+
+<header class="mast">
+  <div class="zari"></div>
+  <div class="gutter"><div class="inner mast-in">
+    <p class="invoc">|| Sri Gurubhyo Namah ||</p>
+    <div class="mast-row">
+      <div class="brand">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <g transform="translate(0 3.5)"><path d="M22 4c3.6 4.8 5.2 8.6 4.6 11.6-.5 2.6-2.4 4.2-4.6 4.2s-4.1-1.6-4.6-4.2C16.8 12.6 18.4 8.8 22 4z" fill="#f2b33d"/>
+          <path d="M22 10c1.6 2.4 2.2 4.3 1.9 5.8-.3 1.2-1 1.9-1.9 1.9s-1.6-.7-1.9-1.9c-.3-1.5.3-3.4 1.9-5.8z" fill="#fff1c7"/></g>
+          <path d="M5 24.5c5.5 1.6 11.2 2.4 17 2.4s11.5-.8 17-2.4c-1.6 7.2-8.6 11.7-17 11.7S6.6 31.7 5 24.5z" fill="var(--gold)"/>
+          <path d="M5 24.5c5.5 1.6 11.2 2.4 17 2.4s11.5-.8 17-2.4" fill="none" stroke="#fff1c7" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M16 36h12l-2 4h-8z" fill="var(--gold)"/>
+        </svg>
+        <div><h1>Sankalpam</h1><p>Telugu panchangam · sankalpam · sandhyavandanam</p></div>
+      </div>
+      <div class="place">
+        <button class="place-btn" id="placeBtn" aria-haspopup="listbox" aria-expanded="false"></button>
+        <div class="picker" id="picker" hidden>
+          <input id="placeSearch" type="search" placeholder="Search a city or kshetram" autocomplete="off" aria-label="Search places">
+          <button class="near-btn" id="nearBtn" type="button">◎ Use my location</button>
+          <p class="near-msg" id="nearMsg" hidden></p>
+          <ul id="placeList" role="listbox"></ul>
+        </div>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections" id="tabs">
+      <button class="tab" role="tab" id="tab-panchangam" aria-controls="panchangam" data-tab="panchangam">Panchangam</button>
+      <button class="tab" role="tab" id="tab-sankalpam" aria-controls="sankalpam" data-tab="sankalpam">Sankalpam</button>
+      <button class="tab" role="tab" id="tab-sandhya" aria-controls="sandhya" data-tab="sandhya" aria-label="Sandhyavandanam">Sandhya<span class="tab-long">vandanam</span></button>
+    </nav>
+  </div></div>
+  <div class="zari up"></div>
+</header>
+
+<main class="gutter"><div class="inner">
+  <section class="panel" id="panchangam" role="tabpanel" aria-labelledby="tab-panchangam">
+    <div class="p-grid">
+      <div>
+        <div class="month-head">
+          <button class="nav" id="prev" aria-label="Previous month">‹</button>
+          <div class="mtitle" id="mtitle"></div>
+          <button class="nav" id="next" aria-label="Next month">›</button>
+        </div>
+        <div class="mtools">
+          <div class="legend">
+            <span><i class="sw" style="background:var(--sukla)"></i>Sukla paksham</span>
+            <span><i class="sw" style="background:var(--bahula)"></i>Bahula paksham</span>
+            <span><i class="sw" style="box-shadow: inset 0 0 0 2px var(--kumkum)"></i>Today</span>
+          </div>
+          <button class="pill-btn" id="todayBtn">Go to today</button>
+        </div>
+        <div class="cal" id="cal"></div>
+      </div>
+      <div class="side">
+        <section class="card placecard" id="placeCard" aria-label="Chosen place">
+          <div class="map-wrap" id="mapWrap">
+            <canvas id="map" aria-hidden="true"></canvas>
+            <div class="map-label"><b id="mapName"></b><span id="mapCoords"></span></div>
+            <button class="replay" id="mapReplay" aria-label="Play the zoom again">↻</button>
+          </div>
+          <div class="deity" id="deity" hidden></div>
+        </section>
+        <aside class="card sheet" id="sheet" aria-live="polite"></aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="sankalpam" role="tabpanel" aria-labelledby="tab-sankalpam" hidden>
+    <div class="s-wrap" id="sankWrap"></div>
+  </section>
+
+  <section class="panel" id="sandhya" role="tabpanel" aria-labelledby="tab-sandhya" hidden>
+    <div class="s-wrap" id="sandhyaWrap"></div>
+  </section>
+</div></main>
+
+<footer class="gutter"><div class="inner">
+  <p>Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com for Bengaluru.
+  Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.</p>
+  <p>Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes, in English letters without svaras.
+  It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.</p>
+  <p class="open">The code is open for anyone to use and build on:
+    <a href="https://github.com/usyvsaditya-del/telugu-sankalpam" rel="noopener">github.com/usyvsaditya-del/telugu-sankalpam</a></p>
+  <p class="dedication">In fond remembrance of Yeragudipati Bhujanga Rao</p>
+</div></footer>
+
+<script>
+/*ENGINE*/
+/*SANDHYA*/
+/*PLACES*/
+
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const KIND = { metro: 'Metro', tier1: 'Tier 1', tier2: 'Tier 2', tier3: 'Tier 3', pilgrimage: 'Kshetram', usa: 'USA', world: 'Abroad' };
+  const TABS = ['panchangam', 'sankalpam', 'sandhya'];
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // Phone storage, with an in-memory copy so the page still works when storage is blocked
+  // (private windows, strict settings): what is typed is used for this visit either way.
+  const mem = {};
+  const store = {
+    get(k) { if (k in mem) return mem[k]; try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { mem[k] = v; try { localStorage.setItem(k, v); } catch {} },
+  };
+  // Mantra text: strings (with \n for new lines) and {v} parts for filled-in words.
+  const renderParts = (parts) => (Array.isArray(parts) ? parts : [parts])
+    .map((x) => (typeof x === 'string' ? esc(x) : `<span class="v">${esc(x.v)}</span>`)).join('').replace(/\n/g, '<br>');
+
+  // India rows: [name, state, lat, lon, kind] at IST. Abroad rows: [name, country, lat, lon, kind, IANA zone].
+  const places = [
+    ...PLACES.map(([name, state, lat, lon, kind]) => ({ name, state, lat, lon, kind, tz: 5.5 })),
+    ...(typeof PLACES_ABROAD !== 'undefined' ? PLACES_ABROAD : [])
+      .map(([name, state, lat, lon, kind, zone]) => ({ name, state, lat, lon, kind, zone, abroad: true })),
+  ];
+  const saved = store.get('panchangam.place');
+  let place = loadMyLocation(saved) || places.find((p) => `${p.name}|${p.state}` === saved)
+    || places.find((p) => p.name === 'Bengaluru') || places[0];
+
+  // "My location" is kept on this device as rounded coordinates (about 1 km), never sent anywhere.
+  function loadMyLocation(s) {
+    if (!s || !s.startsWith('{')) return null;
+    try { const p = JSON.parse(s); return p && typeof p.lat === 'number' && typeof p.lon === 'number' ? p : null; } catch { return null; }
+  }
+
+  // ----- time helpers (place zone, with summer time abroad) -----
+  const local = (jd) => dateFromJd(jd + tzAt(place, jd) / 24);
+  function fmtTime(jd, day) {
+    const t = local(jd);
+    let h = t.getUTCHours(); const m = t.getUTCMinutes();
+    const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+    let s = `${h}:${String(m).padStart(2, '0')} ${ap}`;
+    if (day && (t.getUTCDate() !== day.d || t.getUTCMonth() + 1 !== day.m)) s += `, ${t.getUTCDate()} ${MONTHS[t.getUTCMonth()]}`;
+    return s;
+  }
+  const nowJd = () => jdFromDate(new Date());
+  const todayCivil = () => civilDate(nowJd(), place);
+  const sameDay = (a, b) => a.y === b.y && a.m === b.m && a.d === b.d;
+  const dayOf = (c) => panchang(c.y, c.m, c.d, place);
+
+  function moonSVG(elong) {
+    const r = 10, c = 12, k = Math.cos(elong * Math.PI / 180), rx = Math.abs(k) * r;
+    const waxing = elong < 180;
+    const outer = waxing ? 1 : 0;
+    const inner = waxing ? (k > 0 ? 0 : 1) : (k > 0 ? 1 : 0);
+    const lit = `M ${c} ${c - r} A ${r} ${r} 0 0 ${outer} ${c} ${c + r} A ${rx} ${r} 0 0 ${inner} ${c} ${c - r} Z`;
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="${c}" cy="${c}" r="${r}" fill="var(--moon-dark)" stroke="var(--moon-rim)" stroke-width=".6"/>`
+      + `<path d="${lit}" fill="var(--moon-lit)"/></svg>`;
+  }
+
+  // ----- person details, kept on this device only -----
+  const g = (k) => store.get('panchangam.sk.' + k);
+  function person() {
+    return { gotra: g('gotra') || '', name: g('name') || '', pravara: g('pravara') || '',
+      sutra: g('sutra') || 'Apastamba', sakha: g('sakha') || 'Yajus', married: g('married') !== '0' };
+  }
+  function sankOpts() {
+    const desha = g('desha.' + place.name);
+    return { ...person(), purpose: g('purpose') || 'puja', deity: g('deity') ?? 'Sri Parameswara',
+      venue: g('venue') || 'home', mode: g('mode') || 'full', desha: desha == null || desha === '' ? undefined : desha };
+  }
+
+  // ----- state -----
+  let view = null;      // { month, days }
+  let selected = null;  // {y,m,d}
+  let tab = 'panchangam';
+  let sandhyaPick = null; // null = follow the time of day
+  let japa = { count: 0, key: null, target: +(store.get('panchangam.japa.target') || 108) };
+
+  // ================= Panchangam tab =================
+  function loadMonth(jd) { view = monthDays(jd, place); }
+
+  function renderMonth() {
+    const { month, days } = view;
+    const p0 = days[0], pl = days[days.length - 1];
+    const range = `${p0.date.d} ${MONTHS[p0.date.m - 1]} – ${pl.date.d} ${MONTHS[pl.date.m - 1]} ${pl.date.y}`;
+    $('mtitle').innerHTML = `<h2>${month.adhika ? '<span class="adhika">Adhika</span> ' : ''}${NAMES.masa[month.index]}</h2>`
+      + `<p>${esc(p0.samvatsara)} nama samvatsaram · ${NAMES.ritu[p0.ritu]} ritu · ${p0.ayana}</p><p>${range}</p>`;
+    const today = todayCivil();
+    let html = NAMES.varaShort.map((w) => `<div class="wd">${w}</div>`).join('');
+    html += '<div></div>'.repeat(p0.vara);
+    for (const p of days) {
+      const t = p.tithi[0], first = p === p0 || p.date.d === 1;
+      const cls = ['day', t.index >= 15 ? 'bahula' : '', sameDay(p.date, today) ? 'today' : '',
+        selected && sameDay(p.date, selected) ? 'sel' : ''].join(' ');
+      const label = `${NAMES.vara[p.vara]} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}: ${t.paksha} ${t.name}, ${p.nakshatra[0].name}${p.marks.length ? ', ' + p.marks.map((x) => x.name).join(', ') : ''}`;
+      html += `<button class="${cls}" data-d="${p.date.y}-${p.date.m}-${p.date.d}" aria-label="${esc(label)}">`
+        + `<span class="gd"><b>${p.date.d}</b>${first ? ' ' + MONTHS[p.date.m - 1] : ''}</span>`
+        + moonSVG(p.elongation)
+        + `<span class="tn">${t.name}</span><span class="nk">${p.nakshatra[0].name}</span>`
+        + (p.marks.length ? `<span class="mk">${esc(p.marks[0].name.replace(/ \((Smarta|Vaishnava)\)$/, ''))}</span><span class="dot"></span>` : '')
+        + '</button>';
+    }
+    $('cal').innerHTML = html;
+  }
+
+  function segRows(list, day, now) {
+    return list.map((s, i) => {
+      const live = now != null && now >= s.start && now < s.end;
+      return `<span class="seg">${i ? 'then ' : ''}${esc(s.name)} <time>until ${fmtTime(s.end, day)}</time>${live ? '<span class="now">now</span>' : ''}</span>`;
+    }).join('');
+  }
+
+  function selectedDay() { return view.days.find((x) => sameDay(x.date, selected)) || dayOf(selected); }
+
+  function renderSheet() {
+    const p = selectedDay(), day = p.date, t0 = p.tithi[0];
+    const now = nowJd(), isToday = now >= p.sunrise && now < p.nextSunrise, live = isToday ? now : null;
+    const kal = (k) => `${fmtTime(k.start)} – ${fmtTime(k.end)}`;
+    $('sheet').innerHTML = `
+      <div class="sheet-head">${moonSVG(p.elongation)}<div>
+        <h3>${NAMES.vara[p.vara]}, ${day.d} ${MONTHS_LONG[day.m - 1]} ${day.y}</h3>
+        <p>${p.masa.adhika ? 'Adhika ' : ''}${NAMES.masaSankalpa[p.masa.index]} ${t0.paksha} ${t0.name} · ${esc(place.name)}</p>
+      </div></div>
+      ${p.marks.length ? `<div class="chips">${p.marks.map((m) => `<span class="chip">${esc(m.name)}${m.at ? ` · ${fmtTime(m.at, day)}` : ''}</span>`).join('')}</div>` : ''}
+      <div class="sun">
+        <div><span class="lbl">Sunrise</span><span class="big">${fmtTime(p.sunrise)}</span></div>
+        <div><span class="lbl">Sunset</span><span class="big">${fmtTime(p.sunset)}</span></div>
+      </div>
+      <div class="sec"><h4>Pancha angam</h4><dl class="rows">
+        <dt>Tithi</dt><dd>${segRows(p.tithi.map((s) => ({ ...s, name: `${s.paksha} ${s.name}` })), day, live)}</dd>
+        <dt>Vaaram</dt><dd>${NAMES.vara[p.vara]}</dd>
+        <dt>Nakshatram</dt><dd>${segRows(p.nakshatra, day, live)}</dd>
+        <dt>Yogam</dt><dd>${segRows(p.yoga, day, live)}</dd>
+        <dt>Karanam</dt><dd>${segRows(p.karana, day, live)}</dd>
+        <dt>Chandra rasi</dt><dd>${segRows(p.moonRasis, day, live)}</dd>
+        <dt>Surya rasi</dt><dd>${NAMES.rashi[p.sunRashi]}</dd>
+        <dt>Moon</dt><dd>${p.moonrise != null ? `Rises ${fmtTime(p.moonrise, day)}` : 'No moonrise'} · ${p.moonset != null ? `sets ${fmtTime(p.moonset, day)}` : 'no moonset'}</dd>
+      </dl></div>
+      <div class="sec"><h4>Kaalam</h4><dl class="rows">
+        <dt>Rahu kaalam</dt><dd class="bad">${kal(p.rahu)}</dd>
+        <dt>Yamagandam</dt><dd class="bad">${kal(p.yamagandam)}</dd>
+        <dt>Gulika kaalam</dt><dd class="bad">${kal(p.gulika)}</dd>
+        <dt>Abhijit</dt><dd class="good">${kal(p.abhijit)}${p.abhijit.observed ? '' : ' <span class="note">(not taken on Budhavaram)</span>'}</dd>
+      </dl></div>
+      <div class="row-between"><button class="link-btn" data-go="sankalpam">Sankalpam for this day →</button>
+        ${isToday ? '<button class="link-btn" data-go="sandhya">Sandhyavandanam now →</button>' : ''}</div>`;
+  }
+
+  // ================= Sankalpam tab =================
+  const opt = (map, cur) => Object.entries(map).map(([k, l]) => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(l)}</option>`).join('');
+  const modeCtl = (id, cur) => `<span class="seg-ctl" role="group" aria-label="Sankalpam length" id="${id}">`
+    + [['full', 'Full'], ['laghu', 'Laghu'], ['short', 'Short']].map(([k, l]) => `<button data-mode="${k}" aria-pressed="${k === cur}">${l}</button>`).join('')
+    + '</span>';
+
+  function sankMoment(p) {
+    const now = nowJd();
+    return now >= p.sunrise && now < p.nextSunrise ? { jd: now, label: `as of ${fmtTime(now)} now` } : { jd: p.sunrise + 10 / 1440, label: 'as at sunrise' };
+  }
+
+  function renderSankalpam() {
+    const p = selectedDay(), d = p.date, o = sankOpts(), desha = deshaFor(place), at = sankMoment(p);
+    $('sankWrap').innerHTML = `
+      <div><h2 class="sec-title">Sankalpam</h2><div class="rule"></div>
+        <p class="note">${NAMES.vara[p.vara]}, ${d.d} ${MONTHS_LONG[d.m - 1]} ${d.y} · ${esc(place.name)} · ${at.label}.
+        <button class="link-btn" data-go="panchangam">Choose another day</button></p></div>
+      <div class="card s-card">
+        <div class="row-between">${modeCtl('sk-mode', o.mode)}<button class="pill-btn" id="copyBtn">Copy</button></div>
+        <p class="mantra" id="sankText"></p>
+        <p class="note">Words in red change with the day, the place and you. Laghu says “subha nakshatra, subha yoga, subha karana” after the vaaram; Short keeps only “Mamopatta … preetyartham” and the act.</p>
+      </div>
+      <div class="card s-card">
+        <div class="form">
+          <label>For<select id="sk-purpose">${opt(Object.fromEntries(Object.entries(PURPOSES).map(([k, x]) => [k, x.label])), o.purpose)}</select></label>
+          <label id="sk-deity-wrap"${o.purpose === 'puja' ? '' : ' hidden'}>Deity<input type="text" id="sk-deity" value="${esc(o.deity)}"></label>
+          <label>Gotram<input type="text" id="sk-gotra" value="${esc(o.gotra)}" placeholder="e.g. Bharadwaja"></label>
+          <label>Name<input type="text" id="sk-name" value="${esc(o.name)}" placeholder="e.g. Ramakrishna"></label>
+          <label class="check"><input type="checkbox" id="sk-married"${o.married ? ' checked' : ''}> With dharmapatni</label>
+          ${desha.preset ? '' : `<label>Sitting at<select id="sk-venue">${opt({ home: 'Home', temple: 'Temple', river: 'River bank' }, o.venue)}</select></label>`}
+          <label class="wide">${desha.abroad ? 'Desha line' : 'Kshetra line'}<input type="text" id="sk-desha" value="${esc(o.desha ?? desha.text)}"></label>
+        </div>
+        <p class="note">${desha.abroad
+          ? 'Outside India the “Jambudweepe, Bharata varshe” wording does not apply. Type the desha wording your local temple uses for this land.'
+          : desha.preset
+          ? `The kshetra wording for ${esc(place.name)} is drafted from common usage.`
+          : desha.north
+          ? 'North of the Deccan this follows the north Indian form: the land, the river, and the traditional name of the town where one is in common use.'
+          : `“Srisailasya ${srisailamDirection(place.lat, place.lon).name} pradese” and the river line are worked out from the map.`}
+          Change the line to your family's wording and confirm it with your purohit. Gotram and name stay on this device.</p>
+      </div>`;
+
+    const draw = () => { $('sankText').innerHTML = renderParts(sankalpam(p, at.jd, place, sankOpts())); };
+    draw();
+    const save = (k, val) => { store.set('panchangam.sk.' + k, val); draw(); };
+    for (const k of ['gotra', 'name', 'deity']) $('sk-' + k).addEventListener('input', (e) => save(k, e.target.value));
+    $('sk-desha').addEventListener('input', (e) => save('desha.' + place.name, e.target.value));
+    $('sk-married').addEventListener('change', (e) => save('married', e.target.checked ? '1' : '0'));
+    $('sk-purpose').addEventListener('change', (e) => { $('sk-deity-wrap').hidden = e.target.value !== 'puja'; save('purpose', e.target.value); });
+    if ($('sk-venue')) $('sk-venue').addEventListener('change', (e) => save('venue', e.target.value));
+    wireMode('sk-mode', 'panchangam.sk.mode', draw);
+    wireCopy('copyBtn', 'sankText');
+  }
+
+  function wireMode(id, key, after) {
+    $(id).addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-mode]'); if (!b) return;
+      store.set(key, b.dataset.mode);
+      for (const x of $(id).children) x.setAttribute('aria-pressed', String(x === b));
+      after();
+    });
+  }
+  function wireCopy(btnId, textId) {
+    $(btnId).addEventListener('click', () => {
+      const btn = $(btnId), text = $(textId).innerText || $(textId).textContent;
+      const done = () => { btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = 'Copy'; }, 1500); };
+      const fallback = () => { const r = document.createRange(); r.selectNodeContents($(textId));
+        const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected: press copy'; };
+      try { navigator.clipboard.writeText(text).then(done, fallback); } catch { fallback(); }
+    });
+  }
+
+  // ================= Sandhyavandanam tab =================
+  // The vaidika day runs from sunrise to sunrise: in the small hours it is still the previous
+  // day's Sayam. Returns the moment, today's panchang, and which sandhya the clock points to.
+  function sandhyaNow() {
+    const now = nowJd(), pToday = dayOf(todayCivil());
+    const pPrev = now < sandhyaTimes(pToday).pratahStart ? dayOf(civilDate(pToday.sunrise - 1, place)) : pToday;
+    return { now, pToday, auto: sandhyaContext(now, pToday, pPrev) };
+  }
+  let lastAutoKind = null;
+
+  function renderSandhya() {
+    caf(pranaRaf); pranaRaf = 0;
+    for (const k in mudraTimers) clearInterval(mudraTimers[k]);
+    const { now, pToday, auto } = sandhyaNow();
+    lastAutoKind = auto.kind;
+    const key = sandhyaPick || auto.kind, k = SANDHYA_KINDS[key], me = person();
+    // The day this sandhya belongs to: a Sayam in the small hours belongs to the previous day.
+    const p = key === auto.kind ? auto.day : pToday;
+    const times = sandhyaTimes(p), status = sandhyaStatus(key, now, p);
+    const sayamDay = auto.kind === 'sayam' ? auto.day : pToday, tSayam = sandhyaTimes(sayamDay), tToday = sandhyaTimes(pToday);
+    const hint = { pratah: `Before sunrise · ${fmtTime(tToday.sunrise)}`,
+      madhyahnika: `${fmtTime(tToday.madhyahna.start)} – ${fmtTime(tToday.madhyahna.end)}`,
+      sayam: `Before sunset · ${fmtTime(tSayam.sunset)}` };
+    const when = {
+      pratah: `Begin while the stars are still visible (from ${fmtTime(times.pratahStart)}) and offer arghya by sunrise, ${fmtTime(times.sunrise)}.`,
+      madhyahnika: `Best at midday, around ${fmtTime(times.noon)}. Madhyahna runs ${fmtTime(times.madhyahna.start)} – ${fmtTime(times.madhyahna.end)}.`,
+      sayam: `Begin from ${fmtTime(times.sayamStart)}, offer arghya while the sun is still above the horizon (sunset ${fmtTime(times.sunset)}), and do japam until the stars appear.`,
+    }[key];
+    const steps = sandhyaSteps(key), arghyaStep = steps.findIndex((s) => s.arghya) + 1;
+    const statusLine = {
+      early: `<span class="note">Its time has not come yet.</span>`,
+      'on-time': '',
+      late: `<span class="warn">The best time has passed: offer the turiyarghya as well (step ${arghyaStep}).</span>`,
+      past: `<span class="warn">Its time for today has passed. If you do it now, offer the turiyarghya as well (step ${arghyaStep}).</span>`,
+    }[status];
+    const mode = store.get('panchangam.sandhya.mode') || 'short';
+    document.documentElement.style.setProperty('--mantra-size', (+(store.get('panchangam.mantraSize') || 18)) + 'px');
+    // The japa count is kept per day and sandhya, so a refresh or a tap elsewhere does not lose it.
+    japa.key = `panchangam.japa.${p.date.y}-${p.date.m}-${p.date.d}.${key}`;
+    japa.count = Math.max(0, +(store.get(japa.key) || 0));
+
+    const stepHtml = steps.map((s, i) => {
+      if (s.ref) return `<li class="card step ref"><div class="st-num">${i + 1}</div><div class="st-body"><h3>${esc(s.title)}</h3><p class="how">${esc(s.how)}</p></div></li>`;
+      let body = `<h3>${esc(s.title)}</h3><p class="how">${esc(s.how)}</p>`;
+      if (s.sankalpam) body += `<div class="row-between">${modeCtl('sd-mode', mode)}</div><p class="mantra" id="sdSank"></p>`;
+      else if (s.abhivadanam) body += `<p class="mantra" id="sdAbhi"></p>`;
+      else if (s.mudras) body += mudraHtml(s.id, s.mudras);
+      else body += `<p class="mantra">${renderParts(s.mantra)}</p>`;
+      if (s.breath) body += pranaHtml();
+      if (s.arghya) body += '<p class="timer" id="arghyaTimer" aria-live="polite"></p>';
+      if (s.japa) body += japaHtml();
+      if (s.note) body += `<p class="note">${esc(s.note)}</p>`;
+      return `<li class="card step" id="st-${s.id}"><div class="st-num">${i + 1}</div><div class="st-body">${body}</div></li>`;
+    }).join('');
+
+    $('sandhyaWrap').innerHTML = `
+      <div><h2 class="sec-title">Sandhyavandanam</h2><div class="rule"></div>
+        <p class="note">Krishna Yajurveda · Apastamba · ${esc(place.name)}, ${NAMES.vara[p.vara]} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}</p></div>
+      <div class="kinds" role="tablist" aria-label="Which sandhya" id="kinds">
+        ${Object.entries(SANDHYA_KINDS).map(([kk, x]) => `<button class="kind" role="tab" data-kind="${kk}" aria-selected="${kk === key}">
+          <b>${x.label}</b><small>${hint[kk]}</small>${kk === auto.kind ? '<span class="now">now</span>' : ''}</button>`).join('')}
+      </div>
+      <div class="card when${status === 'late' || status === 'past' ? ' late' : ''}">
+        <span class="lbl">${esc(k.title)}</span><span>${when}</span>${statusLine}
+        ${key !== auto.kind ? `<span class="note">By the clock it is now time for ${SANDHYA_KINDS[auto.kind].title}. <button class="link-btn" id="followClock">Follow the clock</button></span>` : ''}
+      </div>
+      <details class="card me"${me.gotra && me.pravara && me.name ? '' : ' open'}>
+        <summary>Your gotram, pravara and name (for sankalpam and abhivadanam)</summary>
+        <div class="form">
+          <label>Gotram<input type="text" id="sd-gotra" value="${esc(me.gotra)}" placeholder="e.g. Bharadwaja"></label>
+          <label>Name<input type="text" id="sd-name" value="${esc(me.name)}" placeholder="e.g. Ramakrishna"></label>
+          <label class="wide">Pravara rishis<input type="text" id="sd-pravara" value="${esc(me.pravara)}" placeholder="e.g. Angirasa Barhaspatya Bharadwaja"></label>
+          <label>Sutram<input type="text" id="sd-sutra" value="${esc(me.sutra)}"></label>
+          <label>Veda sakha<input type="text" id="sd-sakha" value="${esc(me.sakha)}"></label>
+        </div>
+        <p class="note" style="margin-top:0">Kept on this device only. Never sent anywhere.</p>
+      </details>
+      <div class="row-between"><span class="note">${steps.length} steps, in the order of Telugu sandhyavandanam books. Families differ in small details; follow your elders where they differ.</span>
+        <span class="size" aria-label="Text size">Text <button id="szDown" aria-label="Smaller text">A−</button><button id="szUp" aria-label="Larger text">A+</button></span></div>
+      <ol class="steps">${stepHtml}</ol>`;
+
+    const drawSank = () => { $('sdSank').innerHTML = renderParts(sankalpam(p, now, place,
+      { ...sankOpts(), purpose: key, mode: store.get('panchangam.sandhya.mode') || 'short' })); };
+    const drawAbhi = () => { $('sdAbhi').innerHTML = renderParts(abhivadanam(person())); };
+    drawSank(); drawAbhi(); drawJapa();
+    for (const f of ['gotra', 'name', 'pravara', 'sutra', 'sakha']) $('sd-' + f).addEventListener('input', (e) => {
+      store.set('panchangam.sk.' + f, e.target.value); drawSank(); drawAbhi();
+    });
+    wireMode('sd-mode', 'panchangam.sandhya.mode', drawSank);
+    $('kinds').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-kind]'); if (!b || b.dataset.kind === key) return;
+      sandhyaPick = b.dataset.kind === auto.kind ? null : b.dataset.kind; renderSandhya();
+    });
+    if ($('followClock')) $('followClock').addEventListener('click', () => { sandhyaPick = null; renderSandhya(); });
+    const setSize = (d) => { const s = Math.max(14, Math.min(28, (+(store.get('panchangam.mantraSize') || 18)) + d));
+      store.set('panchangam.mantraSize', String(s)); document.documentElement.style.setProperty('--mantra-size', s + 'px'); };
+    $('szDown').addEventListener('click', () => setSize(-2));
+    $('szUp').addEventListener('click', () => setSize(2));
+    wireJapa(); wirePrana();
+    for (const s of steps) if (s.mudras) wireMudra(s.id, s.mudras);
+    startSandhyaClock(key, p);
+  }
+
+  // ----- timers: arghya countdown and japa time, updated every second while the tab is open -----
+  const fmtDur = (ms) => {
+    const s = Math.max(0, Math.round(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    return h ? `${h} h ${String(m).padStart(2, '0')} min` : m ? `${m} min ${String(sec).padStart(2, '0')} s` : `${sec} s`;
+  };
+  function arghyaText(key, p, now) {
+    const t = sandhyaTimes(p), DAY = 86400000;
+    if (key === 'pratah') {
+      const ms = (t.sunrise - now) * DAY;
+      return ms > 0 ? { text: `Arghya is due by sunrise, ${fmtTime(t.sunrise)}${ms < 12 * 3600e3 ? `: ${fmtDur(ms)} left` : ''}.`, late: false }
+        : { text: `Sunrise was ${fmtDur(-ms)} ago (${fmtTime(t.sunrise)}). Offer the turiyarghya as well.`, late: true };
+    }
+    if (key === 'madhyahnika') {
+      const ms = (t.madhyahna.end - now) * DAY;
+      return ms > 0 ? { text: `Arghya is due by the end of madhyahna, ${fmtTime(t.madhyahna.end)}${ms < 12 * 3600e3 ? `: ${fmtDur(ms)} left` : ''}.`, late: false }
+        : { text: `Madhyahna ended ${fmtDur(-ms)} ago (${fmtTime(t.madhyahna.end)}). Offer the turiyarghya as well.`, late: true };
+    }
+    const toSet = (t.sunset - now) * DAY, toDue = (t.sayamDue - now) * DAY;
+    if (toSet > 0) return { text: `Offer arghya while the sun is up: sunset is at ${fmtTime(t.sunset)}${toSet < 12 * 3600e3 ? `, ${fmtDur(toSet)} from now` : ''}.`, late: false };
+    if (toDue > 0) return { text: `Sunset was ${fmtDur(-toSet)} ago. Offer arghya now; it is due by ${fmtTime(t.sayamDue)}.`, late: false };
+    return { text: `The time for arghya passed at ${fmtTime(t.sayamDue)}. Offer the turiyarghya as well.`, late: true };
+  }
+  function japaTimeText() {
+    const t0 = +(store.get(japa.key + '.t0') || 0), t1 = +(store.get(japa.key + '.t1') || 0);
+    if (!t0 || !japa.count) return 'The timer starts with your first tap.';
+    if (japa.count >= japa.target) return `Complete in ${fmtDur(t1 - t0)}.`;
+    const per = japa.count > 1 ? (t1 - t0) / (japa.count - 1) : 0;
+    return `${fmtDur(Date.now() - t0)} so far${per ? ` · about ${(per / 1000).toFixed(1)} s each · ${fmtDur(per * (japa.target - japa.count))} to go` : ''}.`;
+  }
+  let sandhyaClock = 0;
+  function startSandhyaClock(key, p) {
+    clearInterval(sandhyaClock);
+    const update = () => {
+      if (tab !== 'sandhya') return;
+      const at = $('arghyaTimer');
+      if (at) { const a = arghyaText(key, p, nowJd()); at.textContent = a.text; at.classList?.toggle('late', a.late); }
+      const jt = $('japaTime'); if (jt) jt.textContent = japaTimeText();
+    };
+    update(); sandhyaClock = setInterval(update, 1000);
+  }
+
+  // ----- pranayamam: three rounds of breathe in, hold, breathe out, paced by a growing lamp -----
+  let pranaRaf = 0;
+  function pranaHtml() {
+    const r = store.get('panchangam.prana') || '4-16-8';
+    return `<div class="prana">
+      <div class="breath" aria-hidden="true"><span class="b-ring"></span><span class="b-core" id="pranaCore"></span></div>
+      <div class="prana-info" aria-live="polite"><b id="pranaPhase">Three rounds</b><span id="pranaSub">Breathe in · hold · breathe out</span></div>
+      <div class="prana-ctl">
+        <span class="seg-ctl" role="group" aria-label="Breath timing" id="pranaRatio">
+          ${[['4-16-8', '4 · 16 · 8 s'], ['4-8-8', 'Gentle 4 · 8 · 8 s']].map(([k, l]) => `<button data-r="${k}" aria-pressed="${k === r}">${l}</button>`).join('')}</span>
+        <button class="pill-btn" id="pranaStart">Start</button>
+      </div>
+      <p class="note">Puraka: breathe in. Kumbhaka: hold, saying the mantra in the mind. Rechaka: breathe out. Keep to what your guru taught, and stop at once if it is uncomfortable.</p>
+    </div>`;
+  }
+  function wirePrana() {
+    if (!$('pranaStart')) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const setOrb = (s) => { if (!reduce && $('pranaCore').style) $('pranaCore').style.transform = `scale(${s})`; };
+    const stop = (done) => {
+      caf(pranaRaf); pranaRaf = 0; setOrb(0.45);
+      $('pranaStart').textContent = done ? 'Again' : 'Start';
+      $('pranaPhase').textContent = done ? 'Three rounds done' : 'Three rounds';
+      $('pranaSub').textContent = 'Breathe in · hold · breathe out';
+    };
+    $('pranaRatio').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-r]'); if (!b || pranaRaf) return;
+      store.set('panchangam.prana', b.dataset.r);
+      for (const x of $('pranaRatio').children) x.setAttribute('aria-pressed', String(x === b));
+    });
+    $('pranaStart').addEventListener('click', () => {
+      if (pranaRaf) { stop(false); return; }
+      const [a, h, x] = (store.get('panchangam.prana') || '4-16-8').split('-').map(Number);
+      const ph = [['Breathe in', 'puraka', a], ['Hold', 'kumbhaka · the mantra in the mind', h], ['Breathe out', 'rechaka', x]];
+      const round = a + h + x, t0 = nowMs();
+      let last = -1;
+      $('pranaStart').textContent = 'Stop';
+      const frame = () => {
+        const el = (nowMs() - t0) / 1000;
+        if (el >= round * 3) { stop(true); try { navigator.vibrate?.(200); } catch {} return; }
+        const r = Math.floor(el / round);
+        let rem = el - r * round, i = 0;
+        while (rem >= ph[i][2]) { rem -= ph[i][2]; i++; }
+        const frac = rem / ph[i][2];
+        setOrb(i === 0 ? 0.45 + 0.55 * frac : i === 1 ? 1 : 1 - 0.55 * frac);
+        if (r * 3 + i !== last) { last = r * 3 + i; try { navigator.vibrate?.(40); } catch {} }
+        $('pranaPhase').textContent = `${ph[i][0]} · ${Math.ceil(ph[i][2] - rem)} s`;
+        $('pranaSub').textContent = `Round ${r + 1} of 3 · ${ph[i][1]}`;
+        pranaRaf = raf(frame);
+      };
+      pranaRaf = raf(frame);
+    });
+  }
+
+  // ----- mudras: step through the names, with the ring filling as the sequence goes -----
+  const mudraTimers = {};
+  function mudraHtml(id, list) {
+    return `<div class="mudra" id="mu-${id}">
+      <div class="m-stage"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="var(--line)" stroke-width="4"/>
+        <circle class="m-ring" cx="50" cy="50" r="46" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"/></svg>
+        <span class="m-in" aria-live="polite"><small class="m-idx">1 of ${list.length}</small><b class="m-name">${esc(list[0])}</b></span></div>
+      <div class="m-ctl"><button class="nav" data-act="prev" aria-label="Previous mudra">‹</button>
+        <button class="pill-btn" data-act="play">Play</button><button class="nav" data-act="next" aria-label="Next mudra">›</button></div>
+      <p class="m-list">${list.map((m, i) => `<span data-i="${i}">${esc(m)}</span>`).join(' · ')}</p>
+    </div>`;
+  }
+  function wireMudra(id, list) {
+    const root = $('mu-' + id); if (!root || !root.querySelector) return;
+    const q = (s) => root.querySelector(s);
+    let i = 0;
+    const show = (n) => {
+      i = (n + list.length) % list.length;
+      const name = q('.m-name'); name.textContent = list[i];
+      name.classList.remove('swap'); void name.offsetWidth; name.classList.add('swap');
+      q('.m-idx').textContent = `${i + 1} of ${list.length}`;
+      q('.m-ring').setAttribute('stroke-dashoffset', String(289.03 * (1 - (i + 1) / list.length)));
+      root.querySelectorAll('.m-list span').forEach((s) => s.classList.toggle('on', +s.dataset.i === i));
+    };
+    const stop = () => { clearInterval(mudraTimers[id]); mudraTimers[id] = 0; q('[data-act="play"]').textContent = 'Play'; };
+    root.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-act]'); if (!b) return;
+      if (b.dataset.act === 'prev') { stop(); show(i - 1); return; }
+      if (b.dataset.act === 'next') { stop(); show(i + 1); return; }
+      if (mudraTimers[id]) { stop(); return; }
+      if (i === list.length - 1) show(0);
+      b.textContent = 'Pause';
+      mudraTimers[id] = setInterval(() => {
+        if (i >= list.length - 1) { stop(); return; }
+        show(i + 1); try { navigator.vibrate?.(20); } catch {}
+      }, 3000);
+    });
+    show(0);
+  }
+
+  // Gayatri japa counter: a ring of 108 (or 28, 10) that fills as you tap.
+  function japaHtml() {
+    return `<div class="japa">
+      <button class="bead" id="japaBtn" aria-label="Count one Gayatri">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="var(--line)" stroke-width="5"/>
+          <circle id="japaRing" cx="50" cy="50" r="46" fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"/></svg>
+        <span class="in"><span class="cnt" id="japaCount">0</span><small id="japaOf">of 108</small></span>
+      </button>
+      <div class="japa-ctl">
+        <span class="seg-ctl" role="group" aria-label="Japa count" id="japaTargets">
+          ${[108, 28, 10].map((n) => `<button data-n="${n}" aria-pressed="${n === japa.target}">${n}</button>`).join('')}</span>
+        <button class="pill-btn" id="japaReset">Start again</button>
+      </div></div>
+      <p class="timer" id="japaTime" aria-live="off"></p>`;
+  }
+  function drawJapa() {
+    if (!$('japaCount')) return;
+    const done = japa.count >= japa.target;
+    $('japaCount').textContent = String(japa.count);
+    $('japaOf').textContent = done ? 'complete' : `of ${japa.target}`;
+    $('japaRing').setAttribute('stroke-dashoffset', String(289.03 * (1 - Math.min(1, japa.count / japa.target))));
+  }
+  function wireJapa() {
+    if (!$('japaBtn')) return;
+    const save = () => { if (japa.key) store.set(japa.key, String(japa.count)); };
+    $('japaBtn').addEventListener('click', () => {
+      if (japa.count >= japa.target) return;
+      if (japa.count === 0 && japa.key) store.set(japa.key + '.t0', String(Date.now()));
+      japa.count++; save();
+      if (japa.key) store.set(japa.key + '.t1', String(Date.now()));
+      try { if (japa.count === japa.target) navigator.vibrate?.(250); else if (japa.count % 10 === 0) navigator.vibrate?.(30); } catch {}
+      drawJapa();
+    });
+    $('japaReset').addEventListener('click', () => {
+      japa.count = 0; save();
+      if (japa.key) { store.set(japa.key + '.t0', ''); store.set(japa.key + '.t1', ''); }
+      drawJapa();
+    });
+    $('japaTargets').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-n]'); if (!b) return;
+      japa.target = +b.dataset.n; store.set('panchangam.japa.target', b.dataset.n);
+      for (const x of $('japaTargets').children) x.setAttribute('aria-pressed', String(x === b));
+      drawJapa();
+    });
+  }
+
+  // Keep "today" and the sandhya current when the page stays open: check every minute and
+  // whenever the page comes back into view.
+  let lastToday = null;
+  function tick(force) {
+    const t = todayCivil();
+    if (lastToday && !sameDay(t, lastToday)) {
+      const wasOnToday = selected && sameDay(selected, lastToday);
+      lastToday = t;
+      if (wasOnToday) { goTo(t); return; }
+      renderMonth();
+    }
+    lastToday = t;
+    if (tab === 'sandhya' && (force || sandhyaNow().auto.kind !== lastAutoKind)) renderSandhya();
+    else if (force && tab === 'panchangam') renderSheet();
+  }
+  setInterval(() => tick(false), 60000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(true); });
+
+  // ================= place card: map of lamps + kshetra deity =================
+  // India is drawn only as its listed places (no borders), on a simple equirectangular projection.
+  const MAP_INDIA = { lon: 82.8, lat: 22.4, span: 31 }; // span = degrees of latitude shown
+  const indiaPlaces = places.filter((p) => !p.abroad);
+  const raf = (f) => (window.requestAnimationFrame ? window.requestAnimationFrame(f) : setTimeout(() => f(Date.now()), 16));
+  const caf = (id) => (window.cancelAnimationFrame ? window.cancelAnimationFrame(id) : clearTimeout(id));
+  const nowMs = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+  let mapRaf = 0, mapView = { ...MAP_INDIA }, mapFinal = true;
+
+  const dms = (v, pos, neg) => { const a = Math.abs(v); let d = Math.floor(a), m = Math.round((a - d) * 60);
+    if (m === 60) { d++; m = 0; } return `${d}°${String(m).padStart(2, '0')}′ ${v >= 0 ? pos : neg}`; };
+  const gridLabel = (v, pos, neg) => `${Math.abs(v) % 1 ? Math.abs(v).toFixed(1) : Math.abs(v)}°${v >= 0 ? pos : neg}`;
+
+  function drawMap(view, final, pulse = 0) {
+    const c = $('map'); if (!c || !c.getContext || place.abroad) return;
+    const w = c.clientWidth || 320, h = c.clientHeight || 220, dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
+    const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const bg = getComputedStyle(document.documentElement).getPropertyValue('--maroon').trim() || '#5c0f18';
+    const k = h / view.span, kx = k * Math.cos(view.lat * Math.PI / 180);
+    const X = (lon) => w / 2 + (lon - view.lon) * kx, Y = (lat) => h / 2 - (lat - view.lat) * k;
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+    const glow = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) * 0.7);
+    glow.addColorStop(0, 'rgba(255,196,110,0.10)'); glow.addColorStop(1, 'rgba(0,0,0,0.28)');
+    ctx.fillStyle = glow; ctx.fillRect(0, 0, w, h);
+
+    // latitude / longitude lines, like an old survey sheet
+    const step = view.span > 14 ? 5 : view.span > 5 ? 2 : view.span > 2 ? 1 : 0.5;
+    const lonHalf = w / kx / 2;
+    ctx.strokeStyle = 'rgba(217,169,74,0.16)'; ctx.lineWidth = 1;
+    ctx.fillStyle = 'rgba(217,169,74,0.6)'; ctx.font = '10px Inter, system-ui, sans-serif';
+    for (let la = Math.ceil((view.lat - view.span / 2) / step) * step; la <= view.lat + view.span / 2; la += step) {
+      const y = Math.round(Y(la)) + 0.5; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      if (y > 14 && y < h - 54) ctx.fillText(gridLabel(la, 'N', 'S'), 5, y - 3);
+    }
+    for (let lo = Math.ceil((view.lon - lonHalf) / step) * step; lo <= view.lon + lonHalf; lo += step) {
+      const x = Math.round(X(lo)) + 0.5; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      if (x > 30 && x < w - 60) ctx.fillText(gridLabel(lo, 'E', 'W'), x + 3, 12);
+    }
+
+    // every listed place is a small lamp; kshetrams glow brighter
+    const zoom = MAP_INDIA.span / view.span, r0 = Math.min(4.2, 1.3 * Math.pow(zoom, 0.42));
+    for (const p of indiaPlaces) {
+      const x = X(p.lon), y = Y(p.lat);
+      if (x < -6 || x > w + 6 || y < -6 || y > h + 6) continue;
+      const ks = p.kind === 'pilgrimage';
+      ctx.fillStyle = ks ? 'rgba(255,196,92,0.95)' : 'rgba(217,169,74,0.62)';
+      ctx.beginPath(); ctx.arc(x, y, ks ? r0 * 1.2 : r0, 0, 6.2832); ctx.fill();
+    }
+
+    // the chosen place: a lit lamp with a kumkum ring, pulsing on arrival
+    const sx = X(place.lon), sy = Y(place.lat);
+    if (pulse > 0) {
+      ctx.strokeStyle = `rgba(255,112,88,${(1 - pulse) * 0.9})`; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(sx, sy, 7 + pulse * 20, 0, 6.2832); ctx.stroke();
+    }
+    ctx.shadowColor = 'rgba(255,170,60,0.95)'; ctx.shadowBlur = 14;
+    ctx.fillStyle = '#ffd36b'; ctx.beginPath(); ctx.arc(sx, sy, 5, 0, 6.2832); ctx.fill();
+    ctx.shadowBlur = 0; ctx.strokeStyle = '#ff6b57'; ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.arc(sx, sy, 8, 0, 6.2832); ctx.stroke();
+
+    // once arrived, name a few neighbouring places without overlapping
+    if (final) {
+      ctx.font = '11px Inter, system-ui, sans-serif'; ctx.fillStyle = 'rgba(251,238,219,0.82)';
+      const taken = [{ x: sx - 12, y: sy - 12, w: 24, h: 24 }];
+      const near = indiaPlaces.map((p) => ({ p, x: X(p.lon), y: Y(p.lat) }))
+        .filter((o) => Math.hypot(o.x - sx, o.y - sy) > 6 && o.x > 6 && o.x < w - 6 && o.y > 18 && o.y < h - 58)
+        .sort((a, b) => Math.hypot(a.x - sx, a.y - sy) - Math.hypot(b.x - sx, b.y - sy));
+      let shown = 0;
+      for (const o of near) {
+        const label = o.p.name.replace(/\s*\(.*\)$/, ''), tw = ctx.measureText(label).width;
+        const box = { x: o.x + 6, y: o.y - 14, w: tw + 2, h: 14 };
+        if (box.x + box.w > w - 4) { box.x = o.x - 6 - tw; if (box.x < 4) continue; }
+        if (taken.some((b) => box.x < b.x + b.w && box.x + box.w > b.x && box.y < b.y + b.h && box.y + box.h > b.y)) continue;
+        taken.push(box); ctx.fillText(label, box.x, o.y - 4);
+        if (++shown >= 7) break;
+      }
+    }
+  }
+
+  // Zoom from all of India onto the place. The offset from the target shrinks with the zoom,
+  // so the target never leaves the frame on the way in.
+  function flyTo() {
+    caf(mapRaf);
+    const end = { lon: place.lon, lat: place.lat, span: 2.6 };
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { mapView = end; mapFinal = true; drawMap(end, true); return; }
+    const start = { ...MAP_INDIA }, t0 = nowMs(), delay = 350, dur = 1900;
+    mapFinal = false;
+    const frame = () => {
+      const t = Math.max(0, Math.min(1, (nowMs() - t0 - delay) / dur));
+      const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const span = Math.exp(Math.log(start.span) + (Math.log(end.span) - Math.log(start.span)) * e);
+      const f = (span - end.span) / (start.span - end.span);
+      mapView = { lon: end.lon + (start.lon - end.lon) * f, lat: end.lat + (start.lat - end.lat) * f, span };
+      if (t < 1) { drawMap(mapView, false); mapRaf = raf(frame); } else { mapFinal = true; pulse(nowMs()); }
+    };
+    mapRaf = raf(frame);
+  }
+  function pulse(t0) { // three gentle pulses, then rest
+    const frame = () => { const k = (nowMs() - t0) / 1100;
+      if (k >= 3) { drawMap(mapView, true, 0); return; }
+      drawMap(mapView, true, k % 1); mapRaf = raf(frame); };
+    mapRaf = raf(frame);
+  }
+  const redrawMap = () => drawMap(mapView, mapFinal);
+  try { new ResizeObserver(redrawMap).observe($('map')); } catch { window.addEventListener?.('resize', redrawMap); }
+  try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redrawMap); } catch {}
+  try { document.fonts?.ready?.then(redrawMap); } catch {}
+  $('mapReplay').addEventListener('click', flyTo);
+
+  // Sacred emblem for a deity's form, in a maroon-and-gold medallion (always on maroon, both themes).
+  const GOLD = 'var(--gold)', CREAM = '#fff1c7', KUMKUM = '#e2343a';
+  const EMBLEMS = {
+    vishnu: `<path d="M23 15V34a9 9 0 0 0 18 0V15" fill="none" stroke="${CREAM}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M32 19V41" stroke="${KUMKUM}" stroke-width="4" stroke-linecap="round"/>`,
+    shiva: `<path d="M16 42h32a3.5 3.5 0 0 1 0 7H16a3.5 3.5 0 0 1 0-7z" fill="${GOLD}"/><path d="M48 43h7l-2 4h-5z" fill="${GOLD}"/>
+      <path d="M24 42V28a8 8 0 0 1 16 0v14z" fill="${GOLD}"/>
+      <path d="M25.5 29h13M25.5 32.5h13M25.5 36h13" stroke="${CREAM}" stroke-width="1.4"/><circle cx="32" cy="32.5" r="1.7" fill="${KUMKUM}"/>`,
+    devi: `<g fill="${GOLD}" stroke="var(--maroon)" stroke-width=".8">
+      ${[-72, -36, 36, 72, 0].map((r) => `<path transform="rotate(${r} 32 44)" d="M32 20C38 28 38 38 32 44C26 38 26 28 32 20Z"/>`).join('')}</g>
+      <path d="M18 47h28" stroke="${GOLD}" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="14" r="3" fill="${KUMKUM}"/>`,
+    murugan: `<path d="M32 55V27" stroke="${GOLD}" stroke-width="3" stroke-linecap="round"/>
+      <path d="M32 8C40 16 40 25 32 30C24 25 24 16 32 8Z" fill="${GOLD}"/><path d="M32 13C35.5 18 35.5 23 32 26C28.5 23 28.5 18 32 13Z" fill="${CREAM}" opacity=".55"/>
+      <ellipse cx="32" cy="31" rx="5.5" ry="1.9" fill="${GOLD}"/>`,
+    ganesha: `<path d="M32 13C40 21 46 31 44 39C42 46 22 46 20 39C18 31 24 21 32 13Z" fill="${GOLD}"/>
+      <path d="M32 14C30 24 28 34 27 45M32 14C34 24 36 34 37 45M32 14V46" stroke="var(--maroon)" stroke-width="1.2" opacity=".55" fill="none"/>
+      <circle cx="32" cy="12.5" r="1.8" fill="${CREAM}"/>`,
+    hanuman: `<path d="M32 56V35" stroke="${GOLD}" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="24" r="11" fill="${GOLD}"/>
+      <path d="M22 24h20M23.5 18h17M23.5 30h17" stroke="var(--maroon)" stroke-width="1.2" opacity=".55"/>
+      <circle cx="32" cy="11" r="2.6" fill="${GOLD}"/><rect x="29" y="47" width="6" height="3" rx="1" fill="${CREAM}"/>`,
+    guru: `<ellipse cx="24" cy="33" rx="7" ry="15" fill="${GOLD}"/><ellipse cx="40" cy="33" rx="7" ry="15" fill="${GOLD}"/>
+      <circle cx="24" cy="23" r="2.4" fill="${CREAM}"/><circle cx="40" cy="23" r="2.4" fill="${CREAM}"/>`,
+    krishna: `<path d="M14 47L50 23" stroke="${GOLD}" stroke-width="4" stroke-linecap="round"/>
+      ${[0.42, 0.52, 0.62, 0.72].map((t) => `<circle cx="${14 + 36 * t}" cy="${47 - 24 * t}" r="1" fill="${CREAM}"/>`).join('')}
+      <path d="M41 26L33 44" stroke="${GOLD}" stroke-width="1.2"/><ellipse cx="43" cy="17" rx="7" ry="9" fill="#1f7a72"/>
+      <ellipse cx="43" cy="18" rx="4" ry="5.5" fill="#2b54a8"/><circle cx="43" cy="18.5" r="2.1" fill="${GOLD}"/>`,
+    rama: `<path d="M22 10Q50 32 22 54" fill="none" stroke="${GOLD}" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M22 10V54" stroke="${CREAM}" stroke-width="1.2"/><path d="M11 32H50" stroke="${CREAM}" stroke-width="2"/>
+      <path d="M53 32l-7-4v8z" fill="${CREAM}"/><path d="M14 32l-3-3M14 32l-3 3" stroke="${CREAM}" stroke-width="1.5"/>`,
+    surya: `<circle cx="32" cy="32" r="9" fill="${GOLD}"/>${Array.from({ length: 12 }, (_, i) => {
+      const a = (i * Math.PI) / 6; return `<path d="M${32 + 13 * Math.cos(a)} ${32 + 13 * Math.sin(a)}L${32 + 19 * Math.cos(a)} ${32 + 19 * Math.sin(a)}" stroke="${GOLD}" stroke-width="2" stroke-linecap="round"/>`; }).join('')}`,
+    lamp: `<g transform="translate(10 9)"><g transform="translate(0 3.5)"><path d="M22 4c3.6 4.8 5.2 8.6 4.6 11.6-.5 2.6-2.4 4.2-4.6 4.2s-4.1-1.6-4.6-4.2C16.8 12.6 18.4 8.8 22 4z" fill="#f2b33d"/>
+      <path d="M22 10c1.6 2.4 2.2 4.3 1.9 5.8-.3 1.2-1 1.9-1.9 1.9s-1.6-.7-1.9-1.9c-.3-1.5.3-3.4 1.9-5.8z" fill="${CREAM}"/></g>
+      <path d="M5 24.5c5.5 1.6 11.2 2.4 17 2.4s11.5-.8 17-2.4c-1.6 7.2-8.6 11.7-17 11.7S6.6 31.7 5 24.5z" fill="${GOLD}"/><path d="M16 36h12l-2 4h-8z" fill="${GOLD}"/></g>`,
+  };
+  const FORM_EMBLEM = { narasimha: 'vishnu', ayyappa: 'lamp', brahma: 'lamp', other: 'lamp' };
+  const emblemSVG = (form) => `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--maroon)" stroke="${GOLD}" stroke-width="2.5"/>
+    <circle cx="32" cy="32" r="26" fill="none" stroke="${GOLD}" stroke-width=".8" stroke-dasharray="1.5 2.5"/>${EMBLEMS[FORM_EMBLEM[form] || form] || EMBLEMS.lamp}</svg>`;
+
+  // A kshetra's deity: from the deity table when present, else from the sankalpam wording ("Sri X sannidhau").
+  function deityFor(p) {
+    if (p.noPreset) return null;
+    const table = typeof DEITIES !== 'undefined' ? DEITIES : {};
+    if (table[p.name]) return table[p.name];
+    const k = kshetraFor(p), m = k && k.text.match(/(Sri [^,]+?) (?:brindavana )?sannidhau/);
+    return m ? { deity: m[1], form: 'other', tags: [] } : null;
+  }
+
+  function renderPlaceCard(animate) {
+    const abroad = !!place.abroad, nm = place.name.replace(/\s*\(.*\)$/, '');
+    $('mapWrap').classList?.toggle('abroad', abroad);
+    $('map').hidden = abroad; $('mapReplay').hidden = abroad;
+    $('mapName').textContent = place.mine ? 'My location' : nm;
+    let sub = `${dms(place.lat, 'N', 'S')}, ${dms(place.lon, 'E', 'W')}`;
+    if (place.mine) sub += ` · near ${nm}`;
+    if (abroad) {
+      const off = tzAt(place, nowJd()), hh = Math.trunc(Math.abs(off)), mm = Math.round((Math.abs(off) - hh) * 60);
+      sub += ` · ${place.state} · UTC${off < 0 ? '−' : '+'}${hh}${mm ? ':' + String(mm).padStart(2, '0') : ''}`;
+    }
+    $('mapCoords').textContent = sub;
+    const d = abroad ? null : deityFor(place);
+    $('deity').hidden = !d;
+    if (d) {
+      $('deity').innerHTML = `<div class="medallion">${emblemSVG(d.form)}</div><div>
+        <span class="lbl">Kshetram · ${esc(nm)}</span><h3>${esc(d.deity)}</h3>
+        ${d.tags && d.tags.length ? `<div class="tags">${d.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}</div>`;
+    }
+    if (!abroad) { if (animate) flyTo(); else { mapView = { lon: place.lon, lat: place.lat, span: 2.6 }; mapFinal = true; redrawMap(); } }
+  }
+
+  // ================= tabs, place, events =================
+  function showTab(name) {
+    tab = TABS.includes(name) ? name : 'panchangam';
+    for (const t of TABS) { $(t).hidden = t !== tab; $('tab-' + t).setAttribute('aria-selected', String(t === tab)); }
+    if (tab === 'panchangam') redrawMap(); // the canvas has no size while its tab is hidden
+    if (tab === 'sankalpam') renderSankalpam();
+    if (tab === 'sandhya') renderSandhya();
+  }
+  function go(name) {
+    if (location.hash !== '#' + name) location.hash = name; else showTab(name);
+    window.scrollTo?.(0, 0);
+  }
+  $('tabs').addEventListener('click', (e) => { const b = e.target.closest('button[data-tab]'); if (b) go(b.dataset.tab); });
+  window.addEventListener?.('hashchange', () => showTab(location.hash.slice(1)));
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest?.('button[data-go]'); if (b) go(b.dataset.go);
+    if (!e.target.closest?.('.place')) openPicker(false);
+  });
+
+  function goTo(civil) {
+    selected = civil;
+    loadMonth(dayOf(civil).sunrise);
+    renderMonth(); renderSheet();
+    if (tab === 'sankalpam') renderSankalpam();
+    if (tab === 'sandhya') renderSandhya();
+  }
+  $('cal').addEventListener('click', (e) => {
+    const b = e.target.closest('.day'); if (!b) return;
+    const [y, m, d] = b.dataset.d.split('-').map(Number);
+    selected = { y, m, d }; renderMonth(); renderSheet();
+    // On phones the day sheet sits above the calendar: bring it into view.
+    if (window.matchMedia?.('(max-width: 979px)').matches) $('sheet').scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+  });
+  $('prev').addEventListener('click', () => { loadMonth(view.month.start - 2); selected = view.days[0].date; renderMonth(); renderSheet(); });
+  $('next').addEventListener('click', () => { loadMonth(view.month.end + 2); selected = view.days[0].date; renderMonth(); renderSheet(); });
+  $('todayBtn').addEventListener('click', () => goTo(todayCivil()));
+
+  function renderPlaceBtn() {
+    const name = place.mine ? 'My location' : place.name, sub = place.mine ? `near ${place.name}` : place.state;
+    $('placeBtn').innerHTML = `${esc(name)} <small>${esc(sub)}</small> <span aria-hidden="true">▾</span>`;
+  }
+  function renderList(q) {
+    q = q.trim().toLowerCase();
+    const item = (p) => `<li><button data-i="${places.indexOf(p)}" role="option"><span>${esc(p.name)}</span><small>${esc(p.state)} · ${KIND[p.kind] || ''}</small></button></li>`;
+    let html = '';
+    if (!q) {
+      const groups = [['Metros', (p) => p.kind === 'metro', 20], ['Kshetrams', (p) => p.kind === 'pilgrimage', 40],
+        ['Outside India · USA', (p) => p.kind === 'usa', 60], ['Outside India · World', (p) => p.kind === 'world', 140]];
+      for (const [label, test, n] of groups) {
+        const items = places.filter(test).slice(0, n);
+        if (items.length) html += `<li class="grp">${label}</li>` + items.map(item).join('');
+      }
+      html += `<li class="grp">Type to search all ${places.length} places</li>`;
+    } else {
+      const hits = places.filter((p) => p.name.toLowerCase().includes(q) || p.state.toLowerCase().includes(q)).slice(0, 60);
+      html = hits.length ? hits.map(item).join('') : '<li class="grp">No match. Try the nearest town.</li>';
+    }
+    $('placeList').innerHTML = html;
+  }
+  function openPicker(open) {
+    if ($('picker').hidden === !open) return;
+    $('picker').hidden = !open; $('placeBtn').setAttribute('aria-expanded', String(open));
+    if (open) { $('placeSearch').value = ''; $('nearMsg').hidden = true; renderList(''); $('placeSearch').focus(); }
+  }
+  $('placeBtn').addEventListener('click', (e) => { e.stopPropagation?.(); openPicker($('picker').hidden); });
+  $('picker').addEventListener('click', (e) => e.stopPropagation?.());
+  $('placeSearch').addEventListener('input', (e) => renderList(e.target.value));
+  $('placeSearch').addEventListener('keydown', (e) => { if (e.key === 'Escape') openPicker(false); });
+  function choosePlace(p) {
+    place = p; store.set('panchangam.place', p.mine ? JSON.stringify(p) : `${place.name}|${place.state}`);
+    renderPlaceBtn(); openPicker(false); goTo(selected || todayCivil());
+    renderPlaceCard(tab === 'panchangam'); // animate only where it can be seen
+  }
+  $('placeList').addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) choosePlace(places[+b.dataset.i]); });
+
+  // "Use my location": times for the exact spot (rounded to about 1 km), named after the nearest
+  // listed place. In India the clock is IST; abroad it is the phone's own time zone.
+  // The position stays on this device.
+  const km = (a, b) => {
+    const r = Math.PI / 180, dLat = (b.lat - a.lat) * r, dLon = (b.lon - a.lon) * r;
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLon / 2) ** 2;
+    return 12742 * Math.asin(Math.sqrt(h));
+  };
+  const nearMsg = (t) => { $('nearMsg').textContent = t; $('nearMsg').hidden = false; };
+  $('nearBtn').addEventListener('click', () => {
+    if (!navigator.geolocation) return nearMsg('This browser cannot share location. Search for your town instead.');
+    nearMsg('Finding you…');
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const me = { lat: Math.round(pos.coords.latitude * 100) / 100, lon: Math.round(pos.coords.longitude * 100) / 100 };
+      let best = null, bestKm = Infinity;
+      for (const p of places) { const d = km(me, p); if (d < bestKm) { best = p; bestKm = d; } }
+      let zone = null; try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch {}
+      const inIndia = !best.abroad && bestKm < 300;
+      if (!inIndia && !zone) return nearMsg('Could not read this phone\'s time zone. Search for your city instead.');
+      choosePlace({
+        name: best.name, state: best.state, lat: me.lat, lon: me.lon, mine: true,
+        kind: bestKm <= 10 ? best.kind : (best.abroad ? best.kind : 'tier3'),
+        noPreset: bestKm > 10, // a great kshetra's own wording only when you are actually there
+        ...(inIndia ? { tz: 5.5 } : { zone, abroad: true }),
+      });
+    }, () => nearMsg('Location was not shared, or is not available here. Search for your town instead.'), { timeout: 15000, maximumAge: 600000 });
+  });
+
+  renderPlaceBtn();
+  goTo(todayCivil());
+  showTab((typeof location !== 'undefined' && location.hash || '').slice(1));
+  renderPlaceCard(tab === 'panchangam');
+})();
+</script>
