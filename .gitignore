@@ -11,3 +11,7 @@ firebase-debug.log
 # Mac and tooling clutter
 .DS_Store
 node_modules/
+
+# Mudra reference videos and frames: kept on this Mac only; only the drawings made from them are published
+mudra-videos/
+mudra-frames/
