@@ -223,7 +223,7 @@ ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
 .japa { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
 .bead { position: relative; width: 132px; height: 132px; border-radius: 50%; border: 0; background: var(--mantra-bg); cursor: pointer;
   display: grid; place-items: center; touch-action: manipulation; }
-.bead svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.bead svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .bead .cnt { font-family: var(--font-display); font-size: 38px; line-height: 1; color: var(--maroon); font-variant-numeric: tabular-nums; }
 :root[data-theme="dark"] .bead .cnt { color: var(--gold-ink); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bead .cnt { color: var(--gold-ink); } }
@@ -248,7 +248,7 @@ ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
 /* mudras: the current name in the middle of a filling ring, the full order beneath */
 .mudra { display: grid; gap: 10px; justify-items: center; }
 .m-stage { position: relative; width: 176px; height: 176px; display: grid; place-items: center; }
-.m-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.m-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .m-in { position: relative; display: grid; gap: 4px; text-align: center; padding: 0 20px; }
 .m-idx { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 .m-name { font-family: var(--font-display); font-weight: 400; font-size: 24px; line-height: 1.1; color: var(--maroon); overflow-wrap: anywhere; }
@@ -258,7 +258,18 @@ ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
 .m-list { margin: 0; font-size: 13px; color: var(--muted); text-align: center; max-width: 60ch; line-height: 1.8; }
 .m-list .on { color: var(--kumkum); font-weight: 600; }
 @keyframes mswap { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: no-preference) { .m-name.swap { animation: mswap .45s ease-out; } .m-ring { transition: stroke-dashoffset .4s; } }
+/* beads: japa mala and mudra ring. Unlit beads are the line colour, counted ones gold, the current
+   one kumkum with a small pulse; the meru (top) is a kumkum diamond. */
+.bd { fill: var(--line); }
+.bd.done { fill: var(--gold); }
+.bd.cur { fill: var(--kumkum); }
+.meru { fill: var(--kumkum); }
+@keyframes beadPulse { from { transform: scale(2.4); } to { transform: scale(1); } }
+@media (prefers-reduced-motion: no-preference) {
+  .m-name.swap { animation: mswap .45s ease-out; }
+  .bd { transition: fill .25s; transform-box: fill-box; transform-origin: center; }
+  .bd.cur { animation: beadPulse .5s ease-out; }
+}
 .sheet { scroll-margin-top: 12px; }
 
 /* place card: India drawn as its 499 places (lamps), zooming onto the chosen one; the kshetra's deity below */
@@ -860,7 +871,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     if (japa.count >= japa.target) return t('japa.done', { d: fmtDur(t1 - t0) });
     const per = japa.count > 1 ? (t1 - t0) / (japa.count - 1) : 0;
     return t('japa.progress', { d: fmtDur(Date.now() - t0) })
-      + (per ? ` · ${t('japa.pace', { s: (per / 1000).toFixed(1) })} · ${t('japa.toGo', { d: fmtDur(per * (japa.target - japa.count)) })}` : '') + '.';
+      + (per >= 500 ? ` · ${t('japa.pace', { s: (per / 1000).toFixed(1) })} · ${t('japa.toGo', { d: fmtDur(per * (japa.target - japa.count)) })}` : '') + '.';
   }
   let sandhyaClock = 0;
   function startSandhyaClock(key, p) {
@@ -932,8 +943,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   const mudraTimers = {};
   function mudraHtml(id, list) {
     return `<div class="mudra" id="mu-${id}">
-      <div class="m-stage"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="var(--line)" stroke-width="4"/>
-        <circle class="m-ring" cx="50" cy="50" r="46" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"/></svg>
+      <div class="m-stage"><svg viewBox="0 0 100 100" aria-hidden="true" class="m-beads"><circle cx="50" cy="50" r="46" fill="none" stroke="var(--line)" stroke-width="1"/>${beadRing(list.length, 'mb', false)}</svg>
         <span class="m-in" aria-live="polite"><small class="m-idx">${esc(t('mudra.of', { i: 1, n: list.length }))}</small><b class="m-name">${esc(list[0])}</b></span></div>
       <div class="m-ctl"><button class="nav" data-act="prev" aria-label="${esc(t('mudra.prev'))}">‹</button>
         <button class="pill-btn" data-act="play">${esc(t('mudra.play'))}</button><button class="nav" data-act="next" aria-label="${esc(t('mudra.next'))}">›</button></div>
@@ -949,7 +959,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       const name = q('.m-name'); name.textContent = list[i];
       name.classList.remove('swap'); void name.offsetWidth; name.classList.add('swap');
       q('.m-idx').textContent = t('mudra.of', { i: i + 1, n: list.length });
-      q('.m-ring').setAttribute('stroke-dashoffset', String(289.03 * (1 - (i + 1) / list.length)));
+      lightBeads(q('.m-beads'), i, i);
       root.querySelectorAll('.m-list span').forEach((s) => s.classList.toggle('on', +s.dataset.i === i));
     };
     const stop = () => { clearInterval(mudraTimers[id]); mudraTimers[id] = 0; q('[data-act="play"]').textContent = t('mudra.play'); };
@@ -968,12 +978,33 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     show(0);
   }
 
-  // Gayatri japa counter: a ring of 108 (or 28, 10) that fills as you tap.
+  // Beads around a circle (viewBox 0 0 100 100, radius 46). With a meru, the beads leave a gap at
+  // the top for it, as on a japa mala; otherwise they are evenly spaced, starting at the top.
+  function beadRing(n, cls, meru) {
+    const r = 46, out = [];
+    const rad = n > 60 ? 1.55 : n > 20 ? 2.4 : 3.4;
+    for (let i = 0; i < n; i++) {
+      const a = meru ? -90 + 8 + (i * 344) / (n - 1) : -90 + (i * 360) / n;
+      const x = 50 + r * Math.cos((a * Math.PI) / 180), y = 50 + r * Math.sin((a * Math.PI) / 180);
+      out.push(`<circle class="bd ${cls}" data-i="${i}" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${rad}"/>`);
+    }
+    if (meru) out.push('<path class="meru" d="M50 0.6 L53.2 4 L50 7.4 L46.8 4 Z"/>');
+    return out.join('');
+  }
+  function lightBeads(svg, count, cur) {
+    if (!svg || !svg.querySelectorAll) return;
+    for (const b of svg.querySelectorAll('.bd')) {
+      const i = +b.dataset.i;
+      b.classList.toggle('done', i < count);
+      b.classList.toggle('cur', i === cur);
+    }
+  }
+
+  // Gayatri japa counter: a mala of 108 (or 28, 10) beads that light up as you tap.
   function japaHtml() {
     return `<div class="japa">
       <button class="bead" id="japaBtn" aria-label="${esc(t('japa.count'))}">
-        <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="var(--line)" stroke-width="5"/>
-          <circle id="japaRing" cx="50" cy="50" r="46" fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"/></svg>
+        <svg viewBox="0 0 100 100" aria-hidden="true" id="japaMala">${beadRing(japa.target, 'jb', true)}</svg>
         <span class="in"><span class="cnt" id="japaCount">0</span><small id="japaOf">${esc(t('japa.of', { n: japa.target }))}</small></span>
       </button>
       <div class="japa-ctl">
@@ -988,7 +1019,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const done = japa.count >= japa.target;
     $('japaCount').textContent = String(japa.count);
     $('japaOf').textContent = done ? t('japa.complete') : t('japa.of', { n: japa.target });
-    $('japaRing').setAttribute('stroke-dashoffset', String(289.03 * (1 - Math.min(1, japa.count / japa.target))));
+    lightBeads($('japaMala'), Math.min(japa.count, japa.target), japa.count > 0 && japa.count <= japa.target ? japa.count - 1 : -1);
   }
   function wireJapa() {
     if (!$('japaBtn')) return;
@@ -1009,6 +1040,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     $('japaTargets').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-n]'); if (!b) return;
       japa.target = +b.dataset.n; store.set('panchangam.japa.target', b.dataset.n);
+      $('japaMala').innerHTML = beadRing(japa.target, 'jb', true);
       for (const x of $('japaTargets').children) x.setAttribute('aria-pressed', String(x === b));
       drawJapa();
     });
