@@ -26,9 +26,10 @@
   --moon-lit: #fff3d1;
   --moon-dark: #4a2a2e;
   --moon-rim: #c9a96a;
-  --font-display: "Rozha One", "Iowan Old Style", Georgia, serif;
-  --font-read: "Spectral", "Iowan Old Style", Georgia, serif;
-  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Indian scripts fall through to Noto faces, which load only for the chosen language */
+  --font-display: "Rozha One", "Noto Serif Telugu", "Noto Serif Tamil", "Noto Serif Kannada", "Iowan Old Style", Georgia, serif;
+  --font-read: "Spectral", "Noto Serif Telugu", "Noto Serif Tamil", "Noto Serif Kannada", "Noto Serif Devanagari", "Iowan Old Style", Georgia, serif;
+  --font-ui: "Inter", "Noto Sans Telugu", "Noto Sans Tamil", "Noto Sans Kannada", "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mantra-size: 18px;
 }
 @media (prefers-color-scheme: dark) {
@@ -73,6 +74,11 @@ button, input, select { font: inherit; color: inherit; }
   cursor: pointer; font-weight: 500; font-size: 14px; }
 .tab[aria-selected="true"] { background: var(--gold); color: var(--maroon); }
 
+.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.lang select { background: rgb(255 255 255 / .08); color: var(--on-maroon); border: 1px solid var(--gold); border-radius: 999px;
+  padding: 8px 12px; font: inherit; min-height: 40px; }
+.lang select option { color: #2a1215; background: #fffaf2; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .place { position: relative; }
 .place-btn { display: inline-flex; gap: 8px; align-items: center; background: rgb(255 255 255 / .08); color: var(--on-maroon);
   border: 1px solid var(--gold); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
@@ -288,7 +294,9 @@ ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
   .brand svg { width: 34px; height: 34px; }
   .brand h1 { font-size: 27px; }
   .brand p { font-size: 11.5px; }
-  .place { width: 100%; }
+  .controls { width: 100%; flex-wrap: nowrap; }
+  .lang select { min-height: 44px; }
+  .place { flex: 1; min-width: 0; }
   .place-btn { width: 100%; min-height: 44px; justify-content: space-between; }
   .picker { left: 0; right: 0; width: auto; }
   .tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;
@@ -340,22 +348,29 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
           <path d="M5 24.5c5.5 1.6 11.2 2.4 17 2.4s11.5-.8 17-2.4" fill="none" stroke="#fff1c7" stroke-width="1.2" stroke-linecap="round"/>
           <path d="M16 36h12l-2 4h-8z" fill="var(--gold)"/>
         </svg>
-        <div><h1>Sankalpam</h1><p>Telugu panchangam · sankalpam · sandhyavandanam</p></div>
+        <div><h1>Sankalpam</h1><p data-i18n="brand.tag">Telugu panchangam · sankalpam · sandhyavandanam</p></div>
       </div>
+      <div class="controls">
+      <label class="lang"><span class="sr" data-i18n="lang.label">Language</span>
+        <select id="langSel" aria-label="Language">
+          <option value="en">English</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option>
+          <option value="kn">ಕನ್ನಡ</option><option value="hi">हिन्दी</option>
+        </select></label>
       <div class="place">
         <button class="place-btn" id="placeBtn" aria-haspopup="listbox" aria-expanded="false"></button>
         <div class="picker" id="picker" hidden>
-          <input id="placeSearch" type="search" placeholder="Search a city or kshetram" autocomplete="off" aria-label="Search places">
-          <button class="near-btn" id="nearBtn" type="button">◎ Use my location</button>
+          <input id="placeSearch" type="search" placeholder="Search a city or kshetram" autocomplete="off" aria-label="Search places" data-i18n-ph="place.search" data-i18n-aria="place.search">
+          <button class="near-btn" id="nearBtn" type="button" data-i18n="place.near">◎ Use my location</button>
           <p class="near-msg" id="nearMsg" hidden></p>
           <ul id="placeList" role="listbox"></ul>
         </div>
       </div>
+      </div>
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections" id="tabs">
-      <button class="tab" role="tab" id="tab-panchangam" aria-controls="panchangam" data-tab="panchangam">Panchangam</button>
-      <button class="tab" role="tab" id="tab-sankalpam" aria-controls="sankalpam" data-tab="sankalpam">Sankalpam</button>
-      <button class="tab" role="tab" id="tab-sandhya" aria-controls="sandhya" data-tab="sandhya" aria-label="Sandhyavandanam">Sandhya<span class="tab-long">vandanam</span></button>
+      <button class="tab" role="tab" id="tab-panchangam" aria-controls="panchangam" data-tab="panchangam" data-i18n="tab.panchangam">Panchangam</button>
+      <button class="tab" role="tab" id="tab-sankalpam" aria-controls="sankalpam" data-tab="sankalpam" data-i18n="tab.sankalpam">Sankalpam</button>
+      <button class="tab" role="tab" id="tab-sandhya" aria-controls="sandhya" data-tab="sandhya" aria-label="Sandhyavandanam" data-i18n-aria="tab.sandhyaLong"><span data-i18n="tab.sandhya">Sandhya</span><span class="tab-long" data-i18n="tab.sandhyaRest">vandanam</span></button>
     </nav>
   </div></div>
   <div class="zari up"></div>
@@ -366,26 +381,26 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     <div class="p-grid">
       <div>
         <div class="month-head">
-          <button class="nav" id="prev" aria-label="Previous month">‹</button>
+          <button class="nav" id="prev" aria-label="Previous month" data-i18n-aria="cal.prev">‹</button>
           <div class="mtitle" id="mtitle"></div>
-          <button class="nav" id="next" aria-label="Next month">›</button>
+          <button class="nav" id="next" aria-label="Next month" data-i18n-aria="cal.next">›</button>
         </div>
         <div class="mtools">
           <div class="legend">
-            <span><i class="sw" style="background:var(--sukla)"></i>Sukla paksham</span>
-            <span><i class="sw" style="background:var(--bahula)"></i>Bahula paksham</span>
-            <span><i class="sw" style="box-shadow: inset 0 0 0 2px var(--kumkum)"></i>Today</span>
+            <span><i class="sw" style="background:var(--sukla)"></i><span data-i18n="legend.sukla">Sukla paksham</span></span>
+            <span><i class="sw" style="background:var(--bahula)"></i><span data-i18n="legend.bahula">Bahula paksham</span></span>
+            <span><i class="sw" style="box-shadow: inset 0 0 0 2px var(--kumkum)"></i><span data-i18n="legend.today">Today</span></span>
           </div>
-          <button class="pill-btn" id="todayBtn">Go to today</button>
+          <button class="pill-btn" id="todayBtn" data-i18n="cal.today">Go to today</button>
         </div>
         <div class="cal" id="cal"></div>
       </div>
       <div class="side">
-        <section class="card placecard" id="placeCard" aria-label="Chosen place">
+        <section class="card placecard" id="placeCard" aria-label="Chosen place" data-i18n-aria="place.card">
           <div class="map-wrap" id="mapWrap">
             <canvas id="map" aria-hidden="true"></canvas>
             <div class="map-label"><b id="mapName"></b><span id="mapCoords"></span></div>
-            <button class="replay" id="mapReplay" aria-label="Play the zoom again">↻</button>
+            <button class="replay" id="mapReplay" aria-label="Play the zoom again" data-i18n-aria="map.replay">↻</button>
           </div>
           <div class="deity" id="deity" hidden></div>
         </section>
@@ -404,11 +419,10 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 </div></main>
 
 <footer class="gutter"><div class="inner">
-  <p>Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com for Bengaluru.
-  Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.</p>
-  <p>Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes, in English letters without svaras.
-  It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.</p>
-  <p class="open">The code is open for anyone to use and build on:
+  <p data-i18n="foot.times">Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com. Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.</p>
+  <p data-i18n="foot.sandhya">Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes, in English letters without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.</p>
+  <p data-i18n="foot.mantras" id="footMantras" hidden>Mantras and the sankalpam are shown in English letters in every language for now; versions in each script are being prepared and checked.</p>
+  <p class="open"><span data-i18n="foot.open">The code is open for anyone to use and build on:</span>
     <a href="https://github.com/usyvsaditya-del/telugu-sankalpam" rel="noopener">github.com/usyvsaditya-del/telugu-sankalpam</a></p>
   <p class="dedication">In fond remembrance of Yeragudipati Bhujanga Rao</p>
 </div></footer>
@@ -420,9 +434,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 
 (() => {
   const $ = (id) => document.getElementById(id);
-  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const KIND = { metro: 'Metro', tier1: 'Tier 1', tier2: 'Tier 2', tier3: 'Tier 3', pilgrimage: 'Kshetram', usa: 'USA', world: 'Abroad' };
+  let MONTHS = [], MONTHS_LONG = [];
   const TABS = ['panchangam', 'sankalpam', 'sandhya'];
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   // Phone storage, with an in-memory copy so the page still works when storage is blocked
@@ -432,6 +444,70 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     get(k) { if (k in mem) return mem[k]; try { return localStorage.getItem(k); } catch { return null; } },
     set(k, v) { mem[k] = v; try { localStorage.setItem(k, v); } catch {} },
   };
+  // ----- language: page text from ui.js / ui_i18n.js, panchangam words from names_i18n.js -----
+  const LANG_LOCALE = { en: 'en-IN', te: 'te-IN', ta: 'ta-IN', kn: 'kn-IN', hi: 'hi-IN' };
+  const LANG_FONTS = { // Google Fonts families for each script, loaded only when chosen
+    te: 'Noto+Sans+Telugu:wght@400;600&family=Noto+Serif+Telugu:wght@500',
+    ta: 'Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Tamil:wght@500',
+    kn: 'Noto+Sans+Kannada:wght@400;600&family=Noto+Serif+Kannada:wght@500',
+    hi: 'Noto+Sans+Devanagari:wght@400;600&family=Noto+Serif+Devanagari:wght@500' };
+  const UIX = typeof UI_I18N !== 'undefined' ? UI_I18N : {};
+  const NMX = typeof NAMES_I18N !== 'undefined' ? NAMES_I18N : {};
+  let lang = LANG_LOCALE[store.get('panchangam.lang')] ? store.get('panchangam.lang') : 'en';
+  function t(key, vars) {
+    let s = (UIX[lang] && UIX[lang][key]) ?? UI_EN[key] ?? key;
+    if (vars) s = s.replace(/\{(\w+)\}/g, (_, k) => (vars[k] ?? ''));
+    return s;
+  }
+  // Panchangam words in the chosen language; English (Telugu usage) when a list is missing.
+  const L = () => (lang !== 'en' && NMX[lang]) || null;
+  const nm = {
+    tithi: (i) => (L() ? (i === 29 ? L().amavasya : L().tithi[i % 15]) : tithiName(i)),
+    paksha: (i) => (L() ? L().paksha[i < 15 ? 'Sukla' : 'Bahula'] : pakshaName(i)),
+    nak: (i) => (L() ? L().nakshatra[i] : NAMES.nakshatra[i]),
+    yoga: (i) => (L() ? L().yoga[i] : NAMES.yoga[i]),
+    karana: (k) => { const en = karanaName(k); return L() ? (L().karana[en] || en) : en; },
+    vara: (i) => (L() ? L().vara[i] : NAMES.vara[i]),
+    varaShort: (i) => (L() ? L().varaShort[i] : NAMES.varaShort[i]),
+    masa: (i) => (L() ? L().masa[i] : NAMES.masa[i]),
+    masaPlain: (i) => (L() ? L().masa[i] : NAMES.masaSankalpa[i]),
+    rashi: (i) => (L() ? L().rashi[i] : NAMES.rashi[i]),
+    ritu: (i) => (L() ? L().ritu[i] : NAMES.ritu[i]),
+    ayana: (en) => (L() ? L().ayana[en] || en : en),
+    samvatsara: (en) => (L() ? L().samvatsara[NAMES.samvatsara.indexOf(en)] || en : en),
+    kalam: (en) => (L() ? L().kalam[en] || en : en),
+    mark: (m) => {
+      if (!L()) return m.name;
+      const mk = L().marks, sk = m.name.match(/^(.*) Sankramanam$/);
+      if (sk) return `${nm.rashi(NAMES.rashi.indexOf(sk[1]))} ${mk.Sankramanam}`;
+      return mk[m.name] || m.name;
+    },
+  };
+  function setMonthNames() {
+    const loc = LANG_LOCALE[lang];
+    const fmt = (o) => { try { return new Intl.DateTimeFormat(loc, { ...o, timeZone: 'UTC' }); } catch { return new Intl.DateTimeFormat('en-IN', { ...o, timeZone: 'UTC' }); } };
+    const short = fmt({ month: 'short' }), long = fmt({ month: 'long' });
+    MONTHS = Array.from({ length: 12 }, (_, m) => short.format(new Date(Date.UTC(2026, m, 15))));
+    MONTHS_LONG = Array.from({ length: 12 }, (_, m) => long.format(new Date(Date.UTC(2026, m, 15))));
+  }
+  setMonthNames();
+  function loadFonts(l) {
+    if (!LANG_FONTS[l] || document.getElementById('font-' + l) || !document.createElement) return;
+    const link = document.createElement('link');
+    link.id = 'font-' + l; link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${LANG_FONTS[l]}&display=swap`;
+    document.head?.appendChild(link);
+  }
+  // Static text in the page's HTML carries data-i18n (text), data-i18n-ph (placeholder), data-i18n-aria.
+  function applyStatic() {
+    if (!document.querySelectorAll) return;
+    document.documentElement.lang = lang;
+    for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = t(el.dataset.i18n);
+    for (const el of document.querySelectorAll('[data-i18n-ph]')) el.placeholder = t(el.dataset.i18nPh);
+    for (const el of document.querySelectorAll('[data-i18n-aria]')) el.setAttribute('aria-label', t(el.dataset.i18nAria));
+    if ($('footMantras')) $('footMantras').hidden = lang === 'en';
+  }
+
   // Mantra text: strings (with \n for new lines) and {v} parts for filled-in words.
   const renderParts = (parts) => (Array.isArray(parts) ? parts : [parts])
     .map((x) => (typeof x === 'string' ? esc(x) : `<span class="v">${esc(x.v)}</span>`)).join('').replace(/\n/g, '<br>');
@@ -454,12 +530,15 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 
   // ----- time helpers (place zone, with summer time abroad) -----
   const local = (jd) => dateFromJd(jd + tzAt(place, jd) / 24);
+  // Clock times in the chosen language's own style (e.g. "6:17 AM", "ఉ. 6:17").
+  let timeFmt = null;
   function fmtTime(jd, day) {
-    const t = local(jd);
-    let h = t.getUTCHours(); const m = t.getUTCMinutes();
-    const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
-    let s = `${h}:${String(m).padStart(2, '0')} ${ap}`;
-    if (day && (t.getUTCDate() !== day.d || t.getUTCMonth() + 1 !== day.m)) s += `, ${t.getUTCDate()} ${MONTHS[t.getUTCMonth()]}`;
+    const d = local(jd);
+    if (!timeFmt) { try { timeFmt = new Intl.DateTimeFormat(LANG_LOCALE[lang], { hour: 'numeric', minute: '2-digit', timeZone: 'UTC' }); } catch { timeFmt = null; } }
+    let s;
+    if (timeFmt) s = timeFmt.format(d);
+    else { let h = d.getUTCHours(); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; s = `${h}:${String(d.getUTCMinutes()).padStart(2, '0')} ${ap}`; }
+    if (day && (d.getUTCDate() !== day.d || d.getUTCMonth() + 1 !== day.m)) s += `, ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`;
     return s;
   }
   const nowJd = () => jdFromDate(new Date());
@@ -503,30 +582,30 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const { month, days } = view;
     const p0 = days[0], pl = days[days.length - 1];
     const range = `${p0.date.d} ${MONTHS[p0.date.m - 1]} – ${pl.date.d} ${MONTHS[pl.date.m - 1]} ${pl.date.y}`;
-    $('mtitle').innerHTML = `<h2>${month.adhika ? '<span class="adhika">Adhika</span> ' : ''}${NAMES.masa[month.index]}</h2>`
-      + `<p>${esc(p0.samvatsara)} nama samvatsaram · ${NAMES.ritu[p0.ritu]} ritu · ${p0.ayana}</p><p>${range}</p>`;
+    $('mtitle').innerHTML = `<h2>${month.adhika ? `<span class="adhika">${esc(t('month.adhika'))}</span> ` : ''}${esc(nm.masa(month.index))}</h2>`
+      + `<p>${esc(t('month.sub', { samvatsara: nm.samvatsara(p0.samvatsara), ritu: nm.ritu(p0.ritu), ayana: nm.ayana(p0.ayana) }))}</p><p>${range}</p>`;
     const today = todayCivil();
-    let html = NAMES.varaShort.map((w) => `<div class="wd">${w}</div>`).join('');
+    let html = [0, 1, 2, 3, 4, 5, 6].map((i) => `<div class="wd">${esc(nm.varaShort(i))}</div>`).join('');
     html += '<div></div>'.repeat(p0.vara);
     for (const p of days) {
       const t = p.tithi[0], first = p === p0 || p.date.d === 1;
       const cls = ['day', t.index >= 15 ? 'bahula' : '', sameDay(p.date, today) ? 'today' : '',
         selected && sameDay(p.date, selected) ? 'sel' : ''].join(' ');
-      const label = `${NAMES.vara[p.vara]} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}: ${t.paksha} ${t.name}, ${p.nakshatra[0].name}${p.marks.length ? ', ' + p.marks.map((x) => x.name).join(', ') : ''}`;
+      const label = `${nm.vara(p.vara)} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}: ${nm.paksha(t.index)} ${nm.tithi(t.index)}, ${nm.nak(p.nakshatra[0].index)}${p.marks.length ? ', ' + p.marks.map(nm.mark).join(', ') : ''}`;
       html += `<button class="${cls}" data-d="${p.date.y}-${p.date.m}-${p.date.d}" aria-label="${esc(label)}">`
         + `<span class="gd"><b>${p.date.d}</b>${first ? ' ' + MONTHS[p.date.m - 1] : ''}</span>`
         + moonSVG(p.elongation)
-        + `<span class="tn">${t.name}</span><span class="nk">${p.nakshatra[0].name}</span>`
-        + (p.marks.length ? `<span class="mk">${esc(p.marks[0].name.replace(/ \((Smarta|Vaishnava)\)$/, ''))}</span><span class="dot"></span>` : '')
+        + `<span class="tn">${esc(nm.tithi(t.index))}</span><span class="nk">${esc(nm.nak(p.nakshatra[0].index))}</span>`
+        + (p.marks.length ? `<span class="mk">${esc(nm.mark({ ...p.marks[0], name: p.marks[0].name.replace(/ \((Smarta|Vaishnava)\)$/, '') }))}</span><span class="dot"></span>` : '')
         + '</button>';
     }
     $('cal').innerHTML = html;
   }
 
-  function segRows(list, day, now) {
+  function segRows(list, day, now, name) {
     return list.map((s, i) => {
       const live = now != null && now >= s.start && now < s.end;
-      return `<span class="seg">${i ? 'then ' : ''}${esc(s.name)} <time>until ${fmtTime(s.end, day)}</time>${live ? '<span class="now">now</span>' : ''}</span>`;
+      return `<span class="seg">${i ? esc(t('seg.then')) + ' ' : ''}${esc(name(s))} <time>${esc(t('seg.until', { t: fmtTime(s.end, day) }))}</time>${live ? `<span class="now">${esc(t('now'))}</span>` : ''}</span>`;
     }).join('');
   }
 
@@ -538,74 +617,69 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const kal = (k) => `${fmtTime(k.start)} – ${fmtTime(k.end)}`;
     $('sheet').innerHTML = `
       <div class="sheet-head">${moonSVG(p.elongation)}<div>
-        <h3>${NAMES.vara[p.vara]}, ${day.d} ${MONTHS_LONG[day.m - 1]} ${day.y}</h3>
-        <p>${p.masa.adhika ? 'Adhika ' : ''}${NAMES.masaSankalpa[p.masa.index]} ${t0.paksha} ${t0.name} · ${esc(place.name)}</p>
+        <h3>${esc(nm.vara(p.vara))}, ${day.d} ${MONTHS_LONG[day.m - 1]} ${day.y}</h3>
+        <p>${p.masa.adhika ? esc(t('month.adhika')) + ' ' : ''}${esc(nm.masaPlain(p.masa.index))} ${esc(nm.paksha(t0.index))} ${esc(nm.tithi(t0.index))} · ${esc(place.name)}</p>
       </div></div>
-      ${p.marks.length ? `<div class="chips">${p.marks.map((m) => `<span class="chip">${esc(m.name)}${m.at ? ` · ${fmtTime(m.at, day)}` : ''}</span>`).join('')}</div>` : ''}
+      ${p.marks.length ? `<div class="chips">${p.marks.map((m) => `<span class="chip">${esc(nm.mark(m))}${m.at ? ` · ${fmtTime(m.at, day)}` : ''}</span>`).join('')}</div>` : ''}
       <div class="sun">
-        <div><span class="lbl">Sunrise</span><span class="big">${fmtTime(p.sunrise)}</span></div>
-        <div><span class="lbl">Sunset</span><span class="big">${fmtTime(p.sunset)}</span></div>
+        <div><span class="lbl">${esc(t('sun.rise'))}</span><span class="big">${fmtTime(p.sunrise)}</span></div>
+        <div><span class="lbl">${esc(t('sun.set'))}</span><span class="big">${fmtTime(p.sunset)}</span></div>
       </div>
-      <div class="sec"><h4>Pancha angam</h4><dl class="rows">
-        <dt>Tithi</dt><dd>${segRows(p.tithi.map((s) => ({ ...s, name: `${s.paksha} ${s.name}` })), day, live)}</dd>
-        <dt>Vaaram</dt><dd>${NAMES.vara[p.vara]}</dd>
-        <dt>Nakshatram</dt><dd>${segRows(p.nakshatra, day, live)}</dd>
-        <dt>Yogam</dt><dd>${segRows(p.yoga, day, live)}</dd>
-        <dt>Karanam</dt><dd>${segRows(p.karana, day, live)}</dd>
-        <dt>Chandra rasi</dt><dd>${segRows(p.moonRasis, day, live)}</dd>
-        <dt>Surya rasi</dt><dd>${NAMES.rashi[p.sunRashi]}</dd>
-        <dt>Moon</dt><dd>${p.moonrise != null ? `Rises ${fmtTime(p.moonrise, day)}` : 'No moonrise'} · ${p.moonset != null ? `sets ${fmtTime(p.moonset, day)}` : 'no moonset'}</dd>
+      <div class="sec"><h4>${esc(t('sec.angam'))}</h4><dl class="rows">
+        <dt>${esc(t('row.tithi'))}</dt><dd>${segRows(p.tithi, day, live, (s) => `${nm.paksha(s.index)} ${nm.tithi(s.index)}`)}</dd>
+        <dt>${esc(t('row.vara'))}</dt><dd>${esc(nm.vara(p.vara))}</dd>
+        <dt>${esc(t('row.nakshatra'))}</dt><dd>${segRows(p.nakshatra, day, live, (s) => nm.nak(s.index))}</dd>
+        <dt>${esc(t('row.yoga'))}</dt><dd>${segRows(p.yoga, day, live, (s) => nm.yoga(s.index))}</dd>
+        <dt>${esc(t('row.karana'))}</dt><dd>${segRows(p.karana, day, live, (s) => nm.karana(s.index))}</dd>
+        <dt>${esc(t('row.moonRasi'))}</dt><dd>${segRows(p.moonRasis, day, live, (s) => nm.rashi(s.index))}</dd>
+        <dt>${esc(t('row.sunRasi'))}</dt><dd>${esc(nm.rashi(p.sunRashi))}</dd>
+        <dt>${esc(t('row.moon'))}</dt><dd>${esc(p.moonrise != null ? t('moon.rises', { t: fmtTime(p.moonrise, day) }) : t('moon.noRise'))} · ${esc(p.moonset != null ? t('moon.sets', { t: fmtTime(p.moonset, day) }) : t('moon.noSet'))}</dd>
       </dl></div>
-      <div class="sec"><h4>Kaalam</h4><dl class="rows">
-        <dt>Rahu kaalam</dt><dd class="bad">${kal(p.rahu)}</dd>
-        <dt>Yamagandam</dt><dd class="bad">${kal(p.yamagandam)}</dd>
-        <dt>Gulika kaalam</dt><dd class="bad">${kal(p.gulika)}</dd>
-        <dt>Abhijit</dt><dd class="good">${kal(p.abhijit)}${p.abhijit.observed ? '' : ' <span class="note">(not taken on Budhavaram)</span>'}</dd>
+      <div class="sec"><h4>${esc(t('sec.kaalam'))}</h4><dl class="rows">
+        <dt>${esc(nm.kalam('Rahu kaalam'))}</dt><dd class="bad">${kal(p.rahu)}</dd>
+        <dt>${esc(nm.kalam('Yamagandam'))}</dt><dd class="bad">${kal(p.yamagandam)}</dd>
+        <dt>${esc(nm.kalam('Gulika kaalam'))}</dt><dd class="bad">${kal(p.gulika)}</dd>
+        <dt>${esc(nm.kalam('Abhijit'))}</dt><dd class="good">${kal(p.abhijit)}${p.abhijit.observed ? '' : ` <span class="note">${esc(t('abhijit.wed'))}</span>`}</dd>
       </dl></div>
-      <div class="row-between"><button class="link-btn" data-go="sankalpam">Sankalpam for this day →</button>
-        ${isToday ? '<button class="link-btn" data-go="sandhya">Sandhyavandanam now →</button>' : ''}</div>`;
+      <div class="row-between"><button class="link-btn" data-go="sankalpam">${esc(t('link.sankalpam'))}</button>
+        ${isToday ? `<button class="link-btn" data-go="sandhya">${esc(t('link.sandhya'))}</button>` : ''}</div>`;
   }
 
   // ================= Sankalpam tab =================
   const opt = (map, cur) => Object.entries(map).map(([k, l]) => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(l)}</option>`).join('');
-  const modeCtl = (id, cur) => `<span class="seg-ctl" role="group" aria-label="Sankalpam length" id="${id}">`
-    + [['full', 'Full'], ['laghu', 'Laghu'], ['short', 'Short']].map(([k, l]) => `<button data-mode="${k}" aria-pressed="${k === cur}">${l}</button>`).join('')
+  const modeCtl = (id, cur) => `<span class="seg-ctl" role="group" aria-label="${esc(t('mode.label'))}" id="${id}">`
+    + ['full', 'laghu', 'short'].map((k) => `<button data-mode="${k}" aria-pressed="${k === cur}">${esc(t('mode.' + k))}</button>`).join('')
     + '</span>';
 
   function sankMoment(p) {
     const now = nowJd();
-    return now >= p.sunrise && now < p.nextSunrise ? { jd: now, label: `as of ${fmtTime(now)} now` } : { jd: p.sunrise + 10 / 1440, label: 'as at sunrise' };
+    return now >= p.sunrise && now < p.nextSunrise ? { jd: now, label: t('sk.atNow', { t: fmtTime(now) }) } : { jd: p.sunrise + 10 / 1440, label: t('sk.atSunrise') };
   }
 
   function renderSankalpam() {
     const p = selectedDay(), d = p.date, o = sankOpts(), desha = deshaFor(place), at = sankMoment(p);
     $('sankWrap').innerHTML = `
-      <div><h2 class="sec-title">Sankalpam</h2><div class="rule"></div>
-        <p class="note">${NAMES.vara[p.vara]}, ${d.d} ${MONTHS_LONG[d.m - 1]} ${d.y} · ${esc(place.name)} · ${at.label}.
-        <button class="link-btn" data-go="panchangam">Choose another day</button></p></div>
+      <div><h2 class="sec-title">${esc(t('sk.title'))}</h2><div class="rule"></div>
+        <p class="note">${esc(nm.vara(p.vara))}, ${d.d} ${MONTHS_LONG[d.m - 1]} ${d.y} · ${esc(place.name)} · ${esc(at.label)}.
+        <button class="link-btn" data-go="panchangam">${esc(t('sk.otherDay'))}</button></p></div>
       <div class="card s-card">
-        <div class="row-between">${modeCtl('sk-mode', o.mode)}<button class="pill-btn" id="copyBtn">Copy</button></div>
+        <div class="row-between">${modeCtl('sk-mode', o.mode)}<button class="pill-btn" id="copyBtn">${esc(t('copy'))}</button></div>
         <p class="mantra" id="sankText"></p>
-        <p class="note">Words in red change with the day, the place and you. Laghu says “subha nakshatra, subha yoga, subha karana” after the vaaram; Short keeps only “Mamopatta … preetyartham” and the act.</p>
+        <p class="note">${esc(t('sk.note'))}</p>
       </div>
       <div class="card s-card">
         <div class="form">
-          <label>For<select id="sk-purpose">${opt(Object.fromEntries(Object.entries(PURPOSES).map(([k, x]) => [k, x.label])), o.purpose)}</select></label>
-          <label id="sk-deity-wrap"${o.purpose === 'puja' ? '' : ' hidden'}>Deity<input type="text" id="sk-deity" value="${esc(o.deity)}"></label>
-          <label>Gotram<input type="text" id="sk-gotra" value="${esc(o.gotra)}" placeholder="e.g. Bharadwaja"></label>
-          <label>Name<input type="text" id="sk-name" value="${esc(o.name)}" placeholder="e.g. Ramakrishna"></label>
-          <label class="check"><input type="checkbox" id="sk-married"${o.married ? ' checked' : ''}> With dharmapatni</label>
-          ${desha.preset ? '' : `<label>Sitting at<select id="sk-venue">${opt({ home: 'Home', temple: 'Temple', river: 'River bank' }, o.venue)}</select></label>`}
-          <label class="wide">${desha.abroad ? 'Desha line' : 'Kshetra line'}<input type="text" id="sk-desha" value="${esc(o.desha ?? desha.text)}"></label>
+          <label>${esc(t('f.for'))}<select id="sk-purpose">${opt(Object.fromEntries(Object.keys(PURPOSES).map((k) => [k, t('purpose.' + k)])), o.purpose)}</select></label>
+          <label id="sk-deity-wrap"${o.purpose === 'puja' ? '' : ' hidden'}>${esc(t('f.deity'))}<input type="text" id="sk-deity" value="${esc(o.deity)}"></label>
+          <label>${esc(t('f.gotra'))}<input type="text" id="sk-gotra" value="${esc(o.gotra)}" placeholder="${esc(t('ph.gotra'))}"></label>
+          <label>${esc(t('f.name'))}<input type="text" id="sk-name" value="${esc(o.name)}" placeholder="${esc(t('ph.name'))}"></label>
+          <label class="check"><input type="checkbox" id="sk-married"${o.married ? ' checked' : ''}> ${esc(t('f.married'))}</label>
+          ${desha.preset ? '' : `<label>${esc(t('f.venue'))}<select id="sk-venue">${opt({ home: t('venue.home'), temple: t('venue.temple'), river: t('venue.river') }, o.venue)}</select></label>`}
+          <label class="wide">${esc(t(desha.abroad ? 'f.desha' : 'f.kshetra'))}<input type="text" id="sk-desha" value="${esc(o.desha ?? desha.text)}"></label>
         </div>
-        <p class="note">${desha.abroad
-          ? 'Outside India the “Jambudweepe, Bharata varshe” wording does not apply. Type the desha wording your local temple uses for this land.'
-          : desha.preset
-          ? `The kshetra wording for ${esc(place.name)} is drafted from common usage.`
-          : desha.north
-          ? 'North of the Deccan this follows the north Indian form: the land, the river, and the traditional name of the town where one is in common use.'
-          : `“Srisailasya ${srisailamDirection(place.lat, place.lon).name} pradese” and the river line are worked out from the map.`}
-          Change the line to your family's wording and confirm it with your purohit. Gotram and name stay on this device.</p>
+        <p class="note">${esc(desha.abroad ? t('desha.abroad') : desha.preset ? t('desha.preset', { place: place.name })
+          : desha.north ? t('desha.north') : t('desha.deccan', { dir: srisailamDirection(place.lat, place.lon).name }))}
+          ${esc(t('desha.edit'))}</p>
       </div>`;
 
     const draw = () => { $('sankText').innerHTML = renderParts(sankalpam(p, at.jd, place, sankOpts())); };
@@ -631,14 +705,28 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   function wireCopy(btnId, textId) {
     $(btnId).addEventListener('click', () => {
       const btn = $(btnId), text = $(textId).innerText || $(textId).textContent;
-      const done = () => { btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = 'Copy'; }, 1500); };
+      const done = () => { btn.textContent = t('copied'); setTimeout(() => { btn.textContent = t('copy'); }, 1500); };
       const fallback = () => { const r = document.createRange(); r.selectNodeContents($(textId));
-        const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected: press copy'; };
+        const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = t('copy.selected'); };
       try { navigator.clipboard.writeText(text).then(done, fallback); } catch { fallback(); }
     });
   }
 
   // ================= Sandhyavandanam tab =================
+  // Sandhya steps with their titles and instructions in the chosen language. Keys, most specific
+  // first: step.<id>.title.<kind>, step.<id>.title, and the same for .how and .note. English
+  // (from sandhya.js) when a translation is missing. Mantras are not translated.
+  function localSteps(key) {
+    const steps = sandhyaSteps(key), X = UIX[lang];
+    if (lang === 'en' || !X) return steps;
+    const pick = (field, id) => X[`step.${id}.${field}.${key}`] ?? X[`step.${id}.${field}`];
+    const fill = (str) => str.replace(/\{n\}/g, String(SANDHYA_KINDS[key].arghyas));
+    return steps.map((st) => {
+      const title = pick('title', st.id), how = pick('how', st.id), note = pick('note', st.id);
+      return { ...st, title: title ? fill(title) : st.title, how: how ? fill(how) : st.how, note: st.note && note ? fill(note) : st.note };
+    });
+  }
+
   // The vaidika day runs from sunrise to sunrise: in the small hours it is still the previous
   // day's Sayam. Returns the moment, today's panchang, and which sandhya the clock points to.
   function sandhyaNow() {
@@ -658,20 +746,20 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const p = key === auto.kind ? auto.day : pToday;
     const times = sandhyaTimes(p), status = sandhyaStatus(key, now, p);
     const sayamDay = auto.kind === 'sayam' ? auto.day : pToday, tSayam = sandhyaTimes(sayamDay), tToday = sandhyaTimes(pToday);
-    const hint = { pratah: `Before sunrise · ${fmtTime(tToday.sunrise)}`,
+    const hint = { pratah: t('hint.pratah', { t: fmtTime(tToday.sunrise) }),
       madhyahnika: `${fmtTime(tToday.madhyahna.start)} – ${fmtTime(tToday.madhyahna.end)}`,
-      sayam: `Before sunset · ${fmtTime(tSayam.sunset)}` };
+      sayam: t('hint.sayam', { t: fmtTime(tSayam.sunset) }) };
     const when = {
-      pratah: `Begin while the stars are still visible (from ${fmtTime(times.pratahStart)}) and offer arghya by sunrise, ${fmtTime(times.sunrise)}.`,
-      madhyahnika: `Best at midday, around ${fmtTime(times.noon)}. Madhyahna runs ${fmtTime(times.madhyahna.start)} – ${fmtTime(times.madhyahna.end)}.`,
-      sayam: `Begin from ${fmtTime(times.sayamStart)}, offer arghya while the sun is still above the horizon (sunset ${fmtTime(times.sunset)}), and do japam until the stars appear.`,
+      pratah: t('when.pratah', { start: fmtTime(times.pratahStart), rise: fmtTime(times.sunrise) }),
+      madhyahnika: t('when.madhyahnika', { noon: fmtTime(times.noon), start: fmtTime(times.madhyahna.start), end: fmtTime(times.madhyahna.end) }),
+      sayam: t('when.sayam', { start: fmtTime(times.sayamStart), set: fmtTime(times.sunset) }),
     }[key];
-    const steps = sandhyaSteps(key), arghyaStep = steps.findIndex((s) => s.arghya) + 1;
+    const steps = localSteps(key), arghyaStep = steps.findIndex((s) => s.arghya) + 1;
     const statusLine = {
-      early: `<span class="note">Its time has not come yet.</span>`,
+      early: `<span class="note">${esc(t('status.early'))}</span>`,
       'on-time': '',
-      late: `<span class="warn">The best time has passed: offer the turiyarghya as well (step ${arghyaStep}).</span>`,
-      past: `<span class="warn">Its time for today has passed. If you do it now, offer the turiyarghya as well (step ${arghyaStep}).</span>`,
+      late: `<span class="warn">${esc(t('status.late', { n: arghyaStep }))}</span>`,
+      past: `<span class="warn">${esc(t('status.past', { n: arghyaStep }))}</span>`,
     }[status];
     const mode = store.get('panchangam.sandhya.mode') || 'short';
     document.documentElement.style.setProperty('--mantra-size', (+(store.get('panchangam.mantraSize') || 18)) + 'px');
@@ -694,29 +782,29 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     }).join('');
 
     $('sandhyaWrap').innerHTML = `
-      <div><h2 class="sec-title">Sandhyavandanam</h2><div class="rule"></div>
-        <p class="note">Krishna Yajurveda · Apastamba · ${esc(place.name)}, ${NAMES.vara[p.vara]} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}</p></div>
-      <div class="kinds" role="tablist" aria-label="Which sandhya" id="kinds">
+      <div><h2 class="sec-title">${esc(t('sd.title'))}</h2><div class="rule"></div>
+        <p class="note">${esc(t('sd.sub', { place: place.name, day: `${nm.vara(p.vara)} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}` }))}</p></div>
+      <div class="kinds" role="tablist" aria-label="${esc(t('sd.which'))}" id="kinds">
         ${Object.entries(SANDHYA_KINDS).map(([kk, x]) => `<button class="kind" role="tab" data-kind="${kk}" aria-selected="${kk === key}">
-          <b>${x.label}</b><small>${hint[kk]}</small>${kk === auto.kind ? '<span class="now">now</span>' : ''}</button>`).join('')}
+          <b>${lang === 'en' ? x.label : esc(t('kind.' + kk))}</b><small>${esc(hint[kk])}</small>${kk === auto.kind ? `<span class="now">${esc(t('now'))}</span>` : ''}</button>`).join('')}
       </div>
       <div class="card when${status === 'late' || status === 'past' ? ' late' : ''}">
-        <span class="lbl">${esc(k.title)}</span><span>${when}</span>${statusLine}
-        ${key !== auto.kind ? `<span class="note">By the clock it is now time for ${SANDHYA_KINDS[auto.kind].title}. <button class="link-btn" id="followClock">Follow the clock</button></span>` : ''}
+        <span class="lbl">${esc(t('title.' + key))}</span><span>${esc(when)}</span>${statusLine}
+        ${key !== auto.kind ? `<span class="note">${esc(t('clock.now', { title: t('title.' + auto.kind) }))} <button class="link-btn" id="followClock">${esc(t('clock.follow'))}</button></span>` : ''}
       </div>
       <details class="card me"${me.gotra && me.pravara && me.name ? '' : ' open'}>
-        <summary>Your gotram, pravara and name (for sankalpam and abhivadanam)</summary>
+        <summary>${esc(t('me.summary'))}</summary>
         <div class="form">
-          <label>Gotram<input type="text" id="sd-gotra" value="${esc(me.gotra)}" placeholder="e.g. Bharadwaja"></label>
-          <label>Name<input type="text" id="sd-name" value="${esc(me.name)}" placeholder="e.g. Ramakrishna"></label>
-          <label class="wide">Pravara rishis<input type="text" id="sd-pravara" value="${esc(me.pravara)}" placeholder="e.g. Angirasa Barhaspatya Bharadwaja"></label>
-          <label>Sutram<input type="text" id="sd-sutra" value="${esc(me.sutra)}"></label>
-          <label>Veda sakha<input type="text" id="sd-sakha" value="${esc(me.sakha)}"></label>
+          <label>${esc(t('f.gotra'))}<input type="text" id="sd-gotra" value="${esc(me.gotra)}" placeholder="${esc(t('ph.gotra'))}"></label>
+          <label>${esc(t('f.name'))}<input type="text" id="sd-name" value="${esc(me.name)}" placeholder="${esc(t('ph.name'))}"></label>
+          <label class="wide">${esc(t('f.pravara'))}<input type="text" id="sd-pravara" value="${esc(me.pravara)}" placeholder="${esc(t('ph.pravara'))}"></label>
+          <label>${esc(t('f.sutra'))}<input type="text" id="sd-sutra" value="${esc(me.sutra)}"></label>
+          <label>${esc(t('f.sakha'))}<input type="text" id="sd-sakha" value="${esc(me.sakha)}"></label>
         </div>
-        <p class="note" style="margin-top:0">Kept on this device only. Never sent anywhere.</p>
+        <p class="note" style="margin-top:0">${esc(t('me.device'))}</p>
       </details>
-      <div class="row-between"><span class="note">${steps.length} steps, in the order of Telugu sandhyavandanam books. Families differ in small details; follow your elders where they differ.</span>
-        <span class="size" aria-label="Text size">Text <button id="szDown" aria-label="Smaller text">A−</button><button id="szUp" aria-label="Larger text">A+</button></span></div>
+      <div class="row-between"><span class="note">${esc(t('steps.note', { n: steps.length }))}</span>
+        <span class="size" aria-label="${esc(t('size.label'))}">${esc(t('size.label'))} <button id="szDown" aria-label="${esc(t('size.smaller'))}">A−</button><button id="szUp" aria-label="${esc(t('size.larger'))}">A+</button></span></div>
       <ol class="steps">${stepHtml}</ol>`;
 
     const drawSank = () => { $('sdSank').innerHTML = renderParts(sankalpam(p, now, place,
@@ -743,32 +831,33 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 
   // ----- timers: arghya countdown and japa time, updated every second while the tab is open -----
   const fmtDur = (ms) => {
-    const s = Math.max(0, Math.round(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
-    return h ? `${h} h ${String(m).padStart(2, '0')} min` : m ? `${m} min ${String(sec).padStart(2, '0')} s` : `${sec} s`;
+    const sec = Math.max(0, Math.round(ms / 1000)), h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), x = sec % 60;
+    return h ? t('dur.h', { h, m: String(m).padStart(2, '0') }) : m ? t('dur.m', { m, s: String(x).padStart(2, '0') }) : t('dur.s', { s: x });
   };
   function arghyaText(key, p, now) {
-    const t = sandhyaTimes(p), DAY = 86400000;
+    const tt = sandhyaTimes(p), DAY = 86400000, soon = (ms) => ms < 12 * 3600e3;
     if (key === 'pratah') {
-      const ms = (t.sunrise - now) * DAY;
-      return ms > 0 ? { text: `Arghya is due by sunrise, ${fmtTime(t.sunrise)}${ms < 12 * 3600e3 ? `: ${fmtDur(ms)} left` : ''}.`, late: false }
-        : { text: `Sunrise was ${fmtDur(-ms)} ago (${fmtTime(t.sunrise)}). Offer the turiyarghya as well.`, late: true };
+      const ms = (tt.sunrise - now) * DAY;
+      return ms > 0 ? { text: t('arghya.pratahDue', { t: fmtTime(tt.sunrise) }) + (soon(ms) ? ': ' + t('arghya.left', { d: fmtDur(ms) }) : '') + '.', late: false }
+        : { text: t('arghya.pratahLate', { d: fmtDur(-ms), t: fmtTime(tt.sunrise) }), late: true };
     }
     if (key === 'madhyahnika') {
-      const ms = (t.madhyahna.end - now) * DAY;
-      return ms > 0 ? { text: `Arghya is due by the end of madhyahna, ${fmtTime(t.madhyahna.end)}${ms < 12 * 3600e3 ? `: ${fmtDur(ms)} left` : ''}.`, late: false }
-        : { text: `Madhyahna ended ${fmtDur(-ms)} ago (${fmtTime(t.madhyahna.end)}). Offer the turiyarghya as well.`, late: true };
+      const ms = (tt.madhyahna.end - now) * DAY;
+      return ms > 0 ? { text: t('arghya.madhyDue', { t: fmtTime(tt.madhyahna.end) }) + (soon(ms) ? ': ' + t('arghya.left', { d: fmtDur(ms) }) : '') + '.', late: false }
+        : { text: t('arghya.madhyLate', { d: fmtDur(-ms), t: fmtTime(tt.madhyahna.end) }), late: true };
     }
-    const toSet = (t.sunset - now) * DAY, toDue = (t.sayamDue - now) * DAY;
-    if (toSet > 0) return { text: `Offer arghya while the sun is up: sunset is at ${fmtTime(t.sunset)}${toSet < 12 * 3600e3 ? `, ${fmtDur(toSet)} from now` : ''}.`, late: false };
-    if (toDue > 0) return { text: `Sunset was ${fmtDur(-toSet)} ago. Offer arghya now; it is due by ${fmtTime(t.sayamDue)}.`, late: false };
-    return { text: `The time for arghya passed at ${fmtTime(t.sayamDue)}. Offer the turiyarghya as well.`, late: true };
+    const toSet = (tt.sunset - now) * DAY, toDue = (tt.sayamDue - now) * DAY;
+    if (toSet > 0) return { text: t('arghya.sayamDue', { t: fmtTime(tt.sunset) }) + (soon(toSet) ? ', ' + t('arghya.fromNow', { d: fmtDur(toSet) }) : '') + '.', late: false };
+    if (toDue > 0) return { text: t('arghya.sayamNow', { d: fmtDur(-toSet), t: fmtTime(tt.sayamDue) }), late: false };
+    return { text: t('arghya.sayamLate', { t: fmtTime(tt.sayamDue) }), late: true };
   }
   function japaTimeText() {
     const t0 = +(store.get(japa.key + '.t0') || 0), t1 = +(store.get(japa.key + '.t1') || 0);
-    if (!t0 || !japa.count) return 'The timer starts with your first tap.';
-    if (japa.count >= japa.target) return `Complete in ${fmtDur(t1 - t0)}.`;
+    if (!t0 || !japa.count) return t('japa.first');
+    if (japa.count >= japa.target) return t('japa.done', { d: fmtDur(t1 - t0) });
     const per = japa.count > 1 ? (t1 - t0) / (japa.count - 1) : 0;
-    return `${fmtDur(Date.now() - t0)} so far${per ? ` · about ${(per / 1000).toFixed(1)} s each · ${fmtDur(per * (japa.target - japa.count))} to go` : ''}.`;
+    return t('japa.progress', { d: fmtDur(Date.now() - t0) })
+      + (per ? ` · ${t('japa.pace', { s: (per / 1000).toFixed(1) })} · ${t('japa.toGo', { d: fmtDur(per * (japa.target - japa.count)) })}` : '') + '.';
   }
   let sandhyaClock = 0;
   function startSandhyaClock(key, p) {
@@ -788,13 +877,13 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const r = store.get('panchangam.prana') || '4-16-8';
     return `<div class="prana">
       <div class="breath" aria-hidden="true"><span class="b-ring"></span><span class="b-core" id="pranaCore"></span></div>
-      <div class="prana-info" aria-live="polite"><b id="pranaPhase">Three rounds</b><span id="pranaSub">Breathe in · hold · breathe out</span></div>
+      <div class="prana-info" aria-live="polite"><b id="pranaPhase">${esc(t('prana.rounds'))}</b><span id="pranaSub">${esc(t('prana.cycle'))}</span></div>
       <div class="prana-ctl">
-        <span class="seg-ctl" role="group" aria-label="Breath timing" id="pranaRatio">
-          ${[['4-16-8', '4 · 16 · 8 s'], ['4-8-8', 'Gentle 4 · 8 · 8 s']].map(([k, l]) => `<button data-r="${k}" aria-pressed="${k === r}">${l}</button>`).join('')}</span>
-        <button class="pill-btn" id="pranaStart">Start</button>
+        <span class="seg-ctl" role="group" aria-label="${esc(t('prana.timing'))}" id="pranaRatio">
+          ${[['4-16-8', '4 · 16 · 8 s'], ['4-8-8', `${t('prana.gentle')} 4 · 8 · 8 s`]].map(([k, l]) => `<button data-r="${k}" aria-pressed="${k === r}">${l}</button>`).join('')}</span>
+        <button class="pill-btn" id="pranaStart">${esc(t('prana.start'))}</button>
       </div>
-      <p class="note">Puraka: breathe in. Kumbhaka: hold, saying the mantra in the mind. Rechaka: breathe out. Keep to what your guru taught, and stop at once if it is uncomfortable.</p>
+      <p class="note">${esc(t('prana.note'))}</p>
     </div>`;
   }
   function wirePrana() {
@@ -803,9 +892,9 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const setOrb = (s) => { if (!reduce && $('pranaCore').style) $('pranaCore').style.transform = `scale(${s})`; };
     const stop = (done) => {
       caf(pranaRaf); pranaRaf = 0; setOrb(0.45);
-      $('pranaStart').textContent = done ? 'Again' : 'Start';
-      $('pranaPhase').textContent = done ? 'Three rounds done' : 'Three rounds';
-      $('pranaSub').textContent = 'Breathe in · hold · breathe out';
+      $('pranaStart').textContent = t(done ? 'prana.again' : 'prana.start');
+      $('pranaPhase').textContent = t(done ? 'prana.done' : 'prana.rounds');
+      $('pranaSub').textContent = t('prana.cycle');
     };
     $('pranaRatio').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-r]'); if (!b || pranaRaf) return;
@@ -815,10 +904,10 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     $('pranaStart').addEventListener('click', () => {
       if (pranaRaf) { stop(false); return; }
       const [a, h, x] = (store.get('panchangam.prana') || '4-16-8').split('-').map(Number);
-      const ph = [['Breathe in', 'puraka', a], ['Hold', 'kumbhaka · the mantra in the mind', h], ['Breathe out', 'rechaka', x]];
+      const ph = [[t('prana.in'), t('prana.inSub'), a], [t('prana.hold'), t('prana.holdSub'), h], [t('prana.out'), t('prana.outSub'), x]];
       const round = a + h + x, t0 = nowMs();
       let last = -1;
-      $('pranaStart').textContent = 'Stop';
+      $('pranaStart').textContent = t('prana.stop');
       const frame = () => {
         const el = (nowMs() - t0) / 1000;
         if (el >= round * 3) { stop(true); try { navigator.vibrate?.(200); } catch {} return; }
@@ -829,7 +918,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
         setOrb(i === 0 ? 0.45 + 0.55 * frac : i === 1 ? 1 : 1 - 0.55 * frac);
         if (r * 3 + i !== last) { last = r * 3 + i; try { navigator.vibrate?.(40); } catch {} }
         $('pranaPhase').textContent = `${ph[i][0]} · ${Math.ceil(ph[i][2] - rem)} s`;
-        $('pranaSub').textContent = `Round ${r + 1} of 3 · ${ph[i][1]}`;
+        $('pranaSub').textContent = `${t('prana.round', { r: r + 1 })} · ${ph[i][1]}`;
         pranaRaf = raf(frame);
       };
       pranaRaf = raf(frame);
@@ -842,9 +931,9 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     return `<div class="mudra" id="mu-${id}">
       <div class="m-stage"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="var(--line)" stroke-width="4"/>
         <circle class="m-ring" cx="50" cy="50" r="46" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"/></svg>
-        <span class="m-in" aria-live="polite"><small class="m-idx">1 of ${list.length}</small><b class="m-name">${esc(list[0])}</b></span></div>
-      <div class="m-ctl"><button class="nav" data-act="prev" aria-label="Previous mudra">‹</button>
-        <button class="pill-btn" data-act="play">Play</button><button class="nav" data-act="next" aria-label="Next mudra">›</button></div>
+        <span class="m-in" aria-live="polite"><small class="m-idx">${esc(t('mudra.of', { i: 1, n: list.length }))}</small><b class="m-name">${esc(list[0])}</b></span></div>
+      <div class="m-ctl"><button class="nav" data-act="prev" aria-label="${esc(t('mudra.prev'))}">‹</button>
+        <button class="pill-btn" data-act="play">${esc(t('mudra.play'))}</button><button class="nav" data-act="next" aria-label="${esc(t('mudra.next'))}">›</button></div>
       <p class="m-list">${list.map((m, i) => `<span data-i="${i}">${esc(m)}</span>`).join(' · ')}</p>
     </div>`;
   }
@@ -856,18 +945,18 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       i = (n + list.length) % list.length;
       const name = q('.m-name'); name.textContent = list[i];
       name.classList.remove('swap'); void name.offsetWidth; name.classList.add('swap');
-      q('.m-idx').textContent = `${i + 1} of ${list.length}`;
+      q('.m-idx').textContent = t('mudra.of', { i: i + 1, n: list.length });
       q('.m-ring').setAttribute('stroke-dashoffset', String(289.03 * (1 - (i + 1) / list.length)));
       root.querySelectorAll('.m-list span').forEach((s) => s.classList.toggle('on', +s.dataset.i === i));
     };
-    const stop = () => { clearInterval(mudraTimers[id]); mudraTimers[id] = 0; q('[data-act="play"]').textContent = 'Play'; };
+    const stop = () => { clearInterval(mudraTimers[id]); mudraTimers[id] = 0; q('[data-act="play"]').textContent = t('mudra.play'); };
     root.addEventListener('click', (e) => {
       const b = e.target.closest('button[data-act]'); if (!b) return;
       if (b.dataset.act === 'prev') { stop(); show(i - 1); return; }
       if (b.dataset.act === 'next') { stop(); show(i + 1); return; }
       if (mudraTimers[id]) { stop(); return; }
       if (i === list.length - 1) show(0);
-      b.textContent = 'Pause';
+      b.textContent = t('mudra.pause');
       mudraTimers[id] = setInterval(() => {
         if (i >= list.length - 1) { stop(); return; }
         show(i + 1); try { navigator.vibrate?.(20); } catch {}
@@ -879,15 +968,15 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   // Gayatri japa counter: a ring of 108 (or 28, 10) that fills as you tap.
   function japaHtml() {
     return `<div class="japa">
-      <button class="bead" id="japaBtn" aria-label="Count one Gayatri">
+      <button class="bead" id="japaBtn" aria-label="${esc(t('japa.count'))}">
         <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="var(--line)" stroke-width="5"/>
           <circle id="japaRing" cx="50" cy="50" r="46" fill="none" stroke="var(--gold)" stroke-width="5" stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"/></svg>
-        <span class="in"><span class="cnt" id="japaCount">0</span><small id="japaOf">of 108</small></span>
+        <span class="in"><span class="cnt" id="japaCount">0</span><small id="japaOf">${esc(t('japa.of', { n: japa.target }))}</small></span>
       </button>
       <div class="japa-ctl">
-        <span class="seg-ctl" role="group" aria-label="Japa count" id="japaTargets">
+        <span class="seg-ctl" role="group" aria-label="${esc(t('japa.targets'))}" id="japaTargets">
           ${[108, 28, 10].map((n) => `<button data-n="${n}" aria-pressed="${n === japa.target}">${n}</button>`).join('')}</span>
-        <button class="pill-btn" id="japaReset">Start again</button>
+        <button class="pill-btn" id="japaReset">${esc(t('japa.again'))}</button>
       </div></div>
       <p class="timer" id="japaTime" aria-live="off"></p>`;
   }
@@ -895,7 +984,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     if (!$('japaCount')) return;
     const done = japa.count >= japa.target;
     $('japaCount').textContent = String(japa.count);
-    $('japaOf').textContent = done ? 'complete' : `of ${japa.target}`;
+    $('japaOf').textContent = done ? t('japa.complete') : t('japa.of', { n: japa.target });
     $('japaRing').setAttribute('stroke-dashoffset', String(289.03 * (1 - Math.min(1, japa.count / japa.target))));
   }
   function wireJapa() {
@@ -1102,9 +1191,9 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const abroad = !!place.abroad, nm = place.name.replace(/\s*\(.*\)$/, '');
     $('mapWrap').classList?.toggle('abroad', abroad);
     $('map').hidden = abroad; $('mapReplay').hidden = abroad;
-    $('mapName').textContent = place.mine ? 'My location' : nm;
+    $('mapName').textContent = place.mine ? t('place.mine') : nm;
     let sub = `${dms(place.lat, 'N', 'S')}, ${dms(place.lon, 'E', 'W')}`;
-    if (place.mine) sub += ` · near ${nm}`;
+    if (place.mine) sub += ` · ${t('place.nearX', { x: nm })}`;
     if (abroad) {
       const off = tzAt(place, nowJd()), hh = Math.trunc(Math.abs(off)), mm = Math.round((Math.abs(off) - hh) * 60);
       sub += ` · ${place.state} · UTC${off < 0 ? '−' : '+'}${hh}${mm ? ':' + String(mm).padStart(2, '0') : ''}`;
@@ -1114,7 +1203,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     $('deity').hidden = !d;
     if (d) {
       $('deity').innerHTML = `<div class="medallion">${emblemSVG(d.form)}</div><div>
-        <span class="lbl">Kshetram · ${esc(nm)}</span><h3>${esc(d.deity)}</h3>
+        <span class="lbl">${esc(t('kshetram'))} · ${esc(nm)}</span><h3>${esc(d.deity)}</h3>
         ${d.tags && d.tags.length ? `<div class="tags">${d.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}</div>`;
     }
     if (!abroad) { if (animate) flyTo(); else { mapView = { lon: place.lon, lat: place.lat, span: 2.6 }; mapFinal = true; redrawMap(); } }
@@ -1158,24 +1247,24 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   $('todayBtn').addEventListener('click', () => goTo(todayCivil()));
 
   function renderPlaceBtn() {
-    const name = place.mine ? 'My location' : place.name, sub = place.mine ? `near ${place.name}` : place.state;
+    const name = place.mine ? t('place.mine') : place.name, sub = place.mine ? t('place.nearX', { x: place.name }) : place.state;
     $('placeBtn').innerHTML = `${esc(name)} <small>${esc(sub)}</small> <span aria-hidden="true">▾</span>`;
   }
   function renderList(q) {
     q = q.trim().toLowerCase();
-    const item = (p) => `<li><button data-i="${places.indexOf(p)}" role="option"><span>${esc(p.name)}</span><small>${esc(p.state)} · ${KIND[p.kind] || ''}</small></button></li>`;
+    const item = (p) => `<li><button data-i="${places.indexOf(p)}" role="option"><span>${esc(p.name)}</span><small>${esc(p.state)} · ${esc(t('kind.' + p.kind))}</small></button></li>`;
     let html = '';
     if (!q) {
-      const groups = [['Metros', (p) => p.kind === 'metro', 20], ['Kshetrams', (p) => p.kind === 'pilgrimage', 40],
-        ['Outside India · USA', (p) => p.kind === 'usa', 60], ['Outside India · World', (p) => p.kind === 'world', 140]];
+      const groups = [[t('place.metros'), (p) => p.kind === 'metro', 20], [t('place.kshetrams'), (p) => p.kind === 'pilgrimage', 40],
+        [t('place.usa'), (p) => p.kind === 'usa', 60], [t('place.world'), (p) => p.kind === 'world', 140]];
       for (const [label, test, n] of groups) {
         const items = places.filter(test).slice(0, n);
-        if (items.length) html += `<li class="grp">${label}</li>` + items.map(item).join('');
+        if (items.length) html += `<li class="grp">${esc(label)}</li>` + items.map(item).join('');
       }
-      html += `<li class="grp">Type to search all ${places.length} places</li>`;
+      html += `<li class="grp">${esc(t('place.searchAll', { n: places.length }))}</li>`;
     } else {
       const hits = places.filter((p) => p.name.toLowerCase().includes(q) || p.state.toLowerCase().includes(q)).slice(0, 60);
-      html = hits.length ? hits.map(item).join('') : '<li class="grp">No match. Try the nearest town.</li>';
+      html = hits.length ? hits.map(item).join('') : `<li class="grp">${esc(t('place.none'))}</li>`;
     }
     $('placeList').innerHTML = html;
   }
@@ -1205,23 +1294,38 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   };
   const nearMsg = (t) => { $('nearMsg').textContent = t; $('nearMsg').hidden = false; };
   $('nearBtn').addEventListener('click', () => {
-    if (!navigator.geolocation) return nearMsg('This browser cannot share location. Search for your town instead.');
-    nearMsg('Finding you…');
+    if (!navigator.geolocation) return nearMsg(t('place.noGeo'));
+    nearMsg(t('place.finding'));
     navigator.geolocation.getCurrentPosition((pos) => {
       const me = { lat: Math.round(pos.coords.latitude * 100) / 100, lon: Math.round(pos.coords.longitude * 100) / 100 };
       let best = null, bestKm = Infinity;
       for (const p of places) { const d = km(me, p); if (d < bestKm) { best = p; bestKm = d; } }
       let zone = null; try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch {}
       const inIndia = !best.abroad && bestKm < 300;
-      if (!inIndia && !zone) return nearMsg('Could not read this phone\'s time zone. Search for your city instead.');
+      if (!inIndia && !zone) return nearMsg(t('place.noZone'));
       choosePlace({
         name: best.name, state: best.state, lat: me.lat, lon: me.lon, mine: true,
         kind: bestKm <= 10 ? best.kind : (best.abroad ? best.kind : 'tier3'),
         noPreset: bestKm > 10, // a great kshetra's own wording only when you are actually there
         ...(inIndia ? { tz: 5.5 } : { zone, abroad: true }),
       });
-    }, () => nearMsg('Location was not shared, or is not available here. Search for your town instead.'), { timeout: 15000, maximumAge: 600000 });
+    }, () => nearMsg(t('place.denied')), { timeout: 15000, maximumAge: 600000 });
   });
+
+  // Language: re-draw everything in the chosen language; fonts for the script load on demand.
+  function setLang(l) {
+    lang = LANG_LOCALE[l] ? l : 'en';
+    store.set('panchangam.lang', lang);
+    timeFmt = null; setMonthNames(); loadFonts(lang); applyStatic();
+    if ($('langSel')) $('langSel').value = lang;
+  }
+  $('langSel').addEventListener('change', (e) => {
+    setLang(e.target.value);
+    renderPlaceBtn(); renderMonth(); renderSheet(); renderPlaceCard(false);
+    if (tab === 'sankalpam') renderSankalpam();
+    if (tab === 'sandhya') renderSandhya();
+  });
+  setLang(lang);
 
   renderPlaceBtn();
   goTo(todayCivil());

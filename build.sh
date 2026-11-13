@@ -1,5 +1,6 @@
 #!/bin/sh
-# build.sh — inlines engine.js, sandhya.js, places.js (+ places_abroad.js, deities.js when present) into
+# build.sh — inlines engine.js, sandhya.js, places.js, ui.js (+ places_abroad.js, deities.js, ui_i18n.js,
+#            names_i18n.js when present) into
 # template.html and writes two outputs:
 #   panchangam.html        a single-file copy of the page, without a <head> (for embedding)
 #   site/public/index.html the website: a full HTML document with head, share tags, app
@@ -13,8 +14,9 @@ const fs = require("fs"), path = require("path");
 const dir = process.argv[1];
 const has = (f) => fs.existsSync(path.join(dir, f));
 const read = (f) => fs.readFileSync(path.join(dir, f), "utf8").replace(/^export /gm, "");
-const places = read("places.js") + (has("places_abroad.js") ? "\n" + read("places_abroad.js") : "")
-  + (has("deities.js") ? "\n" + read("deities.js") : "");
+const opt = (f) => (has(f) ? "\n" + read(f) : "");
+const places = read("places.js") + opt("places_abroad.js") + opt("deities.js")
+  + "\n" + read("ui.js") + opt("ui_i18n.js") + opt("names_i18n.js");
 const page = read("template.html").replace("/*ENGINE*/", () => read("engine.js"))
   .replace("/*SANDHYA*/", () => read("sandhya.js")).replace("/*PLACES*/", () => places);
 fs.writeFileSync(path.join(dir, "panchangam.html"), page);
