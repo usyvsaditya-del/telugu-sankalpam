@@ -68,16 +68,25 @@ trust it. Each one says what it would take and the main risk.
 
 ## Open questions for the review
 - Who reviews the mantra text and the kshetra wordings before wider sharing? The scripture
-  review found these Telugu pieces still missing, left out because they should come from a
-  vaidika rather than from memory: muni namaskaram, kara nyasa and anga nyasa, the third marjanam
-  ("Hiranyavarnah suchayah pavakah ..."), and the farewell verse "Stuto maya varada vedamata ...".
-- Hyderabad comes out "Srisailasya Uttara" by the map (344°, close to Vayavya). Which does your
-  family say? The line can now be edited either way.
+  reviews found these Telugu pieces still missing, left out because they should come from a
+  vaidika rather than from memory: "Apavitrah pavitro va ..." at the start, the third marjanam
+  ("Hiranyavarnah suchayah pavakah ..."), the tarpanam sankalpam, kara nyasa and anga nyasa,
+  muni namaskaram, and the farewell verse "Stuto maya varada vedamata ...".
+- Four points the Telugu mantra review rated low confidence; the site has the first form of each:
+  చతుర్వింశత్యక్షరా or చతుర్విగ్ంశత్యక్షరా (avahanam); భవామ శరదశ్శతమ్, శృణవామ or
+  భవామ శరదశ్శతగ్ం శృణవామ (Surya upasthanam); ఆంగీరస or అంగీరస (a year's name);
+  శ్రీమాన్ … గోత్రస్య or శ్రీమతః … గోత్రస్య (sankalpam).
+- In the Telugu sankalpam, towns use their everyday name (భీమశంకర్ క్షేత్రే) and deities the
+  Sanskrit form (శ్రీ భీమశంకర సన్నిధౌ). Is that right?
+- Hyderabad comes out "Srisailasya Uttara" by the map: it lies at 344° from Srisailam, just west
+  of north. Some families may say Vayavya (north-west). Which does your family say? The line can
+  now be edited either way.
 - Default sankalpam inside sandhya: Short (as now) or Full?
 - A custom domain for the site later?
 - The uttara mudras: the site uses Surabhi, Jnana, Vairagya, Yoni, Sankha, Pankaja, Linga, Nirvana.
-  The Telugu book used for the drawings also prints Chakram (for Vairagyam) and Kurmah (for
-  Shankhah) at 3 and 5, and some Telugu compilations end with Niryana. Which does your family say?
+  The Telugu compilations a reviewer checked list Chakra, Kurma and Niryana in place of Vairagya,
+  Sankha and Nirvana, and the Telugu book used for the drawings shows both sets. Which does your
+  family say?
 - Mudra drawings to confirm with someone who does them daily: Kurmam and Varaham (books describe
   them differently), Sammukhonmukham (the book's picture is unclear), Yamapasam.
 - Place wordings the Telugu pass found doubtful in the English source (places_te.js follows the
@@ -90,9 +99,18 @@ trust it. Each one says what it would take and the main risk.
 - The dedication line is in English in every language. How does the family write
   "Yeragudipati Bhujanga Rao" in Telugu?
 - Word choices a native reader should confirm:
-  - Tamil paksha: வளர்பிறை/தேய்பிறை or சுக்ல/கிருஷ்ண.
-  - Kannada paksha: ಕೃಷ್ಣ or ಬಹುಳ.
-  - Telugu yoga forms: శుభం or శుభ.
+  - Telugu yoga forms: శుభం/ఐంద్రం/బ్రహ్మం or శుభ/ఇంద్ర/బ్రహ్మ (Kannada and Tamil have the
+    same Aindra-or-Indra choice).
   - Telugu karanas: తైతుల/గరజి or తైతిల/గరజ.
+  - Telugu: సంకటహర చతుర్థి, సంకష్టహర చతుర్థి or సంకటహర చవితి.
+  - Kannada paksha: ಕೃಷ್ಣ or ಬಹುಳ.
+  - Kannada nakshatras: ಪುಬ್ಬ/ಉತ್ತರ/ಚಿತ್ತ or ಪೂರ್ವ ಫಲ್ಗುಣಿ/ಉತ್ತರ ಫಲ್ಗುಣಿ/ಚಿತ್ರಾ.
+  - Kannada: ಪ್ರಮಾದಿ or ಪ್ರಮಾಥಿ (a year's name); ಕಾರ್ತಿಕ or ಕಾರ್ತೀಕ.
+  - Tamil paksha: வளர்பிறை/தேய்பிறை or சுக்ல/கிருஷ்ண.
   - Tamil Vishti: பத்திரை or விஷ்டி.
-  - Telugu: సంకటహర చతుర్థి or చవితి.
+  - Tamil sankramana: தை மாதப் பிறப்பு or மகர சங்கராந்தி.
+  - Tamil letters: ஸ்ராவணம் or ச்ராவணம்.
+  - Hindi: आषाढ़ or the Sanskrit आषाढ (ढ़ or ढ).
+- Hindi durations read "1 घंटे"; one hour should be "1 घंटा".
+- All open questions, and every review and piece of feedback so far, are also kept in a shared
+  review document the site's owner sends to reviewers.
