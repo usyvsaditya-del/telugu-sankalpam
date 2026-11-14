@@ -692,58 +692,90 @@ export const PURPOSES = {
   sayam: { label: 'Sayam sandhyavandanam', end: () => 'sayam sandhyam upasishye', sandhya: true },
 };
 
+// The sankalpam's words in English letters. sankalpam_te.js has the same table in Telugu letters
+// (the master for Kannada and Devanagari too); pass a table as o.words. The name lists are
+// functions of the index the engine works out, so each table can use its own lists.
+export const SANKALPA_EN = {
+  opening: 'Mamopatta samasta duritakshaya dwara Sri Parameswara preetyartham, ',
+  muhurte: 'subhe sobhane muhurte, Sri Mahavishnor ajnaya pravartamanasya, adya Brahmanah ',
+  kalpe: 'dwitiya parardhe, Swetavaraha kalpe, Vaivaswata manvantare, Kaliyuge, prathama pade, ',
+  bharata: 'Jambudweepe, Bharata varshe, Bharata khande, Meroh dakshina digbhage, ',
+  sannidhau: 'samasta devata brahmana harihara guru charana sannidhau, ',
+  vartamana: 'asmin vartamana vyavaharika chandramanena Prabhavadi shashti samvatsaranam madhye, ',
+  samvatsare: ' nama samvatsare, ', ritau: ' ritau, ', mase: ' mase, ', pakshe: ' pakshe, ',
+  tithau: ' subha tithau, ', vasara: ' vasara yuktayam, ',
+  laghu: 'subha nakshatra, subha yoga, subha karana, evam guna viseshana visishtayam, asyam subha tithau, ',
+  nakshatraYuktayam: ' nakshatra yuktayam, ', yogaYuktayam: ' yoga yuktayam, ', karanaYuktayam: ' karana yuktayam, ',
+  evam: 'evam guna viseshana visishtayam, asyam ',
+  sriman: 'Sriman ', gotrasya: ' gotrasya, ', namadheyasya: ' namadheyasya, ', dharmapatni: 'dharmapatni samethasya, ',
+  phala: ['asmakam saha kutumbanam kshema sthairya vijaya abhaya ayur arogya aiswarya abhivruddhyartham, ',
+    'dharma artha kama moksha chaturvidha phala purushartha siddhyartham, ishta kamyartha siddhyartham, '],
+  more: '...', stop: '.', blank: '____', deity: 'Sri Parameswara', adhika: 'Adhika ',
+  samvatsara: (i) => NAMES.samvatsara[i],
+  ayana: (uttara) => (uttara ? 'Uttarayane' : 'Dakshinayane'),
+  ritu: (i) => NAMES.ritu[i],
+  masa: (i) => NAMES.masaSankalpa[i],
+  paksha: (sukla) => (sukla ? 'Sukla' : 'Krishna'),
+  tithi: (i) => tithiSankalpa(i),
+  vara: (i) => NAMES.varaSankalpa[i],
+  nakshatra: (i) => NAMES.nakshatraSankalpa[i],
+  yoga: (i) => NAMES.yoga[i],
+  karana: (k) => karanaName(k, true),
+  venues: VENUES,
+  ends: Object.fromEntries(Object.entries(PURPOSES).filter(([, x]) => x.end).map(([k, x]) => [k, x.end])),
+};
+
 // ---------- sankalpam ----------
 // Returns parts: plain strings, and {v} for words filled in from the day, place or person, so the
 // page can highlight them. `p` = panchang() of the day whose vaaram applies; `jd` = the moment.
 // The kala words (samvatsara, ayana, ritu, masa, paksha, tithi, nakshatra, yoga, karana) are taken
 // at `jd`, so a sankalpam after the new moon names the new month.
-// o = { desha, venue, gotra, name, married, purpose, deity, mode } — all optional.
+// o = { desha, venue, gotra, name, married, purpose, deity, mode, words } — all optional.
 // mode 'full' (default) names every anga; 'laghu' says "subha nakshatra, subha yoga, subha karana"
 // after the vaaram; 'short' is only "Mamopatta ... preetyartham" and the act.
+// words: the word table (SANKALPA_EN by default). The desha line comes from deshaFor() in English
+// letters; a caller writing another script passes its own line as o.desha.
 export function sankalpam(p, jd, place, o = {}) {
+  const W = o.words || SANKALPA_EN;
   const a = angasAt(jd), kala = kalaAt(jd);
   const v = (x) => ({ v: x });
-  const masa = (kala.month.adhika ? 'Adhika ' : '') + NAMES.masaSankalpa[kala.month.index];
+  const masa = (kala.month.adhika ? W.adhika : '') + W.masa(kala.month.index);
   const d = deshaFor(place);
   const desha = (o.desha ?? d.text).trim();
-  const purpose = PURPOSES[o.purpose] || PURPOSES.sankalpam;
-  const tithiWord = tithiSankalpa(a.tithi);
+  const pk = PURPOSES[o.purpose] ? o.purpose : 'sankalpam', purpose = PURPOSES[pk], end = W.ends[pk];
+  const deity = o.deity || W.deity;
+  const tithiWord = W.tithi(a.tithi);
   const mode = o.mode || (o.laghu ? 'laghu' : 'full');
-  const opening = 'Mamopatta samasta duritakshaya dwara Sri Parameswara preetyartham, ';
-  if (mode === 'short') return [opening, purpose.end ? v(purpose.end(o.deity || 'Sri Parameswara')) : '...', purpose.end ? '.' : ''];
+  if (mode === 'short') return [W.opening, end ? v(end(deity)) : W.more, end ? W.stop : ''];
 
-  const parts = [opening,
-    'subhe sobhane muhurte, Sri Mahavishnor ajnaya pravartamanasya, adya Brahmanah ',
-    'dwitiya parardhe, Swetavaraha kalpe, Vaivaswata manvantare, Kaliyuge, prathama pade, '];
-  if (!d.abroad) parts.push('Jambudweepe, Bharata varshe, Bharata khande, Meroh dakshina digbhage, ');
+  const parts = [W.opening, W.muhurte, W.kalpe];
+  if (!d.abroad) parts.push(W.bharata);
   if (desha) parts.push(v(desha), ', ');
-  if (!d.preset && !purpose.sandhya) parts.push(v(VENUES[o.venue] || VENUES.home), ', ');
-  if (!purpose.sandhya) parts.push('samasta devata brahmana harihara guru charana sannidhau, ');
+  if (!d.preset && !purpose.sandhya) parts.push(v(W.venues[o.venue] || W.venues.home), ', ');
+  if (!purpose.sandhya) parts.push(W.sannidhau);
   parts.push(
-    'asmin vartamana vyavaharika chandramanena Prabhavadi shashti samvatsaranam madhye, ',
-    v(kala.samvatsara), ' nama samvatsare, ', v(kala.ayana.replace(/m$/, '').replace(/a$/, 'e')), ', ',
-    v(NAMES.ritu[kala.ritu]), ' ritau, ', v(masa), ' mase, ',
-    v(a.tithi < 15 ? 'Sukla' : 'Krishna'), ' pakshe, ', v(tithiWord), ' subha tithau, ',
-    v(NAMES.varaSankalpa[p.vara]), ' vasara yuktayam, ',
+    W.vartamana,
+    v(W.samvatsara(NAMES.samvatsara.indexOf(kala.samvatsara))), W.samvatsare,
+    v(W.ayana(kala.ayana === 'Uttarayanam')), ', ',
+    v(W.ritu(kala.ritu)), W.ritau, v(masa), W.mase,
+    v(W.paksha(a.tithi < 15)), W.pakshe, v(tithiWord), W.tithau,
+    v(W.vara(p.vara)), W.vasara,
   );
   if (mode === 'laghu') {
-    parts.push('subha nakshatra, subha yoga, subha karana, evam guna viseshana visishtayam, asyam subha tithau, ');
+    parts.push(W.laghu);
   } else {
     parts.push(
-      v(NAMES.nakshatraSankalpa[a.nakshatra]), ' nakshatra yuktayam, ',
-      v(NAMES.yoga[a.yoga]), ' yoga yuktayam, ', v(karanaName(a.karana, true)), ' karana yuktayam, ',
-      'evam guna viseshana visishtayam, asyam ', v(tithiWord), ' subha tithau, ',
+      v(W.nakshatra(a.nakshatra)), W.nakshatraYuktayam,
+      v(W.yoga(a.yoga)), W.yogaYuktayam, v(W.karana(a.karana)), W.karanaYuktayam,
+      W.evam, v(tithiWord), W.tithau,
     );
   }
-  if (!purpose.end) { parts.push('...'); return parts; }
+  if (!end) { parts.push(W.more); return parts; }
   if (!purpose.sandhya) {
-    parts.push('Sriman ', v(o.gotra || '____'), ' gotrasya, ', v(o.name || '____'), ' namadheyasya, ');
-    if (o.married !== false) parts.push('dharmapatni samethasya, ');
-    parts.push(
-      'asmakam saha kutumbanam kshema sthairya vijaya abhaya ayur arogya aiswarya abhivruddhyartham, ',
-      'dharma artha kama moksha chaturvidha phala purushartha siddhyartham, ishta kamyartha siddhyartham, ',
-    );
+    parts.push(W.sriman, v(o.gotra || W.blank), W.gotrasya, v(o.name || W.blank), W.namadheyasya);
+    if (o.married !== false) parts.push(W.dharmapatni);
+    parts.push(...W.phala);
   }
-  parts.push(v(purpose.end(o.deity || 'Sri Parameswara')), '.');
+  parts.push(v(end(deity)), W.stop);
   return parts;
 }

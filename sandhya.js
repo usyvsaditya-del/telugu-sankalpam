@@ -1,7 +1,9 @@
 // sandhya.js — Sandhyavandanam for Krishna Yajurveda (Taittiriya), Apastamba sutra, in the order
 // printed in Telugu sandhyavandanam books. Pure data + small pure functions; no DOM.
 // Text is plain English transliteration without svaras: a reading aid, not a substitute for
-// learning from a guru. Reviewed once against published Telugu and Tamil texts (see README);
+// learning from a guru. mantras_te.js has the same text in Telugu script, line for line.
+// Checked twice against published Telugu texts (the second time with the Telugu script, Nov 2026,
+// which settled the order: avahanam before the japa sankalpam, Harihara before udvasanam);
 // a vaidika should still review it before the site is shared widely. Families differ in small
 // details (direction, arghya count, extra namaskarams); the page says so.
 //
@@ -91,6 +93,7 @@ const APO_HI_SHTHA = [
 ].join('\n');
 
 const GAYATRI = 'Om bhur bhuvas suvah\nTat savitur varenyam, bhargo devasya dhimahi, dhiyo yo nah prachodayat';
+const HAMSAS = 'Hagumsas suchishad vasur antarikshasad dhota vedishad atithir duronasat\nNrishad varasad ritasad vyomasad abja goja ritaja adrija ritam brihat';
 
 const PRASANAM = {
   pratah: [
@@ -125,16 +128,16 @@ const UPASTHANAM = {
     'Mitro janan yatayati prajanan, mitro dadhara prithivim uta dyam',
     'Mitrah krishtir animisha\'bhichashte, satyaya havyam ghritavad vidhema',
     'Pra sa mitra marto astu prayasvan, yasta aditya sikshati vratena',
-    'Na hanyate na jiyate tvoto, nainam amho asnotyantito na durat',
+    'Na hanyate na jiyate tvoto, nainam agumho asnotyantito na durat',
   ],
   madhyahnika: [
     'A satyena rajasa vartamano, nivesayann amritam martyam cha',
-    'Hiranyayena savita rathena, devo yati bhuvana vipasyan',
+    'Hiranyayena savita rathena a devo yati bhuvana vipasyan',
     'Udvayam tamasas pari, pasyanto jyotir uttaram',
     'Devam devatra suryam, aganma jyotir uttamam',
     'Udu tyam jatavedasam, devam vahanti ketavah, drise visvaya suryam',
     'Chitram devanam udagad anikam, chakshur mitrasya varunasyagneh',
-    'Apra dyava prithivi antariksham, surya atma jagatas tasthushas cha',
+    'Apra dyava prithivi antarikshagum, surya atma jagatas tasthushas cha',
     'Tacchakshur devahitam purastach chhukram uccharat',
     'Pasyema saradas satam, jivema saradas satam',
     'Nandama saradas satam, modama saradas satam',
@@ -155,9 +158,9 @@ const UPASTHANAM = {
   ],
 };
 
+const OMITYEKAKSHARAM = 'Om ityekaksharam brahma, agnir devata, brahma ity arsham, gayatram chandam, paramatmam sarupam, sayujyam viniyogam';
+
 const NYASAM = [
-  'Om ityekaksharam brahma, agnir devata, brahma ity arsham, gayatram chandam, paramatmam sarupam, sayujyam viniyogam',
-  '',
   'Pranavasya rishir brahma, devi gayatri chandah, paramatma devata',
   'Bhuradi sapta vyahritinam, atri bhrigu kutsa vasishtha gautama kasyapa angirasa rishayah',
   'Gayatri ushnik anushtup brihati pankti trishtup jagatyas chandamsi',
@@ -177,7 +180,7 @@ const AVAHANAM = [
   'Gayatrim avahayami, Savitrim avahayami, Sarasvatim avahayami',
   'Chandarshin avahayami, Sriyam avahayami',
   'Gayatrya gayatri chando visvamitra rishih savita devata',
-  'Agnir mukham, brahma siro, vishnur hridayam, rudras sikha, prithivi yonih',
+  'Agnir mukham, brahma siro, vishnur hridayagum rudras sikha, prithivi yonih',
   'Pranapana vyanodana samana saprana sveta varna sankhyayana sagotra',
   'Gayatri chaturvimsatyakshara tripada shatkukshih panchasirshopanayane viniyogah',
 ].join('\n');
@@ -185,12 +188,13 @@ const AVAHANAM = [
 const DHYANAM = [
   'Mukta vidruma hema nila dhavala chhayair mukhais trikshanair',
   'Yuktam indu nibaddha ratna makutam tattvartha varnatmikam',
-  'Gayatrim varadabhayankusa kasah subhram kapalam gunam',
+  'Gayatrim varadabhayankusa kasah subhram kapalam gadam',
   'Sankham chakram atharavinda yugalam hastair vahantim bhaje',
 ].join('\n');
 
-const DIG_DEVATA = ['prachyai', 'dakshinayai', 'pratichyai', 'udichyai', 'urdhvayai', 'adharayai', 'avantarayai']
-  .map((d) => `Namah ${d} dise yas cha devata etasyam prativasanty etabhyas cha namah`).join('\n');
+const DIG_DEVATA = ['Namah prachyai', 'Namo dakshinayai', 'Namah pratichyai', 'Nama udichyai', 'Nama urdhvayai',
+  "Namo'dharayai", "Namo'vantarayai"]
+  .map((d) => `${d} dise yas cha devata etasyam prativasanty etabhyas cha namah`).join('\n');
 
 const SANDHYA_DEVATA = [
   'Sandhyayai namah, Savitryai namah, Gayatryai namah, Sarasvatyai namah',
@@ -231,14 +235,15 @@ const SAMARPANAM = [
 ].join('\n');
 
 // Gayatri mudras: 24 shown before japam (purva) and 8 after (uttara), in the order of the
-// traditional verses. Names only: hand positions are learnt from a guru.
+// traditional verses. mudra_rig.js draws each one (keyed by these names); the drawings are a
+// reading aid, and hand positions are learnt from a guru.
 export const PURVA_MUDRAS = ['Sumukham', 'Samputam', 'Vitatam', 'Vistritam', 'Dvimukham', 'Trimukham',
   'Chaturmukham', 'Panchamukham', 'Shanmukham', 'Adhomukham', 'Vyapakanjalikam', 'Sakatam', 'Yamapasam',
   'Grathitam', 'Sammukhonmukham', 'Pralambam', 'Mushtikam', 'Matsyam', 'Kurmam', 'Varaham', 'Simhakrantam',
   'Mahakrantam', 'Mudgaram', 'Pallavam'];
 export const UTTARA_MUDRAS = ['Surabhi', 'Jnana', 'Vairagya', 'Yoni', 'Sankha', 'Pankaja', 'Linga', 'Nirvana'];
 
-const ARSHEYA = { 1: 'ekarsheya', 2: 'dvyarsheya', 3: 'trayarsheya', 5: 'pancharsheya', 7: 'saptarsheya' };
+const ARSHEYA = { 1: 'ekarsheya', 2: 'dvyarsheya', 3: 'tryarsheya', 5: 'pancharsheya', 7: 'saptarsheya' };
 
 // Abhivadanam in the Telugu form, from the person's pravara, gotram, sutra, sakha and name.
 export function abhivadanam(c = {}) {
@@ -264,7 +269,7 @@ export function sandhyaSteps(kindKey) {
       mantra: ACHAMANAM },
     { id: 'bhutocchatanam', title: 'Bhutocchatanam',
       how: 'Sit facing east or north. Sprinkle a few grains of akshata or a little water behind you.',
-      mantra: 'Uttishthantu bhuta pisachah, ye ete bhumi bharakah\nYe tesham avirodhena, brahma karma samarabhe' },
+      mantra: 'Uttishthantu bhuta pisachah, ye te bhumi bharakah\nYe tesham avirodhena, brahma karma samarabhe' },
     { id: 'pranayamam', title: 'Pranayamam', breath: true,
       how: 'Hold the nose with the right hand as you were taught. Breathe in, hold the breath while saying the mantra in the mind, then breathe out. Three rounds; the timer below paces them.',
       mantra: PRANAYAMAM },
@@ -279,13 +284,13 @@ export function sandhyaSteps(kindKey) {
     { id: 'achamanam2', title: 'Achamanam', ref: 'achamanam', how: 'Do achamanam again, as in step 1.' },
     { id: 'punarmarjanam', title: 'Punar marjanam',
       how: 'Sprinkle water on the head again at each line, as in marjanam.',
-      mantra: 'Dadhikravinno akarisham, jishnor asvasya vajinah\nSurabhi no mukha karat, prana ayugumshi tarishat\n' + APO_HI_SHTHA + '\nOm bhur bhuvas suvah' },
+      mantra: 'Dadhikravno akarisham, jishnor asvasya vajinah\nSurabhi no mukha karat, pra na ayugumshi tarishat\n' + APO_HI_SHTHA + '\nOm bhur bhuvas suvah' },
     { id: 'aghamarshanam', title: 'Aghamarshanam',
       how: 'Take water in the right palm and hold it near the nose. Say the mantra, then cast the water away to the left without looking at it.',
-      mantra: 'Drupadad iva munchatu, drupadad iva mumuchanah\nSvinnah snatvi malad iva, putam pavitrenevajyam\nApah sundhantu mainasah' },
+      mantra: 'Drupadad iva munchatu, drupadad iven mumuchanah\nSvinnah snatvi malad iva, putam pavitrenevajyam\nApah sundhantu mainasah' },
     { id: 'arghyam', title: `Arghya pradanam: ${k.arghyas} arghyas`, arghya: true,
       how: k.arghyaHow,
-      mantra: `${mamopatta}${k.japaName} arghya pradanam karishye\n\n${GAYATRI}\n(say the Gayatri ${k.arghyas === 2 ? 'twice' : 'three times'}, one arghya each time)`,
+      mantra: `${mamopatta}${k.japaName} arghya pradanam karishye\n\n${kindKey === 'madhyahnika' ? HAMSAS + '\n' : ''}${GAYATRI}`,
       note: 'If the right time has passed, first say "Kalatita prayaschittartham turiyarghya pradanam karishye" and offer one more arghya (the turiyarghya) with the Gayatri.' },
     { id: 'pradakshinam', title: 'Atma pradakshinam',
       how: 'Take water in the right palm, turn around once clockwise where you stand, and sprinkle the water around you.',
@@ -294,17 +299,17 @@ export function sandhyaSteps(kindKey) {
       how: 'Pour a little water over the fingertips for each name.',
       mantra: lines(TARPANAM[kindKey]) },
     { id: 'achamanam3', title: 'Achamanam', ref: 'achamanam', how: 'Do achamanam again, as in step 1.' },
-    { id: 'japa-prep', title: 'Preparing for Gayatri japam',
-      how: 'Do pranayamam (step 3). Say the japa sankalpam, then touch the head, mouth and heart as the rishi, chandas and devata are named.',
-      mantra: `${mamopatta}${k.japaName} gayatri maha mantra japam karishye\n\n` + NYASAM },
     { id: 'avahanam', title: 'Gayatri avahanam',
       how: 'Invite the Devi with palms joined.',
-      mantra: AVAHANAM },
+      mantra: `${OMITYEKAKSHARAM}\n${AVAHANAM}` },
+    { id: 'japa-prep', title: 'Preparing for Gayatri japam',
+      how: 'Do pranayamam (step 3). Say the japa sankalpam, then touch the head, mouth and heart as the rishi, chandas and devata are named.',
+      mantra: `${mamopatta}${k.japaName}nga yathasakti gayatri maha mantra japam karishye\n\n` + NYASAM },
     { id: 'dhyanam', title: 'Gayatri dhyanam',
       how: 'Meditate on the Devi in this form.',
       mantra: DHYANAM },
     { id: 'purvamudra', title: 'Purva mudras: 24 (in many families)', mudras: PURVA_MUDRAS,
-      how: 'Before japam, show the 24 Gayatri mudras in this order, with the hand positions your guru taught. Play steps through the names.' },
+      how: 'Before japam, show the 24 Gayatri mudras in this order, with the hand positions your guru taught. Play moves the drawing from one mudra to the next.' },
     { id: 'japam', title: 'Gayatri japam', japa: true,
       how: `${k.japaHow} Say the Gayatri 108 times, or 28, or at least 10. Tap the counter for each one.`,
       mantra: GAYATRI },
@@ -315,10 +320,10 @@ export function sandhyaSteps(kindKey) {
       how: 'Turn to each direction in order and bow: east, south, west, north, above, below, and all between.',
       mantra: DIG_DEVATA },
     { id: 'sandhyadevata', title: 'Sandhya devata namaskaram', how: 'Bow with joined palms.', mantra: SANDHYA_DEVATA },
+    { id: 'harihara', title: 'Harihara vandanam', how: 'Bow with joined palms.', mantra: HARIHARA },
     { id: 'udvasanam', title: 'Gayatri udvasanam',
       how: 'Bid the Devi farewell.',
       mantra: 'Uttame sikhare jate, bhumyam parvata murdhani\nBrahmanebhyo\'bhyanujnata, gaccha devi yathasukham' },
-    { id: 'harihara', title: 'Harihara vandanam', how: 'Bow with joined palms.', mantra: HARIHARA },
     { id: 'suryanarayana', title: 'Surya Narayana vandanam', how: 'Face the sun (or east) and bow.', mantra: SURYA_NARAYANA },
     { id: 'yama', title: 'Yama vandanam (in some families)', how: 'Face south and bow. Not every Telugu family says this; follow your elders.', mantra: YAMA_VANDANAM },
     { id: 'abhivadanam', title: 'Abhivadanam', abhivadanam: true,

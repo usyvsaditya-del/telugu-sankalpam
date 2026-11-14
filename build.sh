@@ -1,11 +1,14 @@
 #!/bin/sh
-# build.sh — inlines engine.js, sandhya.js, places.js, ui.js (+ places_abroad.js, deities.js, ui_i18n.js,
-#            names_i18n.js when present) into
+# build.sh — inlines engine.js, sandhya.js, mudra_rig.js, indic.js, mantras_te.js, sankalpam_te.js,
+#            places.js, ui.js (+ places_abroad.js, deities.js, local_rivers.js, ui_i18n.js,
+#            names_i18n.js, places_te.js when present) into
 # template.html and writes two outputs:
 #   panchangam.html        a single-file copy of the page, without a <head> (for embedding)
 #   site/public/index.html the website: a full HTML document with head, share tags, app
 #                          manifest and icons, and a base CSS reset
-# The `export` keywords are stripped so the modules run as plain inline script.
+# The `export` keywords are stripped so the modules run as plain inline script. mudra_rig.js is wrapped
+# in its own function scope (as MR), and the Telugu-script modules in theirs (only their exports are
+# visible), so their internal names (ACHAMANAM, TITHI …) cannot clash with sandhya.js or engine.js.
 # Deploy: cd site && npx -y firebase-tools@13 deploy --only hosting --project <your-firebase-project>
 set -e
 DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -17,8 +20,17 @@ const read = (f) => fs.readFileSync(path.join(dir, f), "utf8").replace(/^export 
 const opt = (f) => (has(f) ? "\n" + read(f) : "");
 const places = read("places.js") + opt("places_abroad.js") + opt("deities.js") + opt("local_rivers.js")
   + "\n" + read("ui.js") + opt("ui_i18n.js") + opt("names_i18n.js");
+const rig = "\nconst MR = (() => {\n" + read("mudra_rig.js")
+  + "\nreturn { MUDRA_POSES, resolvePose, blendPose, mudraSvg };\n})();\n";
+// A module in its own scope; its exports (export const/function NAME) become page-level names.
+const scoped = (f) => {
+  const raw = fs.readFileSync(path.join(dir, f), "utf8");
+  const names = [...raw.matchAll(/^export (?:const|let|function) ([A-Za-z_$][\w$]*)/gm)].map((m) => m[1]);
+  return `\nconst { ${names.join(", ")} } = (() => {\n${read(f)}\nreturn { ${names.join(", ")} };\n})();\n`;
+};
+const scripts = scoped("indic.js") + scoped("mantras_te.js") + scoped("sankalpam_te.js") + (has("places_te.js") ? scoped("places_te.js") : "");
 const page = read("template.html").replace("/*ENGINE*/", () => read("engine.js"))
-  .replace("/*SANDHYA*/", () => read("sandhya.js")).replace("/*PLACES*/", () => places);
+  .replace("/*SANDHYA*/", () => read("sandhya.js") + rig + scripts).replace("/*PLACES*/", () => places);
 fs.writeFileSync(path.join(dir, "panchangam.html"), page);
 console.log("wrote panchangam.html", page.length, "bytes");
 

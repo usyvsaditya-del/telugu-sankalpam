@@ -1,11 +1,12 @@
 // ui.js — every piece of page text in English, keyed. ui_i18n.js gives the same keys in Telugu,
 // Tamil, Kannada and Hindi; a missing key falls back to English. {name} marks a filled-in value.
-// Mantras and the sankalpam stay in English letters for now (phase two renders them in each
-// script from a reviewed IAST source).
+// Mantras and the sankalpam are not here: mantras_te.js and sankalpam_te.js hold them in Telugu
+// letters, the master for Kannada and Devanagari (indic.js); English and Tamil show English letters.
 
 export const UI_EN = {
   // header and tabs
   'brand.tag': 'Telugu panchangam · sankalpam · sandhyavandanam',
+  'brand.invocation': '|| Sri Gurubhyo Namah ||', 'brand.name': 'Sankalpam', 'nav.sections': 'Sections',
   'tab.panchangam': 'Panchangam', 'tab.sankalpam': 'Sankalpam', 'tab.sandhya': 'Sandhya', 'tab.sandhyaRest': 'vandanam', 'tab.sandhyaLong': 'Sandhyavandanam',
   'lang.label': 'Language',
   // place picker
@@ -68,6 +69,7 @@ export const UI_EN = {
   'arghya.sayamDue': 'Offer arghya while the sun is up: sunset is at {t}', 'arghya.sayamNow': 'Sunset was {d} ago. Offer arghya now; it is due by {t}.',
   'arghya.sayamLate': 'The time for arghya passed at {t}. Offer the turiyarghya as well.',
   'arghya.left': '{d} left', 'arghya.fromNow': '{d} from now',
+  'arghya.times': 'Say the Gayatri {n} times, offering one arghya each time.',
   'prana.rounds': 'Three rounds', 'prana.done': 'Three rounds done', 'prana.cycle': 'Breathe in · hold · breathe out',
   'prana.in': 'Breathe in', 'prana.hold': 'Hold', 'prana.out': 'Breathe out',
   'prana.inSub': 'puraka', 'prana.holdSub': 'kumbhaka · the mantra in the mind', 'prana.outSub': 'rechaka',
@@ -75,10 +77,11 @@ export const UI_EN = {
   'prana.timing': 'Breath timing', 'prana.gentle': 'Gentle',
   'prana.note': 'Puraka: breathe in. Kumbhaka: hold, saying the mantra in the mind. Rechaka: breathe out. Keep to what your guru taught, and stop at once if it is uncomfortable.',
   'mudra.play': 'Play', 'mudra.pause': 'Pause', 'mudra.prev': 'Previous mudra', 'mudra.next': 'Next mudra', 'mudra.of': '{i} of {n}',
+  'mudra.drawn': 'Each drawing shows the usual form of the mudra. Families differ in small details; follow your guru.',
   'dur.h': '{h} h {m} min', 'dur.m': '{m} min {s} s', 'dur.s': '{s} s',
   // footer
   'foot.times': 'Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com. Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.',
   'foot.sandhya': 'Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes, in English letters without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.',
-  'foot.mantras': 'Mantras and the sankalpam are shown in English letters in every language for now; versions in each script are being prepared and checked.',
+  'foot.mantras': 'In Tamil, mantras and the sankalpam are shown in English letters for now; a version in Tamil script is being prepared and checked.',
   'foot.open': 'The code is open for anyone to use and build on:',
 };

@@ -53,9 +53,11 @@ trust it. Each one says what it would take and the main risk.
   svaras wrong.
 - **Deity images** only from temple-approved or public-domain sources (e.g. Raja Ravi Varma);
   most temples do not permit photos of the moolavirat.
-- **Languages, phase two.** The page is in English, Telugu, Tamil, Kannada and Hindi; the mantras
-  and the sankalpam are still in English letters. The plan is to re-key them once in IAST, have them
-  reviewed, and then render Telugu, Kannada and Devanagari exactly, plus Tamil with Grantha letters.
+- **Tamil script for the mantras.** Telugu, Kannada and Hindi now show the mantras and the
+  sankalpam in their own script, made from one Telugu-script text. Tamil still shows English
+  letters: Tamil script has no aspirated or voiced letters, so Sanskrit needs a choice of style.
+  The two usual ones are Grantha letters with superscript numbers (க², க³, க⁴), as Tamil
+  sandhyavandanam books print, or plain Tamil letters with a note. Needs a Tamil reader to choose.
 - **Calendar by language.** Choosing a language changes only the words. Each community also counts
   differently, and these would be separate calendar options:
   - Tamil families use solar months, and the Tamil year turns at Chithirai 1, not Ugadi.
@@ -73,6 +75,20 @@ trust it. Each one says what it would take and the main risk.
   family say? The line can now be edited either way.
 - Default sankalpam inside sandhya: Short (as now) or Full?
 - A custom domain for the site later?
+- The uttara mudras: the site uses Surabhi, Jnana, Vairagya, Yoni, Sankha, Pankaja, Linga, Nirvana.
+  The Telugu book used for the drawings also prints Chakram (for Vairagyam) and Kurmah (for
+  Shankhah) at 3 and 5, and some Telugu compilations end with Niryana. Which does your family say?
+- Mudra drawings to confirm with someone who does them daily: Kurmam and Varaham (books describe
+  them differently), Sammukhonmukham (the book's picture is unclear), Yamapasam.
+- Place wordings the Telugu pass found doubtful in the English source (places_te.js follows the
+  English for now): "Shakini Dakini sangame" is usually Śaṅkhinī–Ḍaṅkinī; "Biraja" is the Odia
+  form of Virajā; "Omkareswara Mamaleswara" may be a mis-split of Omkara + Amaleswara;
+  "Manair" is the Telugu Maneru. Several kshetra wordings also put a Tamil or Hindi form inside
+  the Sanskrit (Kumbeswarar, Shrinathji, "Narmada Mata sannidhau"); a purohit should settle them.
+- Hindi place names are made from the Telugu spellings, so a few read Telugu-style
+  (हैदराबादु). A Hindi place list would fix that.
+- The dedication line is in English in every language. How does the family write
+  "Yeragudipati Bhujanga Rao" in Telugu?
 - Word choices a native reader should confirm:
   - Tamil paksha: வளர்பிறை/தேய்பிறை or சுக்ல/கிருஷ்ண.
   - Kannada paksha: ಕೃಷ್ಣ or ಬಹುಳ.

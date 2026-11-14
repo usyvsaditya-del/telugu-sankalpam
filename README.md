@@ -23,9 +23,13 @@ Live: **https://telugu-sankalpam.web.app**
   - a pranayamam breathing timer
   - an arghya countdown
   - a Gayatri japa counter and timer
-  - the purva and uttara mudras in sequence
+  - line drawings of the 24 purva and 8 uttara mudras, the hands moving from one mudra to the next
 - **Places:** 646 places in India and abroad, a map of kshetras with their deities, and "use my
   location".
+- **Languages:** English, Telugu, Tamil, Kannada and Hindi. In Telugu, Kannada and Hindi the
+  mantras, the sankalpam and place names are in that script too, all made from one Telugu-script
+  text. Tamil shows mantras in English letters for now, because Tamil script has no letters for
+  the Sanskrit aspirated and voiced sounds.
 
 Everything is computed in the browser; nothing is sent to a server. Gotram, name and location
 stay in the phone's own storage.
@@ -52,24 +56,40 @@ The astronomy:
 | `places.js` | 499 Indian places (metros, Tier 1/2/3, kshetrams). |
 | `places_abroad.js` | US cities, world capitals and diaspora cities, with time zones. |
 | `deities.js` | Presiding deity, emblem and standing of 210 kshetrams. |
+| `local_rivers.js` | The river (or sangamam) and bank for 201 towns, used in the sankalpam. |
+| `mudra_rig.js` | Draws each Gayatri mudra from joint angles (two hands, and the body for four of them) and blends one pose into the next. |
+| `ui.js`, `ui_i18n.js`, `names_i18n.js` | Page text in English, and in Telugu, Tamil, Kannada and Hindi; panchangam names in those languages. |
+| `mantras_te.js` | The sandhyavandanam mantras, abhivadanam and mudra names in Telugu script. |
+| `sankalpam_te.js` | The sankalpam's wording and day names in Telugu script (the same table `engine.js` uses in English). |
+| `places_te.js` | Place, state and deity names, and every phrase of the sankalpam's place line, in Telugu script. |
+| `indic.js` | Writes Telugu-script text in Kannada or Devanagari letters (the three share one Unicode layout). |
 | `template.html` | The page: layout, styles and the user-interface script. |
 | `build.sh` | Inlines the modules into `site/public/index.html` (and `panchangam.html`, a single-file copy). |
 | `check.mjs` | Prints Bengaluru values to compare with drikpanchang.com. |
+| `check_mudras.mjs` | Checks that every mudra in the sandhya steps has a drawing, and that each draws and moves cleanly. |
+| `check_te.mjs` | Checks the Telugu-script text: same lines as the English, no stray English letters, every place and phrase covered. |
 | `IDEAS.md` | Ideas and open questions for what to build next. |
 
 ## Build and deploy
 ```sh
 sh build.sh
 node check.mjs
+node check_mudras.mjs
+node check_te.mjs
 cd site && npx -y firebase-tools@13 deploy --only hosting --project <your-firebase-project>
 ```
 
 ## Please help
-- **Mantra text** is plain English transliteration without svaras. It is a reading aid, not a
-  substitute for a guru. Corrections from vaidikas are very welcome.
+- **Mantra text** is without svaras, in English letters and in Telugu script (from which the
+  Kannada and Devanagari are made). It is a reading aid, not a substitute for a guru.
+  Corrections from vaidikas are very welcome; a Telugu correction fixes all three scripts.
 - **Kshetra wordings, river lines and traditional town names** are drafted from common usage and
   checked once. Families and regions differ, and every line can be edited on the page. Please
   open an issue when your family's wording differs.
+- **Mudra drawings** show the usual form of each mudra, drawn from its description and checked
+  against the pictures in a printed Telugu sandhyavandanam book. Families differ in small
+  details, and a few (Kurmam, Varaham) are described differently from book to book. To correct
+  one, change its pose in `mudra_rig.js`: each pose is a few numbers per hand.
 - **Vrata days** follow the rules computed panchangams use; matha panchangams can differ by a day.
 
 ## Licence

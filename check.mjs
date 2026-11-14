@@ -12,7 +12,7 @@ for (const [y, m, d] of [[2026, 11, 13], [2026, 3, 20]]) {
 const t0 = performance.now();
 const { month, days } = monthDays(jdFromDate(new Date('2026-11-13T06:00:00Z')), BLR);
 console.log(`\nmonth ${NAMES.masa[month.index]} adhika=${month.adhika}: ${days.length} days, ${Math.round(performance.now() - t0)} ms`);
-console.log(days.map((p) => `${p.date.d}/${p.date.m}:${p.tithi[0].name}${p.marks.length ? '[' + p.marks + ']' : ''}`).join(' '));
+console.log(days.map((p) => `${p.date.d}/${p.date.m}:${p.tithi[0].name}${p.marks.length ? '[' + p.marks.map((m) => m.name).join(', ') + ']' : ''}`).join(' '));
 for (const c of [['Bengaluru', 12.97, 77.59], ['Hyderabad', 17.385, 78.4867], ['Vijayawada', 16.506, 80.648], ['Tirupati', 13.63, 79.42]])
   console.log(c[0], srisailamDirection(c[1], c[2]));
 const p = panchang(2026, 11, 13, BLR);

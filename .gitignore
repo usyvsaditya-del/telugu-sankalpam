@@ -15,3 +15,6 @@ node_modules/
 # Mudra reference videos and frames: kept on this Mac only; only the drawings made from them are published
 mudra-videos/
 mudra-frames/
+
+# Mudra reference pages from a printed book: for drawing poses on this Mac only, never published
+mudra-ref/

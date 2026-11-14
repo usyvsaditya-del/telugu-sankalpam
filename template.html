@@ -245,10 +245,22 @@ ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
 .prana-ctl, .prana .note { grid-column: 1 / -1; margin: 0; }
 .prana-ctl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
-/* mudras: the current name in the middle of a filling ring, the full order beneath */
+/* mudras: a line drawing of the hands that moves from one mudra to the next (mudra_rig.js), the
+   name and a bead per mudra beneath it, then the full order (tap a name to go to it) */
 .mudra { display: grid; gap: 10px; justify-items: center; }
-.m-stage { position: relative; width: 176px; height: 176px; display: grid; place-items: center; }
-.m-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.m-fig { width: min(100%, 360px); aspect-ratio: 190 / 135; margin: 0; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--mantra-bg); overflow: hidden; --mline: var(--maroon); }
+.m-fig svg { display: block; width: 100%; height: 100%; }
+.mh .o { fill: var(--mline); stroke: var(--mline); stroke-linejoin: round; }
+.mh .f { fill: var(--paper); }
+.mh .mk { fill: none; stroke: var(--mline); stroke-linecap: round; }
+.mh .dot { fill: var(--kumkum); }
+:root[data-theme="dark"] .m-fig { --mline: var(--gold-ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .m-fig { --mline: var(--gold-ink); } }
+.m-beads { height: auto; display: block; }
+.m-list span { cursor: pointer; border-radius: 4px; }
+.m-list span:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+.m-note { margin: 0; text-align: center; max-width: 60ch; }
 .m-in { position: relative; display: grid; gap: 4px; text-align: center; padding: 0 20px; }
 .m-idx { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 .m-name { font-family: var(--font-display); font-weight: 400; font-size: 24px; line-height: 1.1; color: var(--maroon); overflow-wrap: anywhere; }
@@ -350,7 +362,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 <header class="mast">
   <div class="zari"></div>
   <div class="gutter"><div class="inner mast-in">
-    <p class="invoc">|| Sri Gurubhyo Namah ||</p>
+    <p class="invoc" data-i18n="brand.invocation">|| Sri Gurubhyo Namah ||</p>
     <div class="mast-row">
       <div class="brand">
         <svg viewBox="0 0 44 44" aria-hidden="true">
@@ -360,11 +372,11 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
           <path d="M5 24.5c5.5 1.6 11.2 2.4 17 2.4s11.5-.8 17-2.4" fill="none" stroke="#fff1c7" stroke-width="1.2" stroke-linecap="round"/>
           <path d="M16 36h12l-2 4h-8z" fill="var(--gold)"/>
         </svg>
-        <div><h1>Sankalpam</h1><p data-i18n="brand.tag">Telugu panchangam · sankalpam · sandhyavandanam</p></div>
+        <div><h1 data-i18n="brand.name">Sankalpam</h1><p data-i18n="brand.tag">Telugu panchangam · sankalpam · sandhyavandanam</p></div>
       </div>
       <div class="controls">
       <label class="lang"><span class="sr" data-i18n="lang.label">Language</span>
-        <select id="langSel" aria-label="Language">
+        <select id="langSel" aria-label="Language" data-i18n-aria="lang.label">
           <option value="en">English</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option>
           <option value="kn">ಕನ್ನಡ</option><option value="hi">हिन्दी</option>
         </select></label>
@@ -379,7 +391,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       </div>
       </div>
     </div>
-    <nav class="tabs" role="tablist" aria-label="Sections" id="tabs">
+    <nav class="tabs" role="tablist" aria-label="Sections" data-i18n-aria="nav.sections" id="tabs">
       <button class="tab" role="tab" id="tab-panchangam" aria-controls="panchangam" data-tab="panchangam" data-i18n="tab.panchangam">Panchangam</button>
       <button class="tab" role="tab" id="tab-sankalpam" aria-controls="sankalpam" data-tab="sankalpam" data-i18n="tab.sankalpam">Sankalpam</button>
       <button class="tab" role="tab" id="tab-sandhya" aria-controls="sandhya" data-tab="sandhya" aria-label="Sandhyavandanam" data-i18n-aria="tab.sandhyaLong"><span data-i18n="tab.sandhya">Sandhya</span><span class="tab-long" data-i18n="tab.sandhyaRest">vandanam</span></button>
@@ -433,7 +445,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 <footer class="gutter"><div class="inner">
   <p data-i18n="foot.times">Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com. Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.</p>
   <p data-i18n="foot.sandhya">Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes, in English letters without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.</p>
-  <p data-i18n="foot.mantras" id="footMantras" hidden>Mantras and the sankalpam are shown in English letters in every language for now; versions in each script are being prepared and checked.</p>
+  <p data-i18n="foot.mantras" id="footMantras" hidden>In Tamil, mantras and the sankalpam are shown in English letters for now; a version in Tamil script is being prepared and checked.</p>
   <p class="open"><span data-i18n="foot.open">The code is open for anyone to use and build on:</span>
     <a href="https://github.com/usyvsaditya-del/telugu-sankalpam" rel="noopener">github.com/usyvsaditya-del/telugu-sankalpam</a></p>
   <p class="dedication">In fond remembrance of Yeragudipati Bhujanga Rao</p>
@@ -471,6 +483,41 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     if (vars) s = s.replace(/\{(\w+)\}/g, (_, k) => (vars[k] ?? ''));
     return s;
   }
+  // ----- mantras and the sankalpam in the page's script -----
+  // Telugu letters are the master (mantras_te.js, sankalpam_te.js); Kannada and Devanagari are made
+  // from them letter by letter (indic.js). English and Tamil show the English-letters text.
+  const inScript = () => typeof INDIC !== 'undefined' && !!INDIC[lang];
+  const toScript = (x) => (inScript() ? indic(x, lang) : x);
+  let sankWordsTe = null;
+  const sankWords = () => sankWordsTe || (sankWordsTe = sankalpaWordsTe(NMX.te));
+  const DIR_TE = { Uttara: 'ఉత్తర', Eesanya: 'ఈశాన్య', Purva: 'పూర్వ', Agneya: 'ఆగ్నేయ', Dakshina: 'దక్షిణ',
+    Nairuti: 'నైరృతి', Paschima: 'పశ్చిమ', Vayavya: 'వాయవ్య' };
+  // The desha line in Telugu letters: each phrase of the English line looked up in places_te.js;
+  // a phrase not found there stays as it is.
+  function deshaTe(pl) {
+    const T = typeof DESHA_TE !== 'undefined' ? DESHA_TE : {};
+    return deshaFor(pl).text.split(/,\s*/).map((ph) => T[ph] ?? ph).join(', ');
+  }
+  // The sankalpam in the page's script: the Telugu words, then converted (Kannada, Devanagari).
+  function sankParts(p, jd, opts) {
+    if (!inScript()) return sankalpam(p, jd, place, opts);
+    return indicParts(sankalpam(p, jd, place, { ...opts, words: sankWords(), desha: opts.desha ?? deshaTe(place) }), lang);
+  }
+  // Place, state, deity and tag names in the page's script (places_te.js); English when missing.
+  // Hindi writes a name's last consonant without the halant Telugu shows (प्रदेश, not प्रदेश्); names
+  // only — the Sanskrit mantras keep it (सत्यम्).
+  const fromTable = (table, key) => {
+    if (!inScript() || !table || !table[key]) return key;
+    const v = toScript(table[key]);
+    return lang === 'hi' ? v.replace(/\u094D(?=$|[\s,()])/g, '') : v;
+  };
+  const placeLabel = (p) => fromTable(typeof PLACE_NAMES_TE !== 'undefined' ? PLACE_NAMES_TE : null, p.name);
+  const placeShort = (p) => placeLabel(p).replace(/\s*\(.*\)$/, '');
+  const stateLabel = (st) => fromTable(typeof STATE_NAMES_TE !== 'undefined' ? STATE_NAMES_TE : null, st);
+  const deityLabel = (dn) => fromTable(typeof DEITY_NAMES_TE !== 'undefined' ? DEITY_NAMES_TE : null, dn);
+  const tagLabel = (tg) => fromTable(typeof TAGS_TE !== 'undefined' ? TAGS_TE : null, tg);
+  const dirLabel = (name) => (inScript() ? toScript(DIR_TE[name] || name) : name);
+  const mudraLabel = (list, i) => (inScript() ? toScript((list === UTTARA_MUDRAS ? UTTARA_MUDRAS_TE : PURVA_MUDRAS_TE)[i]) : list[i]);
   // Panchangam words in the chosen language; English (Telugu usage) when a list is missing.
   const L = () => (lang !== 'en' && NMX[lang]) || null;
   const nm = {
@@ -517,7 +564,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = t(el.dataset.i18n);
     for (const el of document.querySelectorAll('[data-i18n-ph]')) el.placeholder = t(el.dataset.i18nPh);
     for (const el of document.querySelectorAll('[data-i18n-aria]')) el.setAttribute('aria-label', t(el.dataset.i18nAria));
-    if ($('footMantras')) $('footMantras').hidden = lang === 'en';
+    if ($('footMantras')) $('footMantras').hidden = lang !== 'ta';
   }
 
   // Mantra text: strings (with \n for new lines) and {v} parts for filled-in words.
@@ -544,13 +591,22 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 
   // ----- time helpers (place zone, with summer time abroad) -----
   const local = (jd) => dateFromJd(jd + tzAt(place, jd) / 24);
-  // Clock times in the chosen language's own style (e.g. "6:17 AM", "ఉ. 6:17").
+  // Clock times in each language's own style. Telugu as Telugu panchangams print them (ఉ. 6:17,
+  // సా. 5:50) and Kannada with its words for the part of the day: the browser's own words for these
+  // two call 5:50 pm "afternoon". Tamil and Hindi use the browser's words (காலை 6:17, शाम 5:50).
+  const DAY_PARTS = {
+    te: [[3, 'రా.'], [6, 'తె.'], [12, 'ఉ.'], [16, 'మ.'], [19, 'సా.'], [24, 'రా.']],
+    kn: [[3, 'ರಾತ್ರಿ'], [6, 'ಬೆಳಗಿನ ಜಾವ'], [12, 'ಬೆಳಗ್ಗೆ'], [16, 'ಮಧ್ಯಾಹ್ನ'], [19, 'ಸಂಜೆ'], [24, 'ರಾತ್ರಿ']],
+  };
   let timeFmt = null;
   function fmtTime(jd, day) {
-    const d = local(jd);
-    if (!timeFmt) { try { timeFmt = new Intl.DateTimeFormat(LANG_LOCALE[lang], { hour: 'numeric', minute: '2-digit', timeZone: 'UTC' }); } catch { timeFmt = null; } }
+    const d = local(jd), parts = DAY_PARTS[lang];
+    if (!parts && !timeFmt) {
+      try { timeFmt = new Intl.DateTimeFormat(LANG_LOCALE[lang], { hour: 'numeric', minute: '2-digit', timeZone: 'UTC', ...(lang === 'en' ? {} : { dayPeriod: 'short' }) }); } catch { timeFmt = null; }
+    }
     let s;
-    if (timeFmt) s = timeFmt.format(d);
+    if (parts) { const h = d.getUTCHours(); s = `${parts.find(([end]) => h < end)[1]} ${h % 12 || 12}:${String(d.getUTCMinutes()).padStart(2, '0')}`; }
+    else if (timeFmt) s = timeFmt.format(d);
     else { let h = d.getUTCHours(); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; s = `${h}:${String(d.getUTCMinutes()).padStart(2, '0')} ${ap}`; }
     if (day && (d.getUTCDate() !== day.d || d.getUTCMonth() + 1 !== day.m)) s += `, ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`;
     return s;
@@ -574,11 +630,14 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   const g = (k) => store.get('panchangam.sk.' + k);
   function person() {
     return { gotra: g('gotra') || '', name: g('name') || '', pravara: g('pravara') || '',
-      sutra: g('sutra') || 'Apastamba', sakha: g('sakha') || 'Yajus', married: g('married') !== '0' };
+      sutra: g('sutra') || (inScript() ? toScript(SUTRA_TE) : 'Apastamba'),
+      sakha: g('sakha') || (inScript() ? toScript(SAKHA_TE) : 'Yajus'), married: g('married') !== '0' };
   }
+  // An edited desha line is kept per script, so a Telugu edit does not appear in the English page.
+  const deshaKey = () => (inScript() ? `desha.${lang}.${place.name}` : 'desha.' + place.name);
   function sankOpts() {
-    const desha = g('desha.' + place.name);
-    return { ...person(), purpose: g('purpose') || 'puja', deity: g('deity') ?? 'Sri Parameswara',
+    const desha = g(deshaKey());
+    return { ...person(), purpose: g('purpose') || 'puja', deity: g('deity') ?? (inScript() ? toScript(sankWords().deity) : 'Sri Parameswara'),
       venue: g('venue') || 'home', mode: g('mode') || 'full', desha: desha == null || desha === '' ? undefined : desha };
   }
 
@@ -632,7 +691,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     $('sheet').innerHTML = `
       <div class="sheet-head">${moonSVG(p.elongation)}<div>
         <h3>${esc(nm.vara(p.vara))}, ${day.d} ${MONTHS_LONG[day.m - 1]} ${day.y}</h3>
-        <p>${p.masa.adhika ? esc(t('month.adhika')) + ' ' : ''}${esc(nm.masaPlain(p.masa.index))} ${esc(nm.paksha(t0.index))} ${esc(nm.tithi(t0.index))} · ${esc(place.name)}</p>
+        <p>${p.masa.adhika ? esc(t('month.adhika')) + ' ' : ''}${esc(nm.masaPlain(p.masa.index))} ${esc(nm.paksha(t0.index))} ${esc(nm.tithi(t0.index))} · ${esc(placeLabel(place))}</p>
       </div></div>
       ${p.marks.length ? `<div class="chips">${p.marks.map((m) => `<span class="chip">${esc(nm.mark(m))}${m.at ? ` · ${fmtTime(m.at, day)}` : ''}</span>`).join('')}</div>` : ''}
       <div class="sun">
@@ -674,7 +733,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const p = selectedDay(), d = p.date, o = sankOpts(), desha = deshaFor(place), at = sankMoment(p);
     $('sankWrap').innerHTML = `
       <div><h2 class="sec-title">${esc(t('sk.title'))}</h2><div class="rule"></div>
-        <p class="note">${esc(nm.vara(p.vara))}, ${d.d} ${MONTHS_LONG[d.m - 1]} ${d.y} · ${esc(place.name)} · ${esc(at.label)}.
+        <p class="note">${esc(nm.vara(p.vara))}, ${d.d} ${MONTHS_LONG[d.m - 1]} ${d.y} · ${esc(placeLabel(place))} · ${esc(at.label)}.
         <button class="link-btn" data-go="panchangam">${esc(t('sk.otherDay'))}</button></p></div>
       <div class="card s-card">
         <div class="row-between">${modeCtl('sk-mode', o.mode)}<button class="pill-btn" id="copyBtn">${esc(t('copy'))}</button></div>
@@ -689,18 +748,18 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
           <label>${esc(t('f.name'))}<input type="text" id="sk-name" value="${esc(o.name)}" placeholder="${esc(t('ph.name'))}"></label>
           <label class="check"><input type="checkbox" id="sk-married"${o.married ? ' checked' : ''}> ${esc(t('f.married'))}</label>
           ${desha.preset ? '' : `<label>${esc(t('f.venue'))}<select id="sk-venue">${opt({ home: t('venue.home'), temple: t('venue.temple'), river: t('venue.river') }, o.venue)}</select></label>`}
-          <label class="wide">${esc(t(desha.abroad ? 'f.desha' : 'f.kshetra'))}<input type="text" id="sk-desha" value="${esc(o.desha ?? desha.text)}"></label>
+          <label class="wide">${esc(t(desha.abroad ? 'f.desha' : 'f.kshetra'))}<input type="text" id="sk-desha" value="${esc(o.desha ?? (inScript() ? toScript(deshaTe(place)) : desha.text))}"></label>
         </div>
-        <p class="note">${esc(desha.abroad ? t('desha.abroad') : desha.preset ? t('desha.preset', { place: place.name })
-          : desha.north ? t('desha.north') : t('desha.deccan', { dir: srisailamDirection(place.lat, place.lon).name }))}
+        <p class="note">${esc(desha.abroad ? t('desha.abroad') : desha.preset ? t('desha.preset', { place: placeLabel(place) })
+          : desha.north ? t('desha.north') : t('desha.deccan', { dir: dirLabel(srisailamDirection(place.lat, place.lon).name) }))}
           ${esc(t('desha.edit'))}</p>
       </div>`;
 
-    const draw = () => { $('sankText').innerHTML = renderParts(sankalpam(p, at.jd, place, sankOpts())); };
+    const draw = () => { $('sankText').innerHTML = renderParts(sankParts(p, at.jd, sankOpts())); };
     draw();
     const save = (k, val) => { store.set('panchangam.sk.' + k, val); draw(); };
     for (const k of ['gotra', 'name', 'deity']) $('sk-' + k).addEventListener('input', (e) => save(k, e.target.value));
-    $('sk-desha').addEventListener('input', (e) => save('desha.' + place.name, e.target.value));
+    $('sk-desha').addEventListener('input', (e) => save(deshaKey(), e.target.value));
     $('sk-married').addEventListener('change', (e) => save('married', e.target.checked ? '1' : '0'));
     $('sk-purpose').addEventListener('change', (e) => { $('sk-deity-wrap').hidden = e.target.value !== 'puja'; save('purpose', e.target.value); });
     if ($('sk-venue')) $('sk-venue').addEventListener('change', (e) => save('venue', e.target.value));
@@ -732,12 +791,14 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   // (from sandhya.js) when a translation is missing. Mantras are not translated.
   function localSteps(key) {
     const steps = sandhyaSteps(key), X = UIX[lang];
-    if (lang === 'en' || !X) return steps;
+    const TE = inScript() ? sandhyaMantrasTe(key) : null;
+    const script = (st) => (TE && TE[st.id] ? { ...st, mantra: toScript(TE[st.id]) } : st);
+    if (lang === 'en' || !X) return steps.map(script);
     const pick = (field, id) => X[`step.${id}.${field}.${key}`] ?? X[`step.${id}.${field}`];
     const fill = (str) => str.replace(/\{n\}/g, String(SANDHYA_KINDS[key].arghyas));
     return steps.map((st) => {
       const title = pick('title', st.id), how = pick('how', st.id), note = pick('note', st.id);
-      return { ...st, title: title ? fill(title) : st.title, how: how ? fill(how) : st.how, note: st.note && note ? fill(note) : st.note };
+      return script({ ...st, title: title ? fill(title) : st.title, how: how ? fill(how) : st.how, note: st.note && note ? fill(note) : st.note });
     });
   }
 
@@ -753,6 +814,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   function renderSandhya() {
     caf(pranaRaf); pranaRaf = 0;
     for (const k in mudraTimers) clearInterval(mudraTimers[k]);
+    for (const k in mudraRafs) caf(mudraRafs[k]);
     const { now, pToday, auto } = sandhyaNow();
     lastAutoKind = auto.kind;
     const key = sandhyaPick || auto.kind, k = SANDHYA_KINDS[key], me = person();
@@ -789,7 +851,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       else if (s.mudras) body += mudraHtml(s.id, s.mudras);
       else body += `<p class="mantra">${renderParts(s.mantra)}</p>`;
       if (s.breath) body += pranaHtml();
-      if (s.arghya) body += '<p class="timer" id="arghyaTimer" aria-live="polite"></p>';
+      if (s.arghya) body += `<p class="note">${esc(t('arghya.times', { n: k.arghyas }))}</p><p class="timer" id="arghyaTimer" aria-live="polite"></p>`;
       if (s.japa) body += japaHtml();
       if (s.note) body += `<p class="note">${esc(s.note)}</p>`;
       return `<li class="card step" id="st-${s.id}"><div class="st-num">${i + 1}</div><div class="st-body">${body}</div></li>`;
@@ -797,7 +859,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 
     $('sandhyaWrap').innerHTML = `
       <div><h2 class="sec-title">${esc(t('sd.title'))}</h2><div class="rule"></div>
-        <p class="note">${esc(t('sd.sub', { place: place.name, day: `${nm.vara(p.vara)} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}` }))}</p></div>
+        <p class="note">${esc(t('sd.sub', { place: placeLabel(place), day: `${nm.vara(p.vara)} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}` }))}</p></div>
       <div class="kinds" role="tablist" aria-label="${esc(t('sd.which'))}" id="kinds">
         ${Object.entries(SANDHYA_KINDS).map(([kk, x]) => `<button class="kind" role="tab" data-kind="${kk}" aria-selected="${kk === key}">
           <b>${lang === 'en' ? x.label : esc(t('kind.' + kk))}</b><small>${esc(hint[kk])}</small>${kk === auto.kind ? `<span class="now">${esc(t('now'))}</span>` : ''}</button>`).join('')}
@@ -821,9 +883,9 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
         <span class="size" aria-label="${esc(t('size.label'))}">${esc(t('size.label'))} <button id="szDown" aria-label="${esc(t('size.smaller'))}">A−</button><button id="szUp" aria-label="${esc(t('size.larger'))}">A+</button></span></div>
       <ol class="steps">${stepHtml}</ol>`;
 
-    const drawSank = () => { $('sdSank').innerHTML = renderParts(sankalpam(p, now, place,
+    const drawSank = () => { $('sdSank').innerHTML = renderParts(sankParts(p, now,
       { ...sankOpts(), purpose: key, mode: store.get('panchangam.sandhya.mode') || 'short' })); };
-    const drawAbhi = () => { $('sdAbhi').innerHTML = renderParts(abhivadanam(person())); };
+    const drawAbhi = () => { $('sdAbhi').innerHTML = renderParts(inScript() ? indicParts(abhivadanamTe(person()), lang) : abhivadanam(person())); };
     drawSank(); drawAbhi(); drawJapa();
     for (const f of ['gotra', 'name', 'pravara', 'sutra', 'sakha']) $('sd-' + f).addEventListener('input', (e) => {
       store.set('panchangam.sk.' + f, e.target.value); drawSank(); drawAbhi();
@@ -939,31 +1001,68 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     });
   }
 
-  // ----- mudras: step through the names, with the ring filling as the sequence goes -----
-  const mudraTimers = {};
+  // ----- mudras: a drawing of the hands (mudra_rig.js, inlined as MR) that moves from one mudra to
+  // the next, a bead per mudra beneath, and the full order; tap a name to go straight to it -----
+  const mudraTimers = {}, mudraRafs = {}, mudraPoses = {};
+  const mudraPose = (name) => (name in mudraPoses ? mudraPoses[name]
+    : (mudraPoses[name] = MR.MUDRA_POSES[name] ? MR.resolvePose(MR.MUDRA_POSES[name]) : null));
+  const reduceMotion = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch { return false; } };
+  function drawMudra(svg, pose) {
+    const d = MR.mudraSvg(pose);
+    svg.setAttribute('viewBox', d.viewBox); svg.innerHTML = d.svg;
+  }
+  function beadRow(n, cls) {
+    const out = [];
+    for (let i = 0; i < n; i++) out.push(`<circle class="bd ${cls}" data-i="${i}" cx="${5 + i * 10}" cy="5" r="2.6"/>`);
+    return out.join('');
+  }
   function mudraHtml(id, list) {
+    const pose = mudraPose(list[0]), d = pose && MR.mudraSvg(pose);
     return `<div class="mudra" id="mu-${id}">
-      <div class="m-stage"><svg viewBox="0 0 100 100" aria-hidden="true" class="m-beads"><circle cx="50" cy="50" r="46" fill="none" stroke="var(--line)" stroke-width="1"/>${beadRing(list.length, 'mb', false)}</svg>
-        <span class="m-in" aria-live="polite"><small class="m-idx">${esc(t('mudra.of', { i: 1, n: list.length }))}</small><b class="m-name">${esc(list[0])}</b></span></div>
+      ${d ? `<figure class="m-fig"><svg class="mh" viewBox="${d.viewBox}" role="img" aria-label="${esc(mudraLabel(list, 0))}">${d.svg}</svg></figure>` : ''}
+      <span class="m-in" aria-live="polite"><small class="m-idx">${esc(t('mudra.of', { i: 1, n: list.length }))}</small><b class="m-name">${esc(mudraLabel(list, 0))}</b></span>
+      <svg class="m-beads" viewBox="0 0 ${list.length * 10} 10" style="width:min(100%, ${list.length * 12.5}px)" aria-hidden="true">${beadRow(list.length, 'mb')}</svg>
       <div class="m-ctl"><button class="nav" data-act="prev" aria-label="${esc(t('mudra.prev'))}">‹</button>
         <button class="pill-btn" data-act="play">${esc(t('mudra.play'))}</button><button class="nav" data-act="next" aria-label="${esc(t('mudra.next'))}">›</button></div>
-      <p class="m-list">${list.map((m, i) => `<span data-i="${i}">${esc(m)}</span>`).join(' · ')}</p>
+      <p class="m-list">${list.map((m, i) => `<span data-i="${i}" role="button" tabindex="0">${esc(mudraLabel(list, i))}</span>`).join(' · ')}</p>
+      ${d ? `<p class="note m-note">${esc(t('mudra.drawn'))}</p>` : ''}
     </div>`;
   }
   function wireMudra(id, list) {
     const root = $('mu-' + id); if (!root || !root.querySelector) return;
-    const q = (s) => root.querySelector(s);
-    let i = 0;
-    const show = (n) => {
+    const q = (s) => root.querySelector(s), fig = q('.mh');
+    let i = 0, shown = mudraPose(list[0]);
+    // Move the drawing to a pose: blend joint by joint over 0.7 s, or jump when motion is reduced.
+    const moveTo = (target, jump) => {
+      caf(mudraRafs[id]); mudraRafs[id] = 0;
+      if (!fig || !target) return;
+      if (jump || !shown || reduceMotion()) { shown = target; drawMudra(fig, target); return; }
+      const from = shown, t0 = performance.now(), dur = 700;
+      const frame = (now) => {
+        const k = Math.min(1, (now - t0) / dur), e = k < 0.5 ? 2 * k * k : 1 - ((-2 * k + 2) ** 2) / 2;
+        shown = MR.blendPose(from, target, e); drawMudra(fig, shown);
+        mudraRafs[id] = k < 1 ? raf(frame) : 0;
+      };
+      mudraRafs[id] = raf(frame);
+    };
+    const show = (n, jump) => {
       i = (n + list.length) % list.length;
-      const name = q('.m-name'); name.textContent = list[i];
+      const name = q('.m-name'); name.textContent = mudraLabel(list, i);
       name.classList.remove('swap'); void name.offsetWidth; name.classList.add('swap');
       q('.m-idx').textContent = t('mudra.of', { i: i + 1, n: list.length });
       lightBeads(q('.m-beads'), i, i);
       root.querySelectorAll('.m-list span').forEach((s) => s.classList.toggle('on', +s.dataset.i === i));
+      if (fig) fig.setAttribute('aria-label', mudraLabel(list, i));
+      moveTo(mudraPose(list[i]), jump);
     };
     const stop = () => { clearInterval(mudraTimers[id]); mudraTimers[id] = 0; q('[data-act="play"]').textContent = t('mudra.play'); };
+    root.addEventListener('keydown', (e) => {
+      const sp = e.target.closest && e.target.closest('.m-list span[data-i]');
+      if (sp && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); stop(); show(+sp.dataset.i); }
+    });
     root.addEventListener('click', (e) => {
+      const sp = e.target.closest('.m-list span[data-i]');
+      if (sp) { stop(); show(+sp.dataset.i); return; }
       const b = e.target.closest('button[data-act]'); if (!b) return;
       if (b.dataset.act === 'prev') { stop(); show(i - 1); return; }
       if (b.dataset.act === 'next') { stop(); show(i + 1); return; }
@@ -975,7 +1074,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
         show(i + 1); try { navigator.vibrate?.(20); } catch {}
       }, 3000);
     });
-    show(0);
+    show(0, true);
   }
 
   // Beads around a circle (viewBox 0 0 100 100, radius 46). With a meru, the beads leave a gap at
@@ -1134,7 +1233,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
         .sort((a, b) => Math.hypot(a.x - sx, a.y - sy) - Math.hypot(b.x - sx, b.y - sy));
       let shown = 0;
       for (const o of near) {
-        const label = o.p.name.replace(/\s*\(.*\)$/, ''), tw = ctx.measureText(label).width;
+        const label = placeShort(o.p), tw = ctx.measureText(label).width;
         const box = { x: o.x + 6, y: o.y - 14, w: tw + 2, h: 14 };
         if (box.x + box.w > w - 4) { box.x = o.x - 6 - tw; if (box.x < 4) continue; }
         if (taken.some((b) => box.x < b.x + b.w && box.x + box.w > b.x && box.y < b.y + b.h && box.y + box.h > b.y)) continue;
@@ -1223,7 +1322,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   }
 
   function renderPlaceCard(animate) {
-    const abroad = !!place.abroad, nm = place.name.replace(/\s*\(.*\)$/, '');
+    const abroad = !!place.abroad, nm = placeShort(place);
     $('mapWrap').classList?.toggle('abroad', abroad);
     $('map').hidden = abroad; $('mapReplay').hidden = abroad;
     $('mapName').textContent = place.mine ? t('place.mine') : nm;
@@ -1231,15 +1330,15 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     if (place.mine) sub += ` · ${t('place.nearX', { x: nm })}`;
     if (abroad) {
       const off = tzAt(place, nowJd()), hh = Math.trunc(Math.abs(off)), mm = Math.round((Math.abs(off) - hh) * 60);
-      sub += ` · ${place.state} · UTC${off < 0 ? '−' : '+'}${hh}${mm ? ':' + String(mm).padStart(2, '0') : ''}`;
+      sub += ` · ${stateLabel(place.state)} · UTC${off < 0 ? '−' : '+'}${hh}${mm ? ':' + String(mm).padStart(2, '0') : ''}`;
     }
     $('mapCoords').textContent = sub;
     const d = abroad ? null : deityFor(place);
     $('deity').hidden = !d;
     if (d) {
       $('deity').innerHTML = `<div class="medallion">${emblemSVG(d.form)}</div><div>
-        <span class="lbl">${esc(t('kshetram'))} · ${esc(nm)}</span><h3>${esc(d.deity)}</h3>
-        ${d.tags && d.tags.length ? `<div class="tags">${d.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}</div>`;
+        <span class="lbl">${esc(t('kshetram'))} · ${esc(nm)}</span><h3>${esc(deityLabel(d.deity))}</h3>
+        ${d.tags && d.tags.length ? `<div class="tags">${d.tags.map((tg) => `<span class="tag">${esc(tagLabel(tg))}</span>`).join('')}</div>` : ''}</div>`;
     }
     if (!abroad) { if (animate) flyTo(); else { mapView = { lon: place.lon, lat: place.lat, span: 2.6 }; mapFinal = true; redrawMap(); } }
   }
@@ -1282,12 +1381,12 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   $('todayBtn').addEventListener('click', () => goTo(todayCivil()));
 
   function renderPlaceBtn() {
-    const name = place.mine ? t('place.mine') : place.name, sub = place.mine ? t('place.nearX', { x: place.name }) : place.state;
+    const name = place.mine ? t('place.mine') : placeLabel(place), sub = place.mine ? t('place.nearX', { x: placeLabel(place) }) : stateLabel(place.state);
     $('placeBtn').innerHTML = `${esc(name)} <small>${esc(sub)}</small> <span aria-hidden="true">▾</span>`;
   }
   function renderList(q) {
     q = q.trim().toLowerCase();
-    const item = (p) => `<li><button data-i="${places.indexOf(p)}" role="option"><span>${esc(p.name)}</span><small>${esc(p.state)} · ${esc(t('kind.' + p.kind))}</small></button></li>`;
+    const item = (p) => `<li><button data-i="${places.indexOf(p)}" role="option"><span>${esc(placeLabel(p))}</span><small>${esc(stateLabel(p.state))} · ${esc(t('kind.' + p.kind))}</small></button></li>`;
     let html = '';
     if (!q) {
       const groups = [[t('place.metros'), (p) => p.kind === 'metro', 20], [t('place.kshetrams'), (p) => p.kind === 'pilgrimage', 40],
@@ -1298,7 +1397,8 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       }
       html += `<li class="grp">${esc(t('place.searchAll', { n: places.length }))}</li>`;
     } else {
-      const hits = places.filter((p) => p.name.toLowerCase().includes(q) || p.state.toLowerCase().includes(q)).slice(0, 60);
+      const hits = places.filter((p) => p.name.toLowerCase().includes(q) || p.state.toLowerCase().includes(q)
+        || placeLabel(p).includes(q) || stateLabel(p.state).includes(q)).slice(0, 60);
       html = hits.length ? hits.map(item).join('') : `<li class="grp">${esc(t('place.none'))}</li>`;
     }
     $('placeList').innerHTML = html;
