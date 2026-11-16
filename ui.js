@@ -60,6 +60,8 @@ export const UI_EN = {
   'clock.now': 'By the clock it is now time for {title}.', 'clock.follow': 'Follow the clock',
   'me.summary': 'Your gotram, pravara and name (for sankalpam and abhivadanam)', 'me.device': 'Kept on this device only. Never sent anywhere.',
   'steps.note': '{n} steps, in the order of Telugu sandhyavandanam books. Families differ in small details; follow your elders where they differ.',
+  // Shown on the English page only, above the mantras: how to read the pronunciation lines.
+  'sd.pron': 'Mantras are in Telugu letters, each line with its pronunciation under it. In the pronunciation: ā ī ū are long; c is ch as in church; ṭ ḍ ṇ ṣ are said with the tongue curled back; ś is a soft sh; ṛ is the vowel said ru; ṃ is a nasal hum; ḥ is a breath that echoes the vowel before it. There are no svara marks: learn the svaras from a guru.',
   'size.label': 'Text', 'size.smaller': 'Smaller text', 'size.larger': 'Larger text',
   'japa.count': 'Count one Gayatri', 'japa.of': 'of {n}', 'japa.complete': 'complete', 'japa.again': 'Start again', 'japa.targets': 'Japa count',
   'japa.first': 'The timer starts with your first tap.', 'japa.done': 'Complete in {d}.',

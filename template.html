@@ -168,6 +168,7 @@ dl.rows dd { font-variant-numeric: tabular-nums; }
 .seg { display: block; }
 .seg + .seg { color: var(--muted); font-size: 13px; }
 .seg time { color: var(--muted); }
+dl.rows dd small { color: var(--muted); font-size: 13px; }
 .now { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--paper); background: var(--kumkum);
   border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: 2px; }
 dd.bad { color: var(--kumkum); }
@@ -188,6 +189,11 @@ dd.good { color: var(--turmeric); }
 .mantra { font-family: var(--font-read); font-size: var(--mantra-size); line-height: 1.75; background: var(--mantra-bg);
   border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 0; max-width: 70ch; overflow-wrap: break-word; }
 .mantra .v { color: var(--kumkum); font-weight: 600; }
+/* English page: each Telugu line with its pronunciation under it. */
+.mantra.pairs .m-te, .mantra.pairs .m-ro { display: block; }
+.mantra.pairs .m-ro { color: var(--muted); font-size: .84em; line-height: 1.5; margin-bottom: .55em; }
+.mantra.pairs .m-ro:last-child { margin-bottom: 0; }
+.pron { margin: 0 0 4px; }
 .row-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
 
 /* sankalpam tab */
@@ -499,10 +505,16 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     return deshaFor(pl).text.split(/,\s*/).map((ph) => T[ph] ?? ph).join(', ');
   }
   // The sankalpam in the page's script: the Telugu words, then converted (Kannada, Devanagari).
+  const sankPartsTe = (p, jd, opts) => sankalpam(p, jd, place, { ...opts, words: sankWords(), desha: opts.desha ?? deshaTe(place) });
   function sankParts(p, jd, opts) {
     if (!inScript()) return sankalpam(p, jd, place, opts);
-    return indicParts(sankalpam(p, jd, place, { ...opts, words: sankWords(), desha: opts.desha ?? deshaTe(place) }), lang);
+    return indicParts(sankPartsTe(p, jd, opts), lang);
   }
+  // The English page shows the Sanskrit of the sandhya in Telugu letters, with its pronunciation in
+  // Roman letters under it (roman() in indic.js): line by line for a mantra, and for the sankalpam
+  // and abhivadanam, the Telugu paragraph and then its pronunciation.
+  const pairsHtml = (lines) => lines.map((l) => `<span class="m-te">${esc(l)}</span><span class="m-ro">${esc(roman(l))}</span>`).join('');
+  const teRoHtml = (parts) => `<span class="m-te">${renderParts(parts)}</span><span class="m-ro">${renderParts(romanParts(parts))}</span>`;
   // Place, state, deity and tag names in the page's script (places_te.js); English when missing.
   // Hindi writes a name's last consonant without the halant Telugu shows (प्रदेश, not प्रदेश्); names
   // only — the Sanskrit mantras keep it (सत्यम्).
@@ -527,6 +539,9 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     yoga: (i) => (L() ? L().yoga[i] : NAMES.yoga[i]),
     karana: (k) => { const en = karanaName(k); return L() ? (L().karana[en] || en) : en; },
     vara: (i) => (L() ? L().vara[i] : NAMES.vara[i]),
+    // The vaara's Sanskrit name, taken from the sankalpam's own list so the two always agree
+    // (Sukravaram is Bhrigu vasarah). Tamil shows English letters, as its sankalpam does.
+    varaSanskrit: (i) => (inScript() ? toScript(`${sankWords().vara(i)} వాసరః`) : `${NAMES.varaSankalpa[i]} vasarah`),
     varaShort: (i) => (L() ? L().varaShort[i] : NAMES.varaShort[i]),
     masa: (i) => (L() ? L().masa[i] : NAMES.masa[i]),
     masaPlain: (i) => (L() ? (L().masaStem?.[i] ?? L().masa[i]) : NAMES.masaSankalpa[i]), // stem form, as in "Karthika Bahula Chavithi"
@@ -700,7 +715,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       </div>
       <div class="sec"><h4>${esc(t('sec.angam'))}</h4><dl class="rows">
         <dt>${esc(t('row.tithi'))}</dt><dd>${segRows(p.tithi, day, live, (s) => `${nm.paksha(s.index)} ${nm.tithi(s.index)}`)}</dd>
-        <dt>${esc(t('row.vara'))}</dt><dd>${esc(nm.vara(p.vara))}</dd>
+        <dt>${esc(t('row.vara'))}</dt><dd>${esc(nm.vara(p.vara))} <small>(${esc(nm.varaSanskrit(p.vara))})</small></dd>
         <dt>${esc(t('row.nakshatra'))}</dt><dd>${segRows(p.nakshatra, day, live, (s) => nm.nak(s.index))}</dd>
         <dt>${esc(t('row.yoga'))}</dt><dd>${segRows(p.yoga, day, live, (s) => nm.yoga(s.index))}</dd>
         <dt>${esc(t('row.karana'))}</dt><dd>${segRows(p.karana, day, live, (s) => nm.karana(s.index))}</dd>
@@ -791,8 +806,11 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   // (from sandhya.js) when a translation is missing. Mantras are not translated.
   function localSteps(key) {
     const steps = sandhyaSteps(key), X = UIX[lang];
-    const TE = inScript() ? sandhyaMantrasTe(key) : null;
-    const script = (st) => (TE && TE[st.id] ? { ...st, mantra: toScript(TE[st.id]) } : st);
+    // Telugu, Kannada, Hindi: the mantra in that script. English: the Telugu lines, each with its
+    // pronunciation (pairs). Tamil keeps the English-letters text until its script is chosen.
+    const TE = inScript() || lang === 'en' ? sandhyaMantrasTe(key) : null;
+    const script = (st) => (!TE || !TE[st.id] ? st
+      : lang === 'en' ? { ...st, pairs: TE[st.id].split('\n') } : { ...st, mantra: toScript(TE[st.id]) });
     if (lang === 'en' || !X) return steps.map(script);
     const pick = (field, id) => X[`step.${id}.${field}.${key}`] ?? X[`step.${id}.${field}`];
     const fill = (str) => str.replace(/\{n\}/g, String(SANDHYA_KINDS[key].arghyas));
@@ -842,13 +860,15 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     // The japa count is kept per day and sandhya, so a refresh or a tap elsewhere does not lose it.
     japa.key = `panchangam.japa.${p.date.y}-${p.date.m}-${p.date.d}.${key}`;
     japa.count = Math.max(0, +(store.get(japa.key) || 0));
+    const pairs = lang === 'en' ? ' pairs' : '';
 
     const stepHtml = steps.map((s, i) => {
       if (s.ref) return `<li class="card step ref"><div class="st-num">${i + 1}</div><div class="st-body"><h3>${esc(s.title)}</h3><p class="how">${esc(s.how)}</p></div></li>`;
       let body = `<h3>${esc(s.title)}</h3><p class="how">${esc(s.how)}</p>`;
-      if (s.sankalpam) body += `<div class="row-between">${modeCtl('sd-mode', mode)}</div><p class="mantra" id="sdSank"></p>`;
-      else if (s.abhivadanam) body += `<p class="mantra" id="sdAbhi"></p>`;
+      if (s.sankalpam) body += `<div class="row-between">${modeCtl('sd-mode', mode)}</div><p class="mantra${pairs}" id="sdSank"></p>`;
+      else if (s.abhivadanam) body += `<p class="mantra${pairs}" id="sdAbhi"></p>`;
       else if (s.mudras) body += mudraHtml(s.id, s.mudras);
+      else if (s.pairs) body += `<p class="mantra pairs">${pairsHtml(s.pairs)}</p>`;
       else body += `<p class="mantra">${renderParts(s.mantra)}</p>`;
       if (s.breath) body += pranaHtml();
       if (s.arghya) body += `<p class="note">${esc(t('arghya.times', { n: k.arghyas }))}</p><p class="timer" id="arghyaTimer" aria-live="polite"></p>`;
@@ -881,11 +901,15 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       </details>
       <div class="row-between"><span class="note">${esc(t('steps.note', { n: steps.length }))}</span>
         <span class="size" aria-label="${esc(t('size.label'))}">${esc(t('size.label'))} <button id="szDown" aria-label="${esc(t('size.smaller'))}">A−</button><button id="szUp" aria-label="${esc(t('size.larger'))}">A+</button></span></div>
+      ${lang === 'en' ? `<p class="note pron">${esc(t('sd.pron'))}</p>` : ''}
       <ol class="steps">${stepHtml}</ol>`;
 
-    const drawSank = () => { $('sdSank').innerHTML = renderParts(sankParts(p, now,
-      { ...sankOpts(), purpose: key, mode: store.get('panchangam.sandhya.mode') || 'short' })); };
-    const drawAbhi = () => { $('sdAbhi').innerHTML = renderParts(inScript() ? indicParts(abhivadanamTe(person()), lang) : abhivadanam(person())); };
+    const drawSank = () => {
+      const o = { ...sankOpts(), purpose: key, mode: store.get('panchangam.sandhya.mode') || 'short' };
+      $('sdSank').innerHTML = lang === 'en' ? teRoHtml(sankPartsTe(p, now, o)) : renderParts(sankParts(p, now, o));
+    };
+    const drawAbhi = () => { $('sdAbhi').innerHTML = lang === 'en' ? teRoHtml(abhivadanamTe(person()))
+      : renderParts(inScript() ? indicParts(abhivadanamTe(person()), lang) : abhivadanam(person())); };
     drawSank(); drawAbhi(); drawJapa();
     for (const f of ['gotra', 'name', 'pravara', 'sutra', 'sakha']) $('sd-' + f).addEventListener('input', (e) => {
       store.set('panchangam.sk.' + f, e.target.value); drawSank(); drawAbhi();
