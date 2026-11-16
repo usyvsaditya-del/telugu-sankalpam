@@ -7,7 +7,7 @@
 export const UI_EN = {
   // header and tabs
   'brand.tag': 'Telugu panchangam · sankalpam · sandhyavandanam',
-  'brand.invocation': '|| Sri Gurubhyo Namah ||', 'brand.name': 'Sankalpam', 'nav.sections': 'Sections',
+  'brand.invocation': '॥ Sri Gurubhyo Namah ॥', 'brand.name': 'Sankalpam', 'nav.sections': 'Sections',
   'tab.panchangam': 'Panchangam', 'tab.sankalpam': 'Sankalpam', 'tab.sandhya': 'Sandhya', 'tab.sandhyaRest': 'vandanam', 'tab.sandhyaLong': 'Sandhyavandanam',
   'lang.label': 'Language',
   // place picker
@@ -62,9 +62,17 @@ export const UI_EN = {
   'me.summary': 'Your gotram, pravara and name (for sankalpam and abhivadanam)', 'me.device': 'Kept on this device only. Never sent anywhere.',
   'steps.note': '{n} steps, in the order of Telugu sandhyavandanam books. Families differ in small details; follow your elders where they differ.',
   // Shown on the English page only, with the mantras and the sankalpam: how to read the marks.
-  'sd.pron': 'The Sanskrit is in Roman letters with pronunciation marks: ā ī ū are long; c is ch as in church; ṭ ḍ ṇ ṣ ḷ are said with the tongue curled back; ś is a soft sh; ṛ is the vowel said ru; ṅ and ñ are the n of sing and of pinch; ṃ is a nasal hum; ḥ is a breath that echoes the vowel before it. There are no svara marks: learn the svaras from a guru.',
+  // A heading, then one line per item, separated by |.
+  'sd.pron': 'How to read the marks|ā ī ū are long, and so are e and o; a is short, as in about.|th, ph, kh, gh, dh, bh are t, p, k, g, d, b with a breath after them: th is never the th of thin.|c is ch as in church; jñ is said gny.|ṭ ḍ ṇ ṣ ḷ are said with the tongue curled back; ś is a soft sh.|ṛ is the vowel said ru; ṅ and ñ are the n of sing and of pinch.|ṃ is a nasal hum; ḥ is a breath that echoes the vowel before it.|There are no svara marks: learn the svaras from a guru.',
+  // The Sandhya tab's grade of the hour, by the sky (sandhyaGrade in sandhya.js). Before the colon:
+  // the grade's name, shown large.
+  'grade.pratah.uttama': 'Uttama: the stars are still out.', 'grade.pratah.madhyama': 'Madhyama: the stars have faded; the sun is not yet up.',
+  'grade.pratah.adhama': 'Adhama: the sun is up.', 'grade.sayam.uttama': 'Uttama: the sun is still up.',
+  'grade.sayam.madhyama': 'Madhyama: the sun has set; the stars are not yet out.', 'grade.sayam.adhama': 'Adhama: the stars are out.',
+  'solid.label': 'Plain background', 'bar.next': 'Next',
   'size.label': 'Text', 'size.smaller': 'Smaller text', 'size.larger': 'Larger text',
-  'japa.count': 'Count one Gayatri', 'japa.of': 'of {n}', 'japa.complete': 'complete', 'japa.again': 'Start again', 'japa.targets': 'Japa count',
+  'japa.count': 'Count one Gayatri', 'japa.of': 'of {n}', 'japa.complete': 'complete', 'japa.again': 'Start again',
+  'japa.less': 'One less', 'japa.sure': 'Tap again to start over', 'japa.targets': 'Japa count',
   'japa.first': 'The timer starts with your first tap.', 'japa.done': 'Complete in {d}.',
   'japa.progress': '{d} so far', 'japa.pace': 'about {s} s each', 'japa.toGo': '{d} to go',
   'arghya.pratahDue': 'Arghya is due by sunrise, {t}', 'arghya.pratahLate': 'Sunrise was {d} ago ({t}). Offer the turiyarghya as well.',

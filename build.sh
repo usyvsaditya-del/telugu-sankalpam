@@ -49,16 +49,16 @@ const site = `<!doctype html>
 <meta property="og:description" content="${desc}">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://telugu-sankalpam.web.app/icon-512.png">
-<meta name="theme-color" content="#5c0f18">
+<meta name="theme-color" content="#E1E5F1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Sankalpam">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-body { margin: 0; font-size: 14px; }
+body { margin: 0; }
 [hidden] { display: none !important; }
 img { max-width: 100%; }
 </style>
@@ -74,7 +74,7 @@ fs.mkdirSync(pub, { recursive: true });
 fs.writeFileSync(path.join(pub, "index.html"), site);
 fs.writeFileSync(path.join(pub, "manifest.webmanifest"), JSON.stringify({
   name: "Sankalpam · Telugu Panchangam", short_name: "Sankalpam", start_url: "/", scope: "/",
-  display: "standalone", background_color: "#5c0f18", theme_color: "#5c0f18", description: desc,
+  display: "standalone", background_color: "#F3EEE6", theme_color: "#E1E5F1", description: desc,
   icons: [
     { src: "icon-192.png", sizes: "192x192", type: "image/png" },
     { src: "icon-512.png", sizes: "512x512", type: "image/png" },

@@ -10,7 +10,7 @@ import { SANDHYA_KINDS, sandhyaSteps, PURVA_MUDRAS, UTTARA_MUDRAS } from './sand
 import { sandhyaMantrasTe, PURVA_MUDRAS_TE, UTTARA_MUDRAS_TE, abhivadanamTe, TURIYARGHYA_TE } from './mantras_te.js';
 import { sankalpaWordsTe } from './sankalpam_te.js';
 import { NAMES_I18N } from './names_i18n.js';
-import { indic, indicParts, roman, romanParts } from './indic.js';
+import { indic, indicParts, roman, romanParts, softBreaks, SHY } from './indic.js';
 import { panchang, sankalpam, jdFromDate } from './engine.js';
 
 const fails = [];
@@ -29,7 +29,7 @@ function similarity(a, b) {
     d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
   return 1 - d[a.length][b.length] / Math.max(a.length, b.length, 1);
 }
-let roLines = 0, roWorst = 1;
+let roLines = 0, roWorst = 1, brokenWords = 0;
 
 for (const kind of Object.keys(SANDHYA_KINDS)) {
   const TE = sandhyaMantrasTe(kind);
@@ -44,6 +44,11 @@ for (const kind of Object.keys(SANDHYA_KINDS)) {
     te.split('\n').forEach((line, i) => {
       const ro = roman(line);
       roLines++;
+      // Soft break points change nothing but the invisible marks, in every script.
+      const sb = softBreaks(line), unmark = (x) => x.split(SHY).join('');
+      if (sb.includes(SHY)) brokenWords++;
+      if (unmark(sb) !== line || unmark(roman(sb)) !== ro || ['kn', 'hi'].some((l) => unmark(indic(sb, l)) !== indic(line, l)))
+        fails.push(`${kind}/${st.id} line ${i + 1}: soft break points change the text`);
       if (teluguBlock.test(ro)) fails.push(`${kind}/${st.id} line ${i + 1}: Telugu letters left in the pronunciation line`);
       const sim = similarity(skeleton(ro), skeleton(en[i] ?? ''));
       roWorst = Math.min(roWorst, sim);
@@ -107,5 +112,5 @@ try {
   placeNote = `${all.length} places, their states and place-line phrases, ${Object.keys(T.DEITY_NAMES_TE).length} deities`;
 } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e; }
 
-console.log(fails.length ? `FAIL\n  ${fails.slice(0, 30).join('\n  ')}` : `ok: Telugu mantras for every step of 3 sandhyas, 32 mudra names, ${n} Telugu sankalpams; ${placeNote}; Kannada and Devanagari clean; ${roLines} pronunciation lines clean and in step with the English (lowest match ${roWorst.toFixed(2)})`);
+console.log(fails.length ? `FAIL\n  ${fails.slice(0, 30).join('\n  ')}` : `ok: Telugu mantras for every step of 3 sandhyas, 32 mudra names, ${n} Telugu sankalpams; ${placeNote}; Kannada and Devanagari clean; ${roLines} pronunciation lines clean and in step with the English (lowest match ${roWorst.toFixed(2)}); soft break points in ${brokenWords} lines change nothing else`);
 process.exit(fails.length ? 1 : 0);

@@ -1,6 +1,7 @@
 // check.mjs — compares engine output with drikpanchang.com values (Bengaluru), and smoke-tests the month view.
 import { panchang, monthDays, sankalpam, srisailamDirection, NAMES, jdFromDate, dateFromJd } from './engine.js';
-import { skyPhase } from './sandhya.js';
+import { skyPhase, sandhyaGrade } from './sandhya.js';
+import { sunAltitude } from './engine.js';
 const BLR = { name: 'Bengaluru', lat: 12.9716, lon: 77.5946, tz: 5.5 };
 const t = (jd) => dateFromJd(jd).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
 for (const [y, m, d] of [[2026, 11, 13], [2026, 3, 20]]) {
@@ -19,10 +20,21 @@ for (const c of [['Bengaluru', 12.97, 77.59], ['Hyderabad', 17.385, 78.4867], ['
 const p = panchang(2026, 11, 13, BLR);
 console.log('\n' + sankalpam(p, p.sunrise + 0.1, BLR).map((x) => (typeof x === 'string' ? x : `[${x.v}]`)).join(''));
 
-// The page's sky (skyPhase): dawn before sunrise, day at noon, dusk at sunset, night late and early.
-const sky = (jd) => skyPhase(jd, p).phase;
-const skyWant = [[p.sunrise - 30 / 1440, 'dawn'], [p.sunrise + 60 / 1440, 'dawn'], [(p.sunrise + p.sunset) / 2, 'day'],
-  [p.sunset, 'dusk'], [p.sunset + 0.25, 'night'], [p.sunrise - 0.2, 'night']];
-const skyBad = skyWant.filter(([jd, ph]) => sky(jd) !== ph);
-if (skyBad.length) { console.error('FAIL skyPhase:', skyBad.map(([jd, ph]) => `${t(jd)} wanted ${ph}, got ${sky(jd)}`).join('; ')); process.exit(1); }
-console.log('\nsky phases ok: dawn, day, dusk and night fall where they should');
+// The page's sky (skyPhase) and the sandhya grades (sandhyaGrade), from the sun's altitude.
+const alt = (jd) => sunAltitude(jd, BLR.lat, BLR.lon), noon = (p.sunrise + p.sunset) / 2;
+const sky = (jd) => skyPhase(alt(jd), jd < noon);
+const want = [
+  [sky(p.sunrise - 96 / 1440), 'night', 'sky 96 min before sunrise (stars out)'], [sky(p.sunrise - 10 / 1440), 'dawn', 'sky 10 min before sunrise'],
+  [sky(p.sunrise + 20 / 1440), 'dawn', 'sky 20 min after sunrise'], [sky(noon), 'day', 'sky at noon'], [sky(p.sunset), 'dusk', 'sky at sunset'],
+  [sky(p.sunset + 60 / 1440), 'night', 'sky an hour after sunset'],
+  [sandhyaGrade('pratah', alt(p.sunrise - 90 / 1440)), 'uttama', 'Pratah 90 min before sunrise'],
+  [sandhyaGrade('pratah', alt(p.sunrise - 10 / 1440)), 'madhyama', 'Pratah 10 min before sunrise'],
+  [sandhyaGrade('pratah', alt(p.sunrise + 5 / 1440)), 'adhama', 'Pratah 5 min after sunrise'],
+  [sandhyaGrade('sayam', alt(p.sunset - 30 / 1440)), 'uttama', 'Sayam 30 min before sunset'],
+  [sandhyaGrade('sayam', alt(p.sunset + 10 / 1440)), 'madhyama', 'Sayam 10 min after sunset'],
+  [sandhyaGrade('sayam', alt(p.sunset + 70 / 1440)), 'adhama', 'Sayam 70 min after sunset'],
+  [sandhyaGrade('madhyahnika', alt(noon)), null, 'Madhyahnikam has no grade'],
+];
+const bad = want.filter(([got, w]) => got !== w);
+if (bad.length) { console.error('FAIL sky/grade:', bad.map(([got, w, what]) => `${what}: wanted ${w}, got ${got}`).join('; ')); process.exit(1); }
+console.log(`\nsky phases and sandhya grades ok (${want.length} cases)`);

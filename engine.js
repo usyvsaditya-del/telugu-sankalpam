@@ -168,7 +168,9 @@ function altitude(jdUT, lat, lon, eclLon, eclLat) {
   const gmst = norm(280.46061837 + 360.98564736629 * (jdUT - 2451545));
   return Math.asin(sinD(lat) * sinD(dec) + cosD(lat) * cosD(dec) * cosD(gmst + lon - ra)) / D2R;
 }
-const sunAltitude = (jd, lat, lon) => altitude(jd, lat, lon, sunLongitude(jd) + nutation(jd), 0);
+// The sun's geometric altitude in degrees (no refraction) at a place: the page's sky and the
+// sandhya grade (stars out, faded, sun up) are drawn from it.
+export const sunAltitude = (jd, lat, lon) => altitude(jd, lat, lon, sunLongitude(jd) + nutation(jd), 0);
 const moonAltitude = (jd, lat, lon) => altitude(jd, lat, lon, moonLongitude(jd) + nutation(jd), moonLatitude(jd));
 
 function bisect(f, a, b, iters = 40) {

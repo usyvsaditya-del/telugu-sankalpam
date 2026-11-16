@@ -47,6 +47,11 @@ trust it. Each one says what it would take and the main risk.
     chandra balam, the personal side of muhurta.
 12. **Yatra mode.** When you are physically at a kshetram, show its sankalpam wording, timings and
     a short sthala note.
+13. **Durmuhurtam, varjyam, amrita kalam and Brahma muhurtam.** Every Telugu daily panchangam
+    lists them; the day sheet does not yet. Durmuhurtam and Brahma muhurtam follow fixed rules;
+    varjyam and amrita kalam come from each nakshatram's ghatika table. *Takes:* engine work, each
+    checked against drikpanchang. *Then:* the day bar (sunrise to sunset today) can grow into the
+    24-hour kaala chakra (idea 4).
 
 ## Later, or only with the right source
 - **Svara audio** only from a pathashala or temple that permits it. Text-to-speech would get the
@@ -112,5 +117,21 @@ trust it. Each one says what it would take and the main risk.
   - Tamil letters: ஸ்ராவணம் or ச்ராவணம்.
   - Hindi: आषाढ़ or the Sanskrit आषाढ (ढ़ or ढ).
 - Hindi durations read "1 घंटे"; one hour should be "1 घंटा".
+- From the 16 Nov 2026 redesign:
+  - The Telugu mantras are set in Noto Serif Telugu, which keeps look-alike letters (ద/ధ, త/థ,
+    బ/భ, చ/ఛ) clearly apart; titles are in Tiro Telugu, closer to printed books but thinner.
+    Should the mantras use Tiro Telugu too? Someone over 60 should compare the two at arm's length.
+  - The Sandhya tab grades the hour by the sky (Pratah: uttama while the stars are out, madhyama
+    once they fade, adhama after sunrise; Sayam the reverse). It counts the stars as out while the
+    sun is more than 6° below the horizon. Is that how your family counts it?
+  - The three sandhyas are tinted coral (Pratah), pearl (Madhyahnikam) and sapphire (Sayam), after
+    Gayatri, Savitri and Sarasvati as commonly described. Texts differ; a purohit should confirm.
+  - The mantras mark pada breaks with commas. Should they use the danda (।) instead?
+  - The new page words (the three grades, "One less", "Tap again to start over", "Plain
+    background", "Next") in Telugu, Tamil, Kannada and Hindi need a native reader's check.
+  - Tamil: the mantras could use the English page's marked letters (oṃ, ś, ṣ …) in place of plain
+    English letters.
+  - "Glass colours" is built as frosted tints. The other reading is Indian glass painting:
+    saturated jewel colours with gold outlines. Which was meant?
 - All open questions, and every review and piece of feedback so far, are also kept in a shared
   review document the site's owner sends to reviewers.

@@ -80,7 +80,10 @@ export function roman(text) {
       else out += 'a';                                            // the vowel every consonant carries
       continue;
     }
-    if (c === 'ం' && RO_NASAL[ch[i + 1]]) { out += RO_NASAL[ch[i + 1]]; continue; }
+    if (c === 'ం') { // look past a soft break (softBreaks below) to the letter that follows
+      const after = ch[i + 1] === SHY ? ch[i + 2] : ch[i + 1];
+      if (RO_NASAL[after]) { out += RO_NASAL[after]; continue; }
+    }
     if (c === '‌' || c === '‍') continue;               // joiners only shape Telugu letters
     if (c >= '౦' && c <= '౯') { out += String(c.codePointAt(0) - 0x0c66); continue; }
     out += RO_VOWEL[c] ?? RO_SIGN[c] ?? RO_MARK[c] ?? c;
@@ -91,4 +94,30 @@ export function roman(text) {
 // The same for mantra parts, as indicParts: words typed in English pass through unchanged.
 export function romanParts(parts) {
   return (Array.isArray(parts) ? parts : [parts]).map((x) => (typeof x === 'string' ? roman(x) : { ...x, v: roman(x.v) }));
+}
+
+// ----- Soft break points in long words -----
+// softBreaks() puts a soft hyphen (U+00AD, invisible unless the line breaks there) between the
+// aksharas of every Telugu-script word of `min` aksharas or more, so a long compound breaks
+// between aksharas (vi-bhrā) and never inside one (vib-hrā) on a narrow phone. It keeps two
+// aksharas on each side of a break. Applied to the Telugu master before it is written in another
+// script; roman() and indic() carry the marks through. Copy strips them.
+export const SHY = '\u00AD';
+const TE_CONS = /[\u0C15-\u0C39\u0C58-\u0C5A]/, TE_VOWEL = /[\u0C05-\u0C14\u0C60\u0C61]/;
+export function softBreaks(text, min = 8) {
+  if (typeof text !== 'string') return text;
+  return text.replace(/[\u0C00-\u0C7F\u200C\u200D]+/g, (word) => {
+    const ch = [...word], starts = [];
+    for (let i = 1; i < ch.length; i++) {
+      let j = i - 1;
+      while (j >= 0 && (ch[j] === '\u200C' || ch[j] === '\u200D')) j--;
+      if ((TE_CONS.test(ch[i]) && ch[j] !== VIRAMA) || TE_VOWEL.test(ch[i])) starts.push(i);
+    }
+    if (starts.length + 1 < min) return word;
+    const at = new Set(starts.slice(1, -1)); // two aksharas before the first break and after the last
+    return ch.map((c, i) => (at.has(i) ? SHY + c : c)).join('');
+  });
+}
+export function softBreakParts(parts, min) {
+  return (Array.isArray(parts) ? parts : [parts]).map((x) => (typeof x === 'string' ? softBreaks(x, min) : { ...x, v: softBreaks(x.v, min) }));
 }

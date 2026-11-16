@@ -67,16 +67,26 @@ export function sandhyaStatus(kind, jd, p) {
   return jd < t.sayamStart ? 'early' : jd <= t.sayamDue ? 'on-time' : 'late';
 }
 
-// The sky the page draws behind its panels for a moment of the civil day `p`: dawn from the start
-// of Pratah sandhya until 90 min after sunrise, day until Sayam begins, dusk until Sayam's arghya
-// is due (72 min after sunset), and night otherwise. `sun` is how far the sun has gone across the
-// sky (0 at sunrise, 1 at sunset; below 0 or above 1 when it is down), for placing its glow.
-export function skyPhase(jd, p) {
-  const t = sandhyaTimes(p), sun = (jd - p.sunrise) / (p.sunset - p.sunrise);
-  const phase = jd >= t.pratahStart && jd < t.sunrise + 90 * MIN ? 'dawn'
-    : jd >= t.sunrise && jd < t.sayamStart ? 'day'
-      : jd >= t.sayamStart && jd < t.sayamDue ? 'dusk' : 'night';
-  return { phase, sun };
+// The sky the page draws behind its panels, from the sun's altitude at the place (degrees, from
+// sunAltitude in engine.js) and whether it is morning: night while the stars are out (the sun more
+// than 6 degrees below the horizon, the end of civil twilight), dawn or dusk from then until the
+// sun is 10 degrees up, and day above that.
+export function skyPhase(alt, morning) {
+  if (alt < -6) return 'night';
+  if (alt < 10) return morning ? 'dawn' : 'dusk';
+  return 'day';
+}
+
+// The three grades of a sandhya by the sky, as the sandhyavandanam books teach them: Pratah is best
+// while the stars are still out, middling once they have faded, lowest after sunrise; Sayam is
+// best while the sun is up, middling after sunset, lowest once the stars are out. The stars count
+// as out while the sun is more than 6 degrees below the horizon; the sun is up from -0.833 degrees
+// (its upper limb on the horizon, as sunrise is timed). Madhyahnikam has no such grades: null.
+export function sandhyaGrade(kind, alt) {
+  const starsOut = alt < -6, sunUp = alt >= -0.833;
+  if (kind === 'pratah') return starsOut ? 'uttama' : sunUp ? 'adhama' : 'madhyama';
+  if (kind === 'sayam') return sunUp ? 'uttama' : starsOut ? 'adhama' : 'madhyama';
+  return null;
 }
 
 // ---------- text ----------

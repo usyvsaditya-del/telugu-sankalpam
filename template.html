@@ -2,256 +2,378 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@400;500;600&family=Tiro+Devanagari+Sanskrit:ital@0;1&display=swap">
+<script>/* The sky and the plain-background choice from the last visit, set before the first paint. */try{var r=document.documentElement,k=localStorage.getItem('panchangam.sky');if(k)r.setAttribute('data-sky',k);if(localStorage.getItem('panchangam.solid')==='1')r.classList.add('solid')}catch(e){}</script>
 <style>
-/* Layout: a temple-silk masthead (maroon pattu band with gold zari borders) over three tabs:
-   Panchangam (lunar-month calendar + day sheet), Sankalpam, Sandhyavandanam (step-by-step).
-   Ground is sandal paste with faint kolam dots; kumkum marks what to avoid, turmeric what is good. */
+/* Sankalpam: a modern frame around the traditional word.
+   The page sits in the sky of the hour at the chosen place. html[data-sky] is night (stars out:
+   the sun more than 6 degrees below the horizon), dawn, day or dusk, from the sun's altitude
+   (skyPhase in sandhya.js), drawn on one fixed layer behind everything (body::before), with the
+   kolam dots as stars on a second (body::after) that fades out as the sun comes up.
+   Glass is the frame (tab bar, cards, controls). The recited word sits on opaque reading paper.
+   The glass colours are the five faces of Gayatri in the dhyana recited on this page, "mukta
+   vidruma hema nila dhavala": pearl, coral, gold, sapphire, white. Each says one thing:
+     vidruma (coral)   sunrise, Pratah        hema (gold)      good times (Abhijit)
+     nila (sapphire)   night, Sayam           mukta (pearl)    the moon, Madhyahnikam
+     dhavala (white)   the reading paper
+   Two more: dhumra (smoke) marks the times to avoid (Rahu kaalam, Yamagandam, Gulika), as Rahu's
+   shadow crosses the sun; kumkum marks what is auspicious (vratas, festivals, today, and the words
+   of the sankalpam that change). Zari gold is the thread (rules, step numbers, selection); kesari is
+   sunset; maroon stays on the deity medallions and the map. Text sits on tints in ink, never in the
+   tint's own hue. Only the tab bar is blurred; nothing that contains the picker or the tab bar is.
+   Breakpoints: phones under 640px, tablets 640-999px, desktop from 1000px. */
 :root {
-  --ground: #f8f0e1;      /* sandal paste */
-  --dots: rgb(184 137 43 / .16);
-  --paper: #fffaf2;
-  --ink: #2a1215;         /* deep maroon-brown */
-  --muted: #76595a;
-  --line: #e7d4b2;
-  --maroon: #5c0f18;      /* pattu band */
-  --on-maroon: #fbeedb;
-  --gold: #c0912f;        /* zari */
-  --gold-ink: #8a6418;
-  --kumkum: #b3121f;
-  --turmeric: #9a6a07;
-  --mantra-bg: #fdf5e6;
-  --sukla: #fffaf2;
-  --bahula: #efe2c8;
-  --moon-lit: #fff3d1;
-  --moon-dark: #4a2a2e;
-  --moon-rim: #c9a96a;
-  /* Indian scripts fall through to Noto faces, which load only for the chosen language */
-  --font-display: "Rozha One", "Noto Serif Telugu", "Noto Serif Tamil", "Noto Serif Kannada", "Iowan Old Style", Georgia, serif;
-  --font-read: "Spectral", "Noto Serif Telugu", "Noto Serif Tamil", "Noto Serif Kannada", "Noto Serif Devanagari", "Iowan Old Style", Georgia, serif;
-  --font-ui: "Inter", "Noto Sans Telugu", "Noto Sans Tamil", "Noto Sans Kannada", "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mantra-size: 18px;
+  color-scheme: light;
+  /* sky: night by default; html[data-sky] picks the phase (set before first paint, then by setSky) */
+  --sky-top: #D3DAEE; --sky-mid: #E1E5F1; --sky-low: #EAE8EE; --glow: rgb(255 255 255 / .6);
+  --sun-x: 80%; --sun-y: 14%; --stars: 1; --star: rgb(38 56 122 / .2);
+  /* ink */
+  --ink: #23171A; --muted: #5E4E4F; --hair: rgb(70 40 30 / .14); --edge: rgb(255 255 255 / .8);
+  --control-edge: #8E7F75;
+  /* surfaces */
+  --glass: rgb(255 253 248 / .88); --glass-solid: #FFFDF8; --chrome: rgb(255 252 246 / .82);
+  --shadow: 0 1px 2px rgb(60 30 20 / .06), 0 14px 34px -16px rgb(60 30 20 / .3);
+  --paper-read: #FFFDF8;
+  /* the Gayatri glass: tints (behind ink) and inks (as text on paper or glass) */
+  --mukta: #F3EFE7; --vidruma: #FADDD3; --hema: #F8EBC8; --nila: #DCE2F2; --dhumra: #ECE9EE; --kesari: #FBE0C4;
+  --vidruma-ink: #A33A26; --hema-ink: #7D5A0F; --nila-ink: #26387A; --dhumra-ink: #514C58; --kesari-ink: #9A4A0A;
+  --kumkum: #B3121F; --v-bg: rgb(179 18 31 / .08); --zari: #795815; --zari-line: #C9A24A;
+  --maroon: #5C0F18; --on-maroon: #FBEEDB;
+  /* names read by the drawings and scripts (mudra hands, beads, map, moon): kept opaque */
+  --paper: #FFFDF8; --line: #D9CDBF; --gold: #C9A24A; --gold-ink: #795815; --turmeric: #7D5A0F; --mantra-bg: #FFFDF8;
+  --moon-lit: #FFF3D1; --moon-dark: #4A4258; --moon-rim: #B9A27A;
+  --sukla: rgb(255 253 248 / .84); --bahula: rgb(222 228 242 / .8);
+  /* type: Anek for the frame; Tiro for titles; the recited word in a reading face per script */
+  --font-ui: "Anek Latin", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Tiro Devanagari Sanskrit", "Iowan Old Style", Georgia, serif;
+  --font-read: "Tiro Devanagari Sanskrit", "Noto Serif", Georgia, serif;
+  --mantra-size: 20px;
+  --tabbar-h: 66px;
 }
+:root:lang(te) { --font-display: "Tiro Telugu", "Tiro Devanagari Sanskrit", serif; --font-read: "Noto Serif Telugu", "Tiro Telugu", serif; }
+:root:lang(kn) { --font-display: "Tiro Kannada", "Tiro Devanagari Sanskrit", serif; --font-read: "Noto Serif Kannada", "Tiro Kannada", serif; }
+:root:lang(ta) { --font-display: "Tiro Tamil", "Tiro Devanagari Sanskrit", serif; }
+:root:lang(hi) { --font-read: "Noto Serif Devanagari", "Tiro Devanagari Sanskrit", serif; }
+/* light skies by phase (night is the default above) */
+:root[data-sky="dawn"] { --sky-top: #E2E2F0; --sky-mid: #F5E2DA; --sky-low: #F9D6C6; --glow: rgb(255 200 165 / .55); --stars: .2; }
+:root[data-sky="day"] { --sky-top: #FAF7F0; --sky-mid: #F8F0DF; --sky-low: #F5E5BF; --glow: rgb(255 236 176 / .85); --stars: 0; }
+:root[data-sky="dusk"] { --sky-top: #DDE1F0; --sky-mid: #F5E0CF; --sky-low: #F5CBA5; --glow: rgb(255 190 150 / .5); --stars: .1; }
+/* light theme in the dark hours: a warmer, dimmer reading paper, less glare at 5 am */
+:root[data-sky="night"], :root[data-sky="dawn"] { --paper-read: #F3EBDD; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ground: #160a0c; --dots: rgb(217 169 74 / .10); --paper: #221215; --ink: #f3e6d2; --muted: #bba291;
-    --line: #4a2f24; --maroon: #3f0a11; --on-maroon: #f6e7cf; --gold: #d9a94a; --gold-ink: #e3b862;
-    --kumkum: #f07a6e; --turmeric: #e3b04f; --mantra-bg: #2a171a; --sukla: #261518; --bahula: #1b0d10;
-    --moon-lit: #f6e9c4; --moon-dark: #3a2226; --moon-rim: #6b5030; color-scheme: dark;
+    color-scheme: dark;
+    --sky-top: #060818; --sky-mid: #0B102B; --sky-low: #131A3E; --glow: rgb(170 180 255 / .14); --star: rgb(255 255 255 / .22);
+    --ink: #EADFCD; --muted: #BFB2A6; --hair: rgb(255 255 255 / .11); --edge: rgb(255 255 255 / .07); --control-edge: #8B809A;
+    --glass: rgb(22 20 40 / .86); --glass-solid: #16142A; --chrome: rgb(18 16 34 / .86);
+    --shadow: 0 1px 2px rgb(0 0 0 / .35), 0 14px 34px -16px rgb(0 0 0 / .7); --paper-read: #17152A;
+    --mukta: #26232E; --vidruma: #3A2026; --hema: #33290F; --nila: #1B2140; --dhumra: #2B2830; --kesari: #3A2614;
+    --vidruma-ink: #FF9E86; --hema-ink: #F0C25A; --nila-ink: #A9B8FF; --dhumra-ink: #B8B1C0; --kesari-ink: #F5A25C;
+    --kumkum: #FF8A7A; --v-bg: rgb(255 138 122 / .13); --zari: #E2B65C; --zari-line: #D4A84A; --maroon: #3F0A11; --on-maroon: #F6E7CF;
+    --paper: #1C1930; --line: #4A4358; --gold: #D4A84A; --gold-ink: #E2B65C; --turmeric: #F0C25A; --mantra-bg: #1C1930;
+    --moon-lit: #F6E9C4; --moon-dark: #2E2840; --moon-rim: #6B5E80; --sukla: rgb(40 37 64 / .8); --bahula: rgb(16 15 32 / .74);
   }
 }
 :root[data-theme="dark"] {
-  --ground: #160a0c; --dots: rgb(217 169 74 / .10); --paper: #221215; --ink: #f3e6d2; --muted: #bba291;
-  --line: #4a2f24; --maroon: #3f0a11; --on-maroon: #f6e7cf; --gold: #d9a94a; --gold-ink: #e3b862;
-  --kumkum: #f07a6e; --turmeric: #e3b04f; --mantra-bg: #2a171a; --sukla: #261518; --bahula: #1b0d10;
-  --moon-lit: #f6e9c4; --moon-dark: #3a2226; --moon-rim: #6b5030; color-scheme: dark;
+  color-scheme: dark;
+  --sky-top: #060818; --sky-mid: #0B102B; --sky-low: #131A3E; --glow: rgb(170 180 255 / .14); --star: rgb(255 255 255 / .22);
+  --ink: #EADFCD; --muted: #BFB2A6; --hair: rgb(255 255 255 / .11); --edge: rgb(255 255 255 / .07); --control-edge: #8B809A;
+  --glass: rgb(22 20 40 / .86); --glass-solid: #16142A; --chrome: rgb(18 16 34 / .86);
+  --shadow: 0 1px 2px rgb(0 0 0 / .35), 0 14px 34px -16px rgb(0 0 0 / .7); --paper-read: #17152A;
+  --mukta: #26232E; --vidruma: #3A2026; --hema: #33290F; --nila: #1B2140; --dhumra: #2B2830; --kesari: #3A2614;
+  --vidruma-ink: #FF9E86; --hema-ink: #F0C25A; --nila-ink: #A9B8FF; --dhumra-ink: #B8B1C0; --kesari-ink: #F5A25C;
+  --kumkum: #FF8A7A; --v-bg: rgb(255 138 122 / .13); --zari: #E2B65C; --zari-line: #D4A84A; --maroon: #3F0A11; --on-maroon: #F6E7CF;
+  --paper: #1C1930; --line: #4A4358; --gold: #D4A84A; --gold-ink: #E2B65C; --turmeric: #F0C25A; --mantra-bg: #1C1930;
+  --moon-lit: #F6E9C4; --moon-dark: #2E2840; --moon-rim: #6B5E80; --sukla: rgb(40 37 64 / .8); --bahula: rgb(16 15 32 / .74);
 }
+/* dark skies by phase: indigo above, the phase's colour only as a low glow at the horizon */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"])[data-sky="dawn"] { --sky-top: #090D24; --sky-mid: #191733; --sky-low: #45232E; --glow: rgb(220 110 90 / .18); }
+  :root:not([data-theme="light"])[data-sky="day"] { --sky-top: #0C1227; --sky-mid: #15192D; --sky-low: #352C16; --glow: rgb(230 180 90 / .16); }
+  :root:not([data-theme="light"])[data-sky="dusk"] { --sky-top: #0A0D25; --sky-mid: #1D162E; --sky-low: #4A2818; --glow: rgb(230 120 60 / .16); }
+}
+:root[data-theme="dark"][data-sky="dawn"] { --sky-top: #090D24; --sky-mid: #191733; --sky-low: #45232E; --glow: rgb(220 110 90 / .18); }
+:root[data-theme="dark"][data-sky="day"] { --sky-top: #0C1227; --sky-mid: #15192D; --sky-low: #352C16; --glow: rgb(230 180 90 / .16); }
+:root[data-theme="dark"][data-sky="dusk"] { --sky-top: #0A0D25; --sky-mid: #1D162E; --sky-low: #4A2818; --glow: rgb(230 120 60 / .16); }
+/* plain background: chosen on the page (html.solid), or asked for by the phone (iOS Increase
+   Contrast), or where the browser cannot blur: opaque surfaces, a flat ground, no stars */
+:root.solid { --glass: var(--glass-solid); --chrome: var(--glass-solid); }
+@media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
+  :root { --glass: var(--glass-solid); --chrome: var(--glass-solid); --hair: var(--control-edge); }
+}
+
 * { box-sizing: border-box; }
-body { background-color: var(--ground); background-image: radial-gradient(var(--dots) 1.2px, transparent 1.6px);
-  background-size: 22px 22px; color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.5; }
+html { -webkit-text-size-adjust: 100%; }
+body { background-color: var(--sky-low); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.55;
+  padding-bottom: calc(var(--tabbar-h) + 30px + env(safe-area-inset-bottom, 0px)); }
+body::before, body::after { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 100vh; height: 100lvh; z-index: -1; pointer-events: none; }
+body::before { background: radial-gradient(circle at var(--sun-x) var(--sun-y), var(--glow), transparent 48%),
+  linear-gradient(180deg, var(--sky-top), var(--sky-mid) 52%, var(--sky-low)); }
+body::after { background: radial-gradient(var(--star) 1px, transparent 1.6px) 0 0 / 22px 22px; opacity: var(--stars); }
+:root.solid body::before { background: var(--sky-mid); }
+:root.solid body::after { display: none; }
 button, input, select { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--zari-line); outline-offset: 2px; }
 .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-.inner { max-width: 1200px; margin: 0 auto; }
-
-/* masthead */
-.mast { background: var(--maroon); color: var(--on-maroon); }
-.zari { height: 12px; border-top: 2px solid var(--gold); background-color: var(--maroon);
-  background-image: linear-gradient(135deg, var(--gold) 26%, transparent 26%), linear-gradient(225deg, var(--gold) 26%, transparent 26%);
-  background-size: 14px 12px; }
-.zari.up { border-top: 0; border-bottom: 2px solid var(--gold);
-  background-image: linear-gradient(45deg, var(--gold) 26%, transparent 26%), linear-gradient(315deg, var(--gold) 26%, transparent 26%);
-  background-position: 0 100%; }
-.mast-in { padding-block: 14px 16px; }
-.invoc { text-align: center; margin: 0 0 6px; font-family: var(--font-read); font-style: italic; color: var(--gold); letter-spacing: .06em; font-size: 14px; }
-.mast-row { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; }
-.brand { display: flex; gap: 12px; align-items: center; min-width: 0; }
-.brand svg { width: 44px; height: 44px; flex: none; }
-.brand h1 { font-family: var(--font-display); font-weight: 400; font-size: 34px; line-height: 1; margin: 0; color: var(--on-maroon); letter-spacing: .01em; }
-.brand p { margin: 4px 0 0; font-size: 12.5px; color: var(--gold); letter-spacing: .04em; }
-.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
-.tab { border: 1px solid var(--gold); background: transparent; color: var(--on-maroon); border-radius: 999px; padding: 7px 16px;
-  cursor: pointer; font-weight: 500; font-size: 14px; }
-.tab[aria-selected="true"] { background: var(--gold); color: var(--maroon); }
-
-.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; min-width: 0; }
-.lang select { background: rgb(255 255 255 / .08); color: var(--on-maroon); border: 1px solid var(--gold); border-radius: 999px;
-  padding: 8px 12px; font: inherit; min-height: 40px; }
-.lang select option { color: #2a1215; background: #fffaf2; }
+.inner { max-width: 1180px; margin: 0 auto; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.place { position: relative; }
-.place-btn { display: inline-flex; gap: 8px; align-items: center; background: rgb(255 255 255 / .08); color: var(--on-maroon);
-  border: 1px solid var(--gold); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
-.place-btn small { color: var(--gold); }
-.picker { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; width: min(360px, calc(100vw - 32px)); color: var(--ink);
-  background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px; box-shadow: 0 14px 40px rgb(0 0 0 / .25); }
-.picker input { width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--ground); }
-.near-btn { width: 100%; margin-top: 8px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--ground);
-  cursor: pointer; text-align: left; font-size: 14px; }
-.near-msg { margin: 6px 4px 0; font-size: 12px; color: var(--muted); }
-.picker ul { list-style: none; margin: 8px 0 0; padding: 0; max-height: min(320px, 45vh); overflow-y: auto; }
-.picker li button { width: 100%; text-align: left; background: none; border: 0; padding: 7px 8px; border-radius: 6px; cursor: pointer;
-  display: flex; justify-content: space-between; gap: 8px; }
-.picker li button:hover, .picker li button:focus-visible { background: var(--ground); }
-.picker li small { color: var(--muted); white-space: nowrap; }
-.picker .grp { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 8px 8px 2px; }
-
-main { padding-block: 24px 40px; }
-.panel h2.sec-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(26px, 4.4vw, 38px); margin: 0; line-height: 1.15;
-  text-wrap: balance; color: var(--maroon); }
-:root[data-theme="dark"] .panel h2.sec-title { color: var(--gold-ink); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .panel h2.sec-title { color: var(--gold-ink); } }
-.rule { height: 8px; width: 120px; margin: 8px 0 14px; background:
-  radial-gradient(circle, var(--gold) 3px, transparent 3.5px) center / 8px 8px no-repeat,
-  linear-gradient(var(--gold), var(--gold)) left center / 52px 1px no-repeat,
-  linear-gradient(var(--gold), var(--gold)) right center / 52px 1px no-repeat; }
-.card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; }
-.note { font-size: 12.5px; color: var(--muted); }
-.lbl { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-
-/* panchangam tab */
-.p-grid { display: grid; gap: 24px; }
-@media (min-width: 980px) { .p-grid { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); align-items: start; } }
-.month-head { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; }
-.nav { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); background: var(--paper); cursor: pointer; font-size: 18px; color: var(--gold-ink); }
-.mtitle { text-align: center; min-width: 0; }
-.mtitle h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 5.4vw, 50px); margin: 0; line-height: 1.05; color: var(--maroon); }
-:root[data-theme="dark"] .mtitle h2 { color: var(--gold-ink); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mtitle h2 { color: var(--gold-ink); } }
-.mtitle .adhika { color: var(--kumkum); }
-.mtitle p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
-.mtools { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; align-items: center; margin: 14px 0 10px; font-size: 12px; color: var(--muted); }
-.legend { display: flex; gap: 14px; flex-wrap: wrap; }
-.legend span { display: inline-flex; gap: 6px; align-items: center; }
-.sw { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--line); display: inline-block; }
-.pill-btn { border: 1px solid var(--gold); background: var(--paper); border-radius: 999px; padding: 5px 12px; cursor: pointer; font-size: 12px; color: var(--gold-ink); }
-
-.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
-.wd { text-align: center; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 4px 0; }
-.day { position: relative; min-height: 104px; border: 1px solid var(--line); border-radius: 8px; padding: 6px 6px 8px; cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; background: var(--sukla); min-width: 0; }
-.day.bahula { background: var(--bahula); }
-.day .gd { align-self: flex-start; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.day .gd b { font-weight: 600; color: var(--ink); }
-.day .tn { font-family: var(--font-read); font-size: 13.5px; font-weight: 500; line-height: 1.15; overflow-wrap: anywhere; }
-.day .nk { font-size: 11px; color: var(--muted); line-height: 1.2; overflow-wrap: anywhere; }
-.day .mk { font-size: 10.5px; color: var(--kumkum); font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
-.day .dot { display: none; width: 5px; height: 5px; border-radius: 50%; background: var(--kumkum); }
-.day.today { box-shadow: inset 0 0 0 2px var(--kumkum); }
-.day.today .gd b { color: var(--kumkum); }
-.day.sel { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
-.day.today.sel { box-shadow: inset 0 0 0 2px var(--kumkum), 0 0 0 2px var(--gold); }
-.day svg { width: 26px; height: 26px; flex: none; }
-@media (max-width: 620px) {
-  .day { min-height: 74px; padding: 4px 2px 6px; }
-  .day .nk, .day .mk { display: none; }
-  .day .dot { display: block; }
-  .day .tn { font-size: 11px; }
-  .day svg { width: 20px; height: 20px; }
-}
-
-.sheet { padding: 20px; display: grid; gap: 18px; min-width: 0; }
-.sheet-head { display: flex; gap: 14px; align-items: center; }
-.sheet-head svg { width: 56px; height: 56px; flex: none; }
-.sheet-head h3 { font-family: var(--font-display); font-weight: 400; font-size: 25px; margin: 0; line-height: 1.15; }
-.sheet-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { font-size: 12px; font-weight: 600; color: var(--kumkum); border: 1px solid currentColor; border-radius: 999px; padding: 2px 10px; }
-.sun { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.sun div { background: var(--ground); border-radius: 10px; padding: 10px 12px; border: 1px solid var(--line); }
-.big { font-size: 20px; font-variant-numeric: tabular-nums; font-weight: 500; }
-.sec h4 { margin: 0 0 6px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-ink); font-weight: 600; }
-dl.rows { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 16px; }
-dl.rows dt, dl.rows dd { padding: 8px 0; border-top: 1px solid var(--line); margin: 0; }
-dl.rows dt { color: var(--muted); font-size: 13px; }
-dl.rows dd { font-variant-numeric: tabular-nums; }
-.seg { display: block; }
-.seg + .seg { color: var(--muted); font-size: 13px; }
-.seg time { color: var(--muted); }
-dl.rows dd small { color: var(--muted); font-size: 13px; }
-.now { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--paper); background: var(--kumkum);
-  border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: 2px; }
-dd.bad { color: var(--kumkum); }
-dd.good { color: var(--turmeric); }
-.link-btn { background: none; border: 0; padding: 0; color: var(--gold-ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: 14px; }
-
-/* shared form + text */
-.form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
-@media (max-width: 520px) { .form { grid-template-columns: minmax(0, 1fr); } }
-.form label { display: grid; gap: 3px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); min-width: 0; }
-.form .wide { grid-column: 1 / -1; }
-.form input[type=text], .form select { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line);
-  background: var(--paper); font-size: 15px; text-transform: none; letter-spacing: 0; color: var(--ink); }
-.form .check { display: flex; gap: 8px; align-items: center; text-transform: none; letter-spacing: 0; font-size: 14px; color: var(--ink); }
-.seg-ctl { display: inline-flex; border: 1px solid var(--gold); border-radius: 999px; overflow: hidden; }
-.seg-ctl button { border: 0; background: var(--paper); padding: 5px 12px; font-size: 13px; cursor: pointer; color: var(--ink); }
-.seg-ctl button[aria-pressed="true"] { background: var(--gold); color: var(--maroon); }
-.mantra { font-family: var(--font-read); font-size: var(--mantra-size); line-height: 1.75; background: var(--mantra-bg);
-  border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 0; max-width: 70ch; overflow-wrap: break-word; }
-.mantra .v { color: var(--kumkum); font-weight: 600; }
-.pron { margin: 0 0 4px; }
+.card { background: var(--glass); border: 1px solid var(--hair); border-radius: 18px; box-shadow: var(--shadow), inset 0 1px 0 var(--edge); }
+.note { font-size: 14px; color: var(--muted); margin: 0; }
+.lbl { display: block; font-size: 12px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
 .row-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.link-btn { background: none; border: 0; padding: 0; min-height: 44px; color: var(--zari); text-decoration: underline; text-underline-offset: 3px;
+  cursor: pointer; font-size: 15px; font-weight: 500; }
+.pill-btn { border: 1px solid var(--control-edge); background: var(--glass-solid); color: var(--ink); border-radius: 999px; min-height: 44px;
+  padding: 0 16px; cursor: pointer; font-size: 15px; font-weight: 500; }
+.nav { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--control-edge); background: var(--glass-solid); color: var(--ink);
+  cursor: pointer; font-size: 20px; line-height: 1; }
+.seg-ctl { display: inline-flex; border: 1px solid var(--control-edge); border-radius: 999px; overflow: hidden; background: var(--glass-solid); }
+.seg-ctl button { border: 0; background: transparent; padding: 0 14px; min-height: 42px; font-size: 15px; cursor: pointer; color: var(--ink); }
+.seg-ctl button + button { border-left: 1px solid var(--hair); }
+.seg-ctl button[aria-pressed="true"] { background: var(--hema); font-weight: 600; box-shadow: inset 0 -3px 0 var(--zari-line); }
+.now { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--glass-solid); background: var(--kumkum);
+  border-radius: 5px; padding: 1px 6px; margin-left: 6px; vertical-align: 2px; white-space: nowrap; }
+.sec-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 5.6vw, 42px); margin: 0; line-height: 1.1; text-wrap: balance; }
+.rule { height: 8px; width: 120px; margin: 6px 0 4px; background:
+  radial-gradient(circle, var(--zari-line) 3px, transparent 3.5px) center / 8px 8px no-repeat,
+  linear-gradient(var(--zari-line), var(--zari-line)) left center / 52px 1px no-repeat,
+  linear-gradient(var(--zari-line), var(--zari-line)) right center / 52px 1px no-repeat; }
 
-/* sankalpam tab */
-.s-wrap { display: grid; gap: 18px; max-width: 860px; }
-.s-card { padding: 20px; display: grid; gap: 14px; }
+/* masthead: scrolls away; nothing in it is blurred (the picker is opaque) */
+.mast { position: relative; z-index: 20; background: var(--glass); box-shadow: inset 0 -1px 0 var(--hair); }
+.mast-in { padding-block: 12px 12px; display: grid; gap: 8px; }
+.invoc { margin: 0; text-align: center; font-family: var(--font-display); font-size: 15px; color: var(--zari); letter-spacing: .04em; }
+.mast-row { position: relative; display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; }
+.brand { display: flex; gap: 12px; align-items: center; min-width: 0; }
+.brand svg { width: 46px; height: 46px; flex: none; }
+.brand h1 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 34px; line-height: 1; letter-spacing: .01em; }
+.brand-tag { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.lang select, .place-btn { min-height: 44px; border: 1px solid var(--control-edge); background: var(--glass); color: var(--ink); border-radius: 999px;
+  font-size: 15px; box-shadow: inset 0 1px 0 var(--edge); }
+.lang select { padding: 0 14px; }
+.place { min-width: 0; }
+.place-btn { display: inline-flex; gap: 8px; align-items: center; padding: 0 16px; cursor: pointer; max-width: 100%; }
+.place-btn .pn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.place-btn small { color: var(--muted); font-size: 13px; white-space: nowrap; }
+.picker { position: absolute; right: 0; top: calc(100% + 8px); z-index: 40; width: min(380px, calc(100vw - 32px)); color: var(--ink);
+  background: var(--glass-solid); border: 1px solid var(--hair); border-radius: 18px; padding: 10px; box-shadow: 0 18px 50px -12px rgb(0 0 0 / .4); }
+.picker input { width: 100%; min-height: 44px; padding: 8px 14px; border-radius: 12px; border: 1px solid var(--control-edge); background: var(--glass-solid); font-size: 16px; }
+.near-btn { width: 100%; margin-top: 8px; min-height: 44px; padding: 8px 14px; border-radius: 12px; border: 1px solid var(--hair); background: var(--mukta);
+  cursor: pointer; text-align: left; font-size: 15px; }
+.near-msg { margin: 6px 4px 0; font-size: 13px; color: var(--muted); }
+.picker ul { list-style: none; margin: 8px 0 0; padding: 0; max-height: min(340px, 48vh); overflow-y: auto; }
+.picker li button { width: 100%; text-align: left; background: none; border: 0; min-height: 44px; padding: 8px 10px; border-radius: 10px; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.picker li button:hover, .picker li button:focus-visible { background: var(--mukta); }
+.picker li small { color: var(--muted); white-space: nowrap; font-size: 13px; }
+.picker .grp { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 10px 10px 2px; }
+/* the zari: a fine gold zigzag along the masthead's lower edge, the old pattu border's thread */
+.zari { height: 6px; opacity: .9; background:
+  linear-gradient(135deg, var(--zari-line) 25%, transparent 25%) 0 0 / 8px 6px,
+  linear-gradient(225deg, var(--zari-line) 25%, transparent 25%) 0 0 / 8px 6px; }
 
-/* sandhya tab */
+/* tab bar: a floating glass pill at the bottom on phones and tablets (the only blurred element),
+   a sticky pill under the masthead on desktop; it steps aside while you type or scroll down a
+   reading tab, and comes back when you scroll up */
+.tabs { position: fixed; z-index: 30; left: 50%; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+  width: min(440px, calc(100% - 24px)); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 5px; border-radius: 26px;
+  background: var(--chrome); border: 1px solid var(--hair); box-shadow: var(--shadow), inset 0 1px 0 var(--edge);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5); backdrop-filter: blur(20px) saturate(1.5); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .tabs { background: var(--glass-solid); } }
+.tab { position: relative; display: grid; justify-items: center; align-content: center; gap: 1px; min-height: 54px; padding: 4px; border: 0;
+  border-radius: 21px; background: transparent; color: var(--ink); font-size: 13.5px; font-weight: 500; cursor: pointer; }
+.tab svg, .tab-ico { display: block; width: 24px; height: 24px; }
+.tab[aria-selected="true"] { background: var(--hema); font-weight: 600; }
+.tab[aria-selected="true"]::after { content: ""; position: absolute; left: 32%; right: 32%; bottom: 3px; height: 3px; border-radius: 3px; background: var(--zari-line); }
+.tab-long { display: none; }
+:root.typing .tabs, :root.tabs-away .tabs { transform: translate(-50%, 160%); }
+@media (prefers-reduced-motion: no-preference) { .tabs { transition: transform .28s ease; } }
+@media (max-height: 480px) { .tabs { display: none; } body { padding-bottom: 24px; } }
+
+main { padding-block: 18px 28px; }
+.panel { display: grid; gap: 16px; }
+
+/* ===== Panchangam: the day first, then the month, then the place ===== */
+.p-grid { display: grid; gap: 16px; }
+.calcard { padding: 16px; min-width: 0; }
+.month-head { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
+.mtitle { text-align: center; min-width: 0; }
+.mtitle h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 6vw, 44px); margin: 0; line-height: 1.05; }
+.mtitle .adhika { color: var(--kumkum); }
+.mtitle p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.mtools { display: flex; flex-wrap: wrap; gap: 8px 14px; justify-content: space-between; align-items: center; margin: 12px 0 10px; font-size: 14px; color: var(--muted); }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.sw { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--control-edge); display: inline-block; }
+.sw-today { background: var(--kumkum); border-color: var(--kumkum); border-radius: 50%; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.wd { text-align: center; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 4px 0; }
+.day { position: relative; min-height: 104px; border: 1px solid var(--hair); border-radius: 14px; padding: 6px 6px 8px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; background: var(--sukla); min-width: 0; color: var(--ink); }
+.day.bahula { background: var(--bahula); }
+.day .gd { align-self: flex-start; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.day .gd b { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 5px; border-radius: 12px; font-weight: 600; color: var(--ink); }
+.day.today .gd b { background: var(--kumkum); color: var(--glass-solid); }
+.day .tn { font-size: 14px; font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; }
+.day .nk { font-size: 12.5px; color: var(--muted); line-height: 1.2; overflow-wrap: anywhere; }
+.day .mk { font-size: 12px; color: var(--kumkum); font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
+.day .dot { display: none; width: 6px; height: 6px; border-radius: 50%; background: var(--kumkum); }
+.day.sel { border-color: var(--zari-line); box-shadow: 0 0 0 2px var(--zari-line), var(--shadow); }
+.day.purnima svg { filter: drop-shadow(0 0 4px rgb(240 194 90 / .95)); }
+.day svg { width: 26px; height: 26px; flex: none; }
+
+.sheet { padding: 18px; display: grid; gap: 16px; min-width: 0; scroll-margin-top: 16px; }
+.hero-head { display: flex; gap: 14px; align-items: center; }
+.hero-head svg { width: 54px; height: 54px; flex: none; }
+.eyebrow { display: block; font-size: 14px; color: var(--muted); }
+.hero-title { margin: 2px 0 0; font-family: var(--font-display); font-weight: 400; font-size: 29px; line-height: 1.15; text-wrap: balance; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 13.5px; font-weight: 600; color: var(--kumkum); background: var(--glass-solid); border: 1px solid currentColor; border-radius: 999px; padding: 3px 11px; }
+/* the day bar: sunrise to sunset for today; the times to avoid as smoke across the sun's path,
+   Abhijit on its own gold lane above, the sun where it is now */
+.daybar { display: grid; gap: 8px; }
+.db-lane { position: relative; height: 8px; margin: 0 1px; }
+.db-lane::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--hair); }
+.db-good { position: absolute; top: 1px; bottom: 1px; border-radius: 4px; background: var(--hema-ink); }
+.db-good.off { background: transparent; border: 1.5px solid var(--hema-ink); }
+.db-track { position: relative; height: 30px; border-radius: 10px; border: 1px solid var(--hair); overflow: hidden;
+  background: linear-gradient(90deg, var(--vidruma), var(--hema) 28%, var(--mukta) 50%, var(--hema) 72%, var(--kesari)); }
+.db-seg { position: absolute; top: 0; bottom: 0; background: var(--dhumra-ink); }
+.db-seg.k-rahu { opacity: .85; } .db-seg.k-yama { opacity: .6; } .db-seg.k-gulika { opacity: .4; }
+.db-sun { position: absolute; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: #FFCF5C;
+  box-shadow: 0 0 0 2px var(--glass-solid), 0 0 14px 3px rgb(255 190 80 / .85); }
+.db-ends { display: flex; justify-content: space-between; gap: 10px; font-variant-numeric: tabular-nums; }
+.db-ends > span { display: grid; }
+.db-ends > span:last-child { text-align: right; }
+.db-ends b { font-size: 19px; font-weight: 600; }
+.db-now { margin: 0; font-size: 15.5px; }
+.k-sw { display: inline-block; width: 11px; height: 11px; margin-right: 8px; vertical-align: -1px; border-radius: 3px; background: var(--dhumra-ink); }
+.k-sw.k-rahu { opacity: .85; } .k-sw.k-yama { opacity: .6; } .k-sw.k-gulika { opacity: .4; } .k-sw.k-abhijit { background: var(--hema-ink); }
+.sun { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.sun > div { border-radius: 12px; padding: 10px 12px; border: 1px solid var(--hair); }
+.sun > div:first-child { background: var(--vidruma); }
+.sun > div:last-child { background: var(--kesari); }
+.big { font-size: 20px; font-variant-numeric: tabular-nums; font-weight: 600; display: block; }
+.sec h4 { margin: 0 0 4px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--zari); font-weight: 600; }
+dl.rows { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 16px; }
+dl.rows dt, dl.rows dd { padding: 9px 0; border-top: 1px solid var(--hair); margin: 0; }
+dl.rows dt { color: var(--muted); font-size: 14.5px; }
+dl.rows dd { font-variant-numeric: tabular-nums; }
+dl.rows dd small { color: var(--muted); font-size: 14px; }
+.seg { display: block; }
+.seg + .seg { color: var(--muted); font-size: 14.5px; }
+.seg time { color: var(--muted); }
+dd.bad { color: var(--dhumra-ink); }
+dd.good { color: var(--hema-ink); }
+.side { display: grid; gap: 16px; min-width: 0; align-content: start; }
+.placecard { overflow: hidden; }
+.map-wrap { position: relative; height: 220px; background: var(--maroon); }
+.map-wrap canvas { display: block; width: 100%; height: 100%; }
+.map-label { position: absolute; left: 14px; right: 60px; bottom: 12px; display: grid; gap: 2px; color: var(--on-maroon);
+  text-shadow: 0 1px 3px rgb(0 0 0 / .6); pointer-events: none; }
+.map-label b { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.05; }
+.map-label span { font-size: 12.5px; color: #E9C77A; font-variant-numeric: tabular-nums; letter-spacing: .03em; }
+.replay { position: absolute; right: 10px; top: 10px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #C9A24A;
+  background: rgb(0 0 0 / .3); color: #FBEEDB; cursor: pointer; font-size: 18px; }
+.map-wrap.abroad { height: auto; padding: 18px 14px 16px; }
+.map-wrap.abroad .map-label { position: static; }
+.deity { display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 14px; align-items: center; padding: 14px 16px; border-top: 2px solid var(--zari-line); }
+@media (prefers-reduced-motion: no-preference) { .deity { animation: rise .6s ease-out; } }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.medallion svg { width: 68px; height: 68px; display: block; }
+.deity h3 { font-family: var(--font-display); font-weight: 400; font-size: 22px; margin: 2px 0 0; line-height: 1.15; }
+.deity p { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tag { font-size: 12.5px; border: 1px solid var(--zari-line); color: var(--zari); border-radius: 999px; padding: 1px 9px; }
+
+/* ===== shared form and the recited word ===== */
+.form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
+.form label { display: grid; gap: 4px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); min-width: 0; }
+.form .wide { grid-column: 1 / -1; }
+.form input[type=text], .form select { width: 100%; min-height: 44px; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--control-edge);
+  background: var(--glass-solid); font-size: 16px; text-transform: none; letter-spacing: 0; color: var(--ink); }
+.form .check { display: flex; gap: 10px; align-items: center; text-transform: none; letter-spacing: 0; font-size: 15.5px; color: var(--ink); min-height: 44px; }
+.form .check input { width: 20px; height: 20px; accent-color: var(--kumkum); }
+.mantra { font-family: var(--font-read); font-size: var(--mantra-size); line-height: 1.85; background: var(--paper-read); color: var(--ink);
+  border: 1px solid var(--hair); border-radius: 14px; padding: 14px 16px; margin: 0; overflow-wrap: break-word; -webkit-hyphens: manual; hyphens: manual; }
+:root:lang(te) .mantra, :root:lang(kn) .mantra, :root:lang(hi) .mantra { line-height: 1.95; }
+.mantra .v { color: var(--kumkum); font-weight: inherit; font-synthesis: none; background: var(--v-bg); border-radius: 4px; padding: 0 .1em;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.ml { display: block; padding-left: 1.1em; text-indent: -1.1em; }
+details.key { padding: 2px 16px; }
+details.key summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 600; color: var(--zari); }
+.key ul { margin: 0 0 14px; padding-left: 18px; display: grid; gap: 4px; font-size: 15px; color: var(--ink); }
+
+/* ===== Sankalpam: the words first, then your details ===== */
+.s-head { display: grid; gap: 2px; }
+.sk-grid { display: grid; gap: 16px; }
+.s-card { padding: 18px; display: grid; gap: 14px; min-width: 0; }
+
+/* ===== Sandhyavandanam: the hour, then the steps ===== */
+.sk-wrap { display: grid; gap: 16px; }
+.sd-wrap { display: grid; gap: 16px; max-width: 820px; margin: 0 auto; }
+.sd-hero { padding: 18px; display: grid; gap: 14px; background: linear-gradient(180deg, var(--kind-tint, var(--mukta)), transparent 75%), var(--glass); }
+.sd-hero[data-kind="pratah"] { --kind-tint: var(--vidruma); }
+.sd-hero[data-kind="madhyahnika"] { --kind-tint: var(--mukta); }
+.sd-hero[data-kind="sayam"] { --kind-tint: var(--nila); }
 .kinds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.kind { border: 1px solid var(--line); background: var(--paper); border-radius: 12px; padding: 12px; cursor: pointer; text-align: left; display: grid; gap: 2px; min-width: 0; }
+.kind { border: 1px solid var(--control-edge); background: var(--glass-solid); border-radius: 14px; padding: 10px 12px; cursor: pointer; text-align: left;
+  display: grid; gap: 2px; min-width: 0; color: var(--ink); align-content: start; }
 .kind b { font-family: var(--font-display); font-weight: 400; font-size: 21px; line-height: 1.1; overflow-wrap: anywhere; }
-:lang(ta) .kind b, :lang(kn) .kind b, :lang(te) .kind b { font-size: 17px; }
-.kind small { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
-.kind[aria-selected="true"] { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
-.kind .now { justify-self: start; margin: 2px 0 0; }
-@media (max-width: 480px) { .kind { padding: 10px 8px; } }
-.when { padding: 12px 16px; display: grid; gap: 4px; }
-.when.late { border-color: var(--kumkum); }
+:lang(ta) .kind b, :lang(kn) .kind b, :lang(te) .kind b { font-size: 18px; }
+.kind small { color: var(--muted); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.kind[data-kind="pratah"] { --own: var(--vidruma); } .kind[data-kind="madhyahnika"] { --own: var(--mukta); } .kind[data-kind="sayam"] { --own: var(--nila); }
+.kind[aria-selected="true"] { background: var(--own); border-color: var(--zari-line); box-shadow: 0 0 0 2px var(--zari-line), inset 0 -3px 0 var(--zari-line); }
+.kind .now { justify-self: start; margin: 4px 0 0; }
+.when { display: grid; gap: 6px; }
 .when .warn { color: var(--kumkum); font-weight: 600; }
-details.me { padding: 4px 16px; }
-details.me summary { cursor: pointer; padding: 10px 0; font-weight: 500; color: var(--gold-ink); }
-details.me .form { padding-bottom: 14px; }
-.size { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; color: var(--muted); }
-.size button { width: 34px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); cursor: pointer; }
-ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
-.step { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; padding: 16px; }
-.st-num { width: 34px; height: 34px; border-radius: 50%; background: var(--gold); color: var(--maroon); display: grid; place-items: center;
-  font-family: var(--font-display); font-size: 17px; }
-.st-body { display: grid; gap: 8px; min-width: 0; }
-.st-body h3 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.15; }
-.how { margin: 0; color: var(--muted); font-size: 14px; max-width: 70ch; }
-.step.ref { padding-block: 10px; }
-.step.ref .st-num { background: transparent; border: 1px solid var(--gold); color: var(--gold-ink); }
+.grade { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; font-size: 15.5px; }
+.grade b { font-family: var(--font-display); font-weight: 400; font-size: 21px; color: var(--zari); }
+details.me { padding: 2px 16px; }
+details.me summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; font-weight: 600; color: var(--zari); }
+details.me .form { padding-bottom: 12px; }
+.tools { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; padding: 12px 16px; }
+.size { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); }
+.size button, .solid-btn { min-width: 44px; min-height: 44px; border-radius: 12px; border: 1px solid var(--control-edge); background: var(--glass-solid);
+  color: var(--ink); cursor: pointer; font-size: 15px; padding: 0 10px; }
+.solid-btn[aria-pressed="true"] { background: var(--hema); font-weight: 600; box-shadow: inset 0 -3px 0 var(--zari-line); }
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; position: relative; }
+.step { position: relative; min-width: 0; scroll-margin-top: 16px; }
+.st-body { display: grid; gap: 10px; min-width: 0; padding: 14px 16px; background: var(--glass); border: 1px solid var(--hair); border-radius: 18px;
+  box-shadow: var(--shadow), inset 0 1px 0 var(--edge); }
+.st-body h3 { margin: 0; display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 400;
+  font-size: max(21px, calc(var(--mantra-size) * 1.1)); line-height: 1.2; }
+.st-num { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--zari-line); background: var(--glass-solid); color: var(--zari);
+  display: grid; place-items: center; font-family: var(--font-ui); font-weight: 600; font-size: 14.5px; line-height: 1; }
+.how { margin: 0; color: var(--muted); font-size: max(16px, calc(var(--mantra-size) * .8)); line-height: 1.5; max-width: 70ch; }
+.step.ref .st-body { background: transparent; box-shadow: none; border-style: dashed; border-color: var(--control-edge); }
 .japa { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
-.bead { position: relative; width: 132px; height: 132px; border-radius: 50%; border: 0; background: var(--mantra-bg); cursor: pointer;
-  display: grid; place-items: center; touch-action: manipulation; }
+.bead { position: relative; width: 150px; height: 150px; border-radius: 50%; border: 0; background: var(--paper-read); cursor: pointer;
+  display: grid; place-items: center; touch-action: manipulation; box-shadow: var(--shadow); }
 .bead svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.bead .cnt { font-family: var(--font-display); font-size: 38px; line-height: 1; color: var(--maroon); font-variant-numeric: tabular-nums; }
-:root[data-theme="dark"] .bead .cnt { color: var(--gold-ink); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bead .cnt { color: var(--gold-ink); } }
-.bead small { display: block; color: var(--muted); font-size: 12px; }
+.bead .cnt { font-family: var(--font-display); font-size: 44px; line-height: 1; font-variant-numeric: tabular-nums; }
+.bead small { display: block; color: var(--muted); font-size: 13px; }
 .bead .in { position: relative; text-align: center; }
-.japa-ctl { display: grid; gap: 8px; }
-.timer { margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; color: var(--gold-ink); }
+.japa-ctl { display: grid; gap: 8px; justify-items: start; }
+.japa-ctl .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.timer { margin: 0; font-size: 15px; font-variant-numeric: tabular-nums; color: var(--zari); }
 .timer.late { color: var(--kumkum); font-weight: 600; }
-
 /* pranayamam: a lamp that grows as you breathe in, rests while you hold, shrinks as you breathe out */
 .prana { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px 16px; align-items: center; }
 .breath { position: relative; width: 116px; height: 116px; display: grid; place-items: center; }
-.b-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px dashed var(--gold); opacity: .55; }
+.b-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px dashed var(--zari-line); opacity: .6; }
 .b-core { width: 100%; height: 100%; border-radius: 50%; transform: scale(.45);
   background: radial-gradient(circle at 40% 35%, var(--moon-lit), var(--gold) 70%); box-shadow: 0 0 24px rgb(240 180 70 / .35); }
 .prana-info { display: grid; gap: 2px; min-width: 0; }
-.prana-info b { font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.15; font-variant-numeric: tabular-nums; }
-.prana-info span { color: var(--muted); font-size: 13px; }
+.prana-info b { font-family: var(--font-display); font-weight: 400; font-size: 23px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.prana-info span { color: var(--muted); font-size: 14px; }
 .prana-ctl, .prana .note { grid-column: 1 / -1; margin: 0; }
 .prana-ctl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-
-/* mudras: a line drawing of the hands that moves from one mudra to the next (mudra_rig.js), the
-   name and a bead per mudra beneath it, then the full order (tap a name to go to it) */
+/* mudras: a line drawing of the hands moving from one mudra to the next (mudra_rig.js) */
 .mudra { display: grid; gap: 10px; justify-items: center; }
-.m-fig { width: min(100%, 360px); aspect-ratio: 190 / 135; margin: 0; border: 1px solid var(--line); border-radius: 12px;
-  background: var(--mantra-bg); overflow: hidden; --mline: var(--maroon); }
+.m-fig { width: min(100%, 360px); aspect-ratio: 190 / 135; margin: 0; border: 1px solid var(--hair); border-radius: 14px;
+  background: var(--paper-read); overflow: hidden; --mline: var(--maroon); }
 .m-fig svg { display: block; width: 100%; height: 100%; }
 .mh .o { fill: var(--mline); stroke: var(--mline); stroke-linejoin: round; }
 .mh .f { fill: var(--paper); }
@@ -260,20 +382,18 @@ ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
 :root[data-theme="dark"] .m-fig { --mline: var(--gold-ink); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .m-fig { --mline: var(--gold-ink); } }
 .m-beads { height: auto; display: block; }
-.m-list span { cursor: pointer; border-radius: 4px; }
-.m-list span:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
-.m-note { margin: 0; text-align: center; max-width: 60ch; }
 .m-in { position: relative; display: grid; gap: 4px; text-align: center; padding: 0 20px; }
-.m-idx { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
-.m-name { font-family: var(--font-display); font-weight: 400; font-size: 24px; line-height: 1.1; color: var(--maroon); overflow-wrap: anywhere; }
-:root[data-theme="dark"] .m-name { color: var(--gold-ink); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .m-name { color: var(--gold-ink); } }
+.m-idx { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.m-name { font-family: var(--font-display); font-weight: 400; font-size: 25px; line-height: 1.1; overflow-wrap: anywhere; }
 .m-ctl { display: flex; gap: 10px; align-items: center; }
-.m-list { margin: 0; font-size: 13px; color: var(--muted); text-align: center; max-width: 60ch; line-height: 1.8; }
-.m-list .on { color: var(--kumkum); font-weight: 600; }
+.m-list { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 62ch; }
+.m-list span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--hair);
+  background: var(--glass-solid); font-size: 14px; color: var(--muted); cursor: pointer; }
+.m-list .on { color: var(--glass-solid); background: var(--kumkum); border-color: var(--kumkum); font-weight: 600; }
+.m-note { text-align: center; max-width: 60ch; }
 @keyframes mswap { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
-/* beads: japa mala and mudra ring. Unlit beads are the line colour, counted ones gold, the current
-   one kumkum with a small pulse; the meru (top) is a kumkum diamond. */
+/* beads of the japa mala and the mudra ring: unlit in the line colour, counted in gold, the
+   current one kumkum with a small pulse; the meru (top) a kumkum diamond */
 .bd { fill: var(--line); }
 .bd.done { fill: var(--gold); }
 .bd.cur { fill: var(--kumkum); }
@@ -284,88 +404,80 @@ ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
   .bd { transition: fill .25s; transform-box: fill-box; transform-origin: center; }
   .bd.cur { animation: beadPulse .5s ease-out; }
 }
-.sheet { scroll-margin-top: 12px; }
 
-/* place card: India drawn as its 499 places (lamps), zooming onto the chosen one; the kshetra's deity below */
-.side { display: grid; gap: 16px; min-width: 0; align-content: start; }
-.placecard { overflow: hidden; }
-.map-wrap { position: relative; height: 230px; background: var(--maroon); }
-.map-wrap canvas { display: block; width: 100%; height: 100%; }
-.map-label { position: absolute; left: 14px; right: 56px; bottom: 12px; display: grid; gap: 2px; color: var(--on-maroon);
-  text-shadow: 0 1px 3px rgb(0 0 0 / .6); pointer-events: none; }
-.map-label b { font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.05; }
-.map-label span { font-size: 12px; color: var(--gold); font-variant-numeric: tabular-nums; letter-spacing: .03em; }
-.replay { position: absolute; right: 10px; top: 10px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold);
-  background: rgb(0 0 0 / .25); color: var(--on-maroon); cursor: pointer; font-size: 18px; }
-.map-wrap.abroad { height: auto; padding: 18px 14px 16px; }
-.map-wrap.abroad .map-label { position: static; }
-.deity { display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 14px; align-items: center; padding: 14px 16px;
-  border-top: 2px solid var(--gold); }
-@media (prefers-reduced-motion: no-preference) { .deity { animation: rise .6s ease-out; } }
-@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.medallion svg { width: 68px; height: 68px; display: block; }
-.deity h3 { font-family: var(--font-display); font-weight: 400; font-size: 21px; margin: 2px 0 0; line-height: 1.15; }
-.deity p { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
-.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-.tag { font-size: 11.5px; border: 1px solid var(--gold); color: var(--gold-ink); border-radius: 999px; padding: 1px 8px; }
-
-/* phones: compact masthead, today first, tabs in a bottom bar within thumb reach,
-   16px inputs (no iPhone zoom on focus) and 44px touch targets */
-@media (max-width: 979px) { .p-grid > .side { order: -1; } }
-@media (max-width: 640px) {
-  body { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
-  .map-wrap { height: 210px; }
-  .mast-in { padding-block: 10px 12px; }
-  .invoc { font-size: 12px; margin-bottom: 4px; }
-  .brand svg { width: 34px; height: 34px; }
-  .brand h1 { font-size: 27px; }
-  .brand p { font-size: 11.5px; }
-  .controls { width: 100%; flex-wrap: nowrap; }
-  .lang select { min-height: 44px; }
-  .place { flex: 1; min-width: 0; }
-  .place-btn { width: 100%; min-height: 44px; justify-content: space-between; }
-  .picker { left: 0; right: 0; width: auto; }
-  .tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;
-    background: var(--maroon); border-top: 2px solid var(--gold);
-    padding: 7px max(10px, env(safe-area-inset-right, 0px)) calc(7px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px)); }
-  .tab { min-height: 48px; border-radius: 10px; padding: 6px 4px; font-size: 14px; }
-  .tab-long { display: none; }
-  .cal { gap: 3px; }
-  .day .tn { font-size: clamp(9px, 2.6vw, 11px); white-space: nowrap; overflow-wrap: normal; letter-spacing: -.01em; }
-  .kind b { font-size: 16px; hyphens: manual; }
-  main { padding-block: 16px 24px; }
-  .form input[type=text], .form select, .picker input { font-size: 16px; min-height: 44px; }
-  .seg-ctl button { min-height: 40px; padding: 8px 14px; font-size: 14px; }
-  .pill-btn { min-height: 40px; padding: 8px 14px; font-size: 13px; }
-  .link-btn { min-height: 40px; }
-  .sheet { padding: 16px; }
-  .step { grid-template-columns: 28px minmax(0, 1fr); gap: 10px; padding: 14px 12px; }
-  .st-num { width: 28px; height: 28px; font-size: 15px; }
-  .st-body h3 { font-size: 20px; }
-  .mantra { padding: 12px 13px; }
-  .bead { width: 160px; height: 160px; }
-  .bead .cnt { font-size: 46px; }
-  .japa { justify-content: center; }
-  .size button { width: 44px; height: 40px; }
-  .nav { width: 44px; height: 44px; }
-}
-footer { padding-block: 8px 40px; color: var(--muted); font-size: 12.5px; }
-footer p { max-width: 80ch; margin: 0 0 6px; }
-footer a { color: var(--gold-ink); text-underline-offset: 3px; overflow-wrap: anywhere; }
-footer .dedication { margin: 22px auto 0; text-align: center; max-width: none; font-family: var(--font-read); font-style: italic;
-  font-size: 16px; color: var(--ink); }
+footer { padding-block: 0 28px; }
+footer .inner { background: var(--glass); border: 1px solid var(--hair); border-radius: 18px; padding: 16px 18px; color: var(--muted); font-size: 14px; }
+footer p { max-width: 80ch; margin: 0 0 8px; }
+footer a { color: var(--zari); text-underline-offset: 3px; overflow-wrap: anywhere; }
+footer .dedication { margin: 18px auto 0; text-align: center; max-width: none; font-family: var(--font-display); font-style: italic; font-size: 17px; color: var(--ink); }
 footer .dedication::before { content: ""; display: block; width: 120px; height: 8px; margin: 0 auto 12px; background:
-  radial-gradient(circle, var(--gold) 3px, transparent 3.5px) center / 8px 8px no-repeat,
-  linear-gradient(var(--gold), var(--gold)) left center / 52px 1px no-repeat,
-  linear-gradient(var(--gold), var(--gold)) right center / 52px 1px no-repeat; }
-@media (prefers-reduced-motion: no-preference) { .day, .kind, .tab { transition: background-color .15s, box-shadow .15s; } }
+  radial-gradient(circle, var(--zari-line) 3px, transparent 3.5px) center / 8px 8px no-repeat,
+  linear-gradient(var(--zari-line), var(--zari-line)) left center / 52px 1px no-repeat,
+  linear-gradient(var(--zari-line), var(--zari-line)) right center / 52px 1px no-repeat; }
+
+/* phones: the controls take their own row; the calendar keeps one line per tile; step numbers
+   sit in the title so the mantra gets the full width */
+@media (max-width: 639px) {
+  .brand svg { width: 38px; height: 38px; }
+  .brand h1 { font-size: 29px; }
+  .brand-tag { font-size: 13px; }
+  .mast-row { gap: 10px; }
+  .controls { width: 100%; flex-wrap: nowrap; }
+  .place { flex: 1; }
+  .place-btn { width: 100%; justify-content: space-between; }
+  .place-btn small { display: none; }
+  .picker { left: 0; right: 0; width: auto; }
+  .calcard { padding: 12px 10px; }
+  .cal { gap: 4px; }
+  .day { min-height: 74px; padding: 4px 2px 6px; border-radius: 11px; }
+  .day .nk, .day .mk { display: none; }
+  .day .dot { display: block; }
+  .day .tn { font-size: clamp(9.5px, 2.7vw, 12px); white-space: nowrap; overflow-wrap: normal; letter-spacing: -.01em; }
+  .day .gd b { min-width: 21px; height: 21px; }
+  .wd { font-size: clamp(8.5px, 2.45vw, 12px); letter-spacing: 0; overflow: hidden; }
+  .day svg { width: 20px; height: 20px; }
+  .sheet, .s-card, .sd-hero { padding: 14px; }
+  .hero-title { font-size: 25px; }
+  .kind { padding: 10px 8px; }
+  .kind b { font-size: 17px; -webkit-hyphens: manual; hyphens: manual; }
+  .form { grid-template-columns: minmax(0, 1fr); }
+  .st-body { padding: 12px 10px; }
+  .st-body .mantra { margin-inline: -4px; padding: 12px 12px; }
+  .bead { width: 168px; height: 168px; }
+  .bead .cnt { font-size: 50px; }
+  .japa { justify-content: center; }
+  .japa-ctl { justify-items: center; }
+}
+/* tablets and up: the steps hang on a gold thread, numbers in the margin */
+@media (min-width: 640px) {
+  ol.steps { padding-left: 56px; }
+  ol.steps::before { content: ""; position: absolute; left: 21px; top: 26px; bottom: 26px; width: 2px;
+    background: linear-gradient(var(--zari-line), rgb(201 162 74 / .25)); }
+  .st-body h3 .st-num { position: absolute; left: -56px; top: 12px; width: 44px; height: 44px; font-size: 16px; box-shadow: var(--shadow); }
+}
+/* desktop: the tab bar sits under the masthead and stays; two columns where they help */
+@media (min-width: 1000px) {
+  body { padding-bottom: 0; }
+  .tabs { position: sticky; top: 12px; left: auto; bottom: auto; transform: none; width: max-content; margin: 4px auto 0;
+    grid-template-columns: repeat(3, auto); border-radius: 999px; }
+  :root.typing .tabs, :root.tabs-away .tabs { transform: none; }
+  .tab { grid-auto-flow: column; gap: 8px; min-height: 46px; padding: 0 20px; border-radius: 999px; font-size: 15.5px; }
+  .tab-long { display: inline; }
+  .tab[aria-selected="true"]::after { bottom: 4px; }
+  .p-grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); grid-template-areas: "cal sheet" "cal place"; align-items: start; gap: 22px; }
+  .p-grid > .sheet { grid-area: sheet; }
+  .p-grid > .calcard { grid-area: cal; }
+  .p-grid > .placecard { grid-area: place; }
+  .sheet, .step { scroll-margin-top: 80px; }
+  .sk-grid { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); align-items: start; gap: 22px; }
+  .sk-grid > .sk-form { position: sticky; top: 84px; }
+}
 </style>
 
 <!--page-->
 <header class="mast">
-  <div class="zari"></div>
   <div class="gutter"><div class="inner mast-in">
-    <p class="invoc" data-i18n="brand.invocation">|| Sri Gurubhyo Namah ||</p>
+    <p class="invoc" data-i18n="brand.invocation">॥ Sri Gurubhyo Namah ॥</p>
     <div class="mast-row">
       <div class="brand">
         <svg viewBox="0 0 44 44" aria-hidden="true">
@@ -375,38 +487,41 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
           <path d="M5 24.5c5.5 1.6 11.2 2.4 17 2.4s11.5-.8 17-2.4" fill="none" stroke="#fff1c7" stroke-width="1.2" stroke-linecap="round"/>
           <path d="M16 36h12l-2 4h-8z" fill="var(--gold)"/>
         </svg>
-        <div><h1 data-i18n="brand.name">Sankalpam</h1><p data-i18n="brand.tag">Telugu panchangam · sankalpam · sandhyavandanam</p></div>
+        <div><h1 data-i18n="brand.name">Sankalpam</h1><p class="brand-tag" data-i18n="brand.tag">Telugu panchangam · sankalpam · sandhyavandanam</p></div>
       </div>
       <div class="controls">
-      <label class="lang"><span class="sr" data-i18n="lang.label">Language</span>
-        <select id="langSel" aria-label="Language" data-i18n-aria="lang.label">
-          <option value="en">English</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option>
-          <option value="kn">ಕನ್ನಡ</option><option value="hi">हिन्दी</option>
-        </select></label>
-      <div class="place">
-        <button class="place-btn" id="placeBtn" aria-haspopup="listbox" aria-expanded="false"></button>
-        <div class="picker" id="picker" hidden>
-          <input id="placeSearch" type="search" placeholder="Search a city or kshetram" autocomplete="off" aria-label="Search places" data-i18n-ph="place.search" data-i18n-aria="place.search">
-          <button class="near-btn" id="nearBtn" type="button" data-i18n="place.near">◎ Use my location</button>
-          <p class="near-msg" id="nearMsg" hidden></p>
-          <ul id="placeList" role="listbox"></ul>
-        </div>
+        <label class="lang"><span class="sr" data-i18n="lang.label">Language</span>
+          <select id="langSel" aria-label="Language" data-i18n-aria="lang.label">
+            <option value="en">English</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option>
+            <option value="kn">ಕನ್ನಡ</option><option value="hi">हिन्दी</option>
+          </select></label>
+        <div class="place"><button class="place-btn" id="placeBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="picker"></button></div>
       </div>
+      <!-- The place picker hangs from the masthead row (opaque, never blurred), so it can span the row on phones. -->
+      <div class="picker" id="picker" hidden>
+        <input id="placeSearch" type="search" placeholder="Search a city or kshetram" autocomplete="off" aria-label="Search places" data-i18n-ph="place.search" data-i18n-aria="place.search">
+        <button class="near-btn" id="nearBtn" type="button" data-i18n="place.near">◎ Use my location</button>
+        <p class="near-msg" id="nearMsg" hidden></p>
+        <ul id="placeList" role="listbox"></ul>
       </div>
     </div>
-    <nav class="tabs" role="tablist" aria-label="Sections" data-i18n-aria="nav.sections" id="tabs">
-      <button class="tab" role="tab" id="tab-panchangam" aria-controls="panchangam" data-tab="panchangam" data-i18n="tab.panchangam">Panchangam</button>
-      <button class="tab" role="tab" id="tab-sankalpam" aria-controls="sankalpam" data-tab="sankalpam" data-i18n="tab.sankalpam">Sankalpam</button>
-      <button class="tab" role="tab" id="tab-sandhya" aria-controls="sandhya" data-tab="sandhya" aria-label="Sandhyavandanam" data-i18n-aria="tab.sandhyaLong"><span data-i18n="tab.sandhya">Sandhya</span><span class="tab-long" data-i18n="tab.sandhyaRest">vandanam</span></button>
-    </nav>
   </div></div>
-  <div class="zari up"></div>
+  <div class="zari" aria-hidden="true"></div>
 </header>
+
+<!-- Tabs: labels sit in inner spans (applyStatic rewrites [data-i18n] text and would drop the icons).
+     The Panchangam icon is tonight's moon, drawn by setTabMoon(). -->
+<nav class="tabs" role="tablist" aria-label="Sections" data-i18n-aria="nav.sections" id="tabs">
+  <button class="tab" role="tab" id="tab-panchangam" aria-controls="panchangam" data-tab="panchangam"><span class="tab-ico" id="tabMoon" aria-hidden="true"></span><span data-i18n="tab.panchangam">Panchangam</span></button>
+  <button class="tab" role="tab" id="tab-sankalpam" aria-controls="sankalpam" data-tab="sankalpam"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.8h17c-.7 4.2-4.2 7-8.5 7s-7.8-2.8-8.5-7z"/><path d="M12 2.8c1.5 2.1 2.3 3.5 2.3 4.5a2.3 2.3 0 0 1-4.6 0c0-1 .8-2.4 2.3-4.5z" fill="currentColor" fill-opacity=".25"/><circle cx="8.6" cy="10.6" r=".9" fill="currentColor" stroke="none"/><circle cx="15.4" cy="10.6" r=".9" fill="currentColor" stroke="none"/></svg><span data-i18n="tab.sankalpam">Sankalpam</span></button>
+  <button class="tab" role="tab" id="tab-sandhya" aria-controls="sandhya" data-tab="sandhya" aria-label="Sandhyavandanam" data-i18n-aria="tab.sandhyaLong"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7.4 14.6a4.6 4.6 0 0 1 9.2 0"/><path d="M12 5.4v2M6.2 8.2l1.4 1.4M17.8 8.2l-1.4 1.4M3.5 14.6h17"/><path d="M4 18.4c1.4 0 1.4-1 2.8-1s1.4 1 2.8 1 1.4-1 2.8-1 1.4 1 2.8 1 1.4-1 2.8-1"/></svg><span><span data-i18n="tab.sandhya">Sandhya</span><span class="tab-long" data-i18n="tab.sandhyaRest">vandanam</span></span></button>
+</nav>
 
 <main class="gutter"><div class="inner">
   <section class="panel" id="panchangam" role="tabpanel" aria-labelledby="tab-panchangam">
     <div class="p-grid">
-      <div>
+      <aside class="card sheet" id="sheet"></aside>
+      <div class="card calcard">
         <div class="month-head">
           <button class="nav" id="prev" aria-label="Previous month" data-i18n-aria="cal.prev">‹</button>
           <div class="mtitle" id="mtitle"></div>
@@ -416,38 +531,35 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
           <div class="legend">
             <span><i class="sw" style="background:var(--sukla)"></i><span data-i18n="legend.sukla">Sukla paksham</span></span>
             <span><i class="sw" style="background:var(--bahula)"></i><span data-i18n="legend.bahula">Bahula paksham</span></span>
-            <span><i class="sw" style="box-shadow: inset 0 0 0 2px var(--kumkum)"></i><span data-i18n="legend.today">Today</span></span>
+            <span><i class="sw sw-today"></i><span data-i18n="legend.today">Today</span></span>
           </div>
           <button class="pill-btn" id="todayBtn" data-i18n="cal.today">Go to today</button>
         </div>
         <div class="cal" id="cal"></div>
       </div>
-      <div class="side">
-        <section class="card placecard" id="placeCard" aria-label="Chosen place" data-i18n-aria="place.card">
-          <div class="map-wrap" id="mapWrap">
-            <canvas id="map" aria-hidden="true"></canvas>
-            <div class="map-label"><b id="mapName"></b><span id="mapCoords"></span></div>
-            <button class="replay" id="mapReplay" aria-label="Play the zoom again" data-i18n-aria="map.replay">↻</button>
-          </div>
-          <div class="deity" id="deity" hidden></div>
-        </section>
-        <aside class="card sheet" id="sheet" aria-live="polite"></aside>
-      </div>
+      <section class="card placecard" id="placeCard" aria-label="Chosen place" data-i18n-aria="place.card">
+        <div class="map-wrap" id="mapWrap">
+          <canvas id="map" aria-hidden="true"></canvas>
+          <div class="map-label"><b id="mapName"></b><span id="mapCoords"></span></div>
+          <button class="replay" id="mapReplay" aria-label="Play the zoom again" data-i18n-aria="map.replay">↻</button>
+        </div>
+        <div class="deity" id="deity" hidden></div>
+      </section>
     </div>
   </section>
 
-  <section class="panel" id="sankalpam" role="tabpanel" aria-labelledby="tab-sankalpam" hidden>
-    <div class="s-wrap" id="sankWrap"></div>
+<section class="panel" id="sankalpam" role="tabpanel" aria-labelledby="tab-sankalpam" hidden>
+    <div class="sk-wrap" id="sankWrap"></div>
   </section>
 
   <section class="panel" id="sandhya" role="tabpanel" aria-labelledby="tab-sandhya" hidden>
-    <div class="s-wrap" id="sandhyaWrap"></div>
+    <div class="sd-wrap" id="sandhyaWrap"></div>
   </section>
 </div></main>
 
 <footer class="gutter"><div class="inner">
   <p data-i18n="foot.times">Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com. Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.</p>
-  <p data-i18n="foot.sandhya">Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes, in English letters without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.</p>
+  <p data-i18n="foot.sandhya">Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes. On this page its Sanskrit is in Roman letters with pronunciation marks, without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.</p>
   <p data-i18n="foot.mantras" id="footMantras" hidden>In Tamil, mantras and the sankalpam are shown in English letters for now; a version in Tamil script is being prepared and checked.</p>
   <p class="open"><span data-i18n="foot.open">The code is open for anyone to use and build on:</span>
     <a href="https://github.com/usyvsaditya-del/telugu-sankalpam" rel="noopener">github.com/usyvsaditya-del/telugu-sankalpam</a></p>
@@ -473,11 +585,16 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   };
   // ----- language: page text from ui.js / ui_i18n.js, panchangam words from names_i18n.js -----
   const LANG_LOCALE = { en: 'en-IN', te: 'te-IN', ta: 'ta-IN', kn: 'kn-IN', hi: 'hi-IN' };
-  const LANG_FONTS = { // Google Fonts families for each script, loaded only when chosen
-    te: 'Noto+Sans+Telugu:wght@400;600&family=Noto+Serif+Telugu:wght@500',
-    ta: 'Noto+Sans+Tamil:wght@400;600&family=Noto+Serif+Tamil:wght@500',
-    kn: 'Noto+Sans+Kannada:wght@400;600&family=Noto+Serif+Kannada:wght@500',
-    hi: 'Noto+Sans+Devanagari:wght@400;600&family=Noto+Serif+Devanagari:wght@500' };
+  // Google Fonts for each script, loaded only when that language is chosen. Titles: Tiro (swap,
+  // small files). The recited word: Noto Serif at weight 500, which keeps look-alike letters
+  // (ద/ధ, త/థ, బ/భ) apart at dawn, loaded "optional" so a line never re-wraps mid-recital when the
+  // font arrives late (a first visit may keep the phone's own face). The frame (labels, tiles)
+  // uses the phone's own face for each script, which saves 120-250 KB.
+  const LANG_FONTS = {
+    te: { display: 'Tiro+Telugu', read: 'Noto+Serif+Telugu:wght@500' },
+    ta: { display: 'Tiro+Tamil' },
+    kn: { display: 'Tiro+Kannada', read: 'Noto+Serif+Kannada:wght@500' },
+    hi: { read: 'Noto+Serif+Devanagari:wght@500' } };
   const UIX = typeof UI_I18N !== 'undefined' ? UI_I18N : {};
   const NMX = typeof NAMES_I18N !== 'undefined' ? NAMES_I18N : {};
   let lang = LANG_LOCALE[store.get('panchangam.lang')] ? store.get('panchangam.lang') : 'en';
@@ -496,9 +613,11 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   // page but Tamil: in the page's own script, and on the English page in Roman letters with
   // pronunciation marks (roman() in indic.js). One script per page: the English page shows no Telugu
   // letters. Tamil keeps the English-letters text of sandhya.js and engine.js for now.
+  // Long words carry soft break points between aksharas (softBreaks in indic.js), so a compound
+  // breaks as vi-bhrā on a narrow phone and never as vib-hrā; Copy takes them out again.
   const fromTe = () => inScript() || lang === 'en';
-  const recite = (x) => (lang === 'en' ? roman(x) : toScript(x));
-  const reciteParts = (parts) => (lang === 'en' ? romanParts(parts) : indicParts(parts, lang));
+  const recite = (x) => (lang === 'en' ? roman(softBreaks(x)) : toScript(softBreaks(x)));
+  const reciteParts = (parts) => (lang === 'en' ? romanParts(softBreakParts(parts)) : indicParts(softBreakParts(parts), lang));
   let sankWordsTe = null;
   const sankWords = () => sankWordsTe || (sankWordsTe = sankalpaWordsTe(NMX.te));
   const DIR_TE = { Uttara: 'ఉత్తర', Eesanya: 'ఈశాన్య', Purva: 'పూర్వ', Agneya: 'ఆగ్నేయ', Dakshina: 'దక్షిణ',
@@ -567,11 +686,15 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   }
   setMonthNames();
   function loadFonts(l) {
-    if (!LANG_FONTS[l] || document.getElementById('font-' + l) || !document.createElement) return;
-    const link = document.createElement('link');
-    link.id = 'font-' + l; link.rel = 'stylesheet';
-    link.href = `https://fonts.googleapis.com/css2?family=${LANG_FONTS[l]}&display=swap`;
-    document.head?.appendChild(link);
+    if (!LANG_FONTS[l] || !document.createElement) return;
+    for (const [role, display] of [['display', 'swap'], ['read', 'optional']]) {
+      const fam = LANG_FONTS[l][role], id = `font-${l}-${role}`;
+      if (!fam || document.getElementById(id)) continue;
+      const link = document.createElement('link');
+      link.id = id; link.rel = 'stylesheet';
+      link.href = `https://fonts.googleapis.com/css2?family=${fam}&display=${display}`;
+      document.head?.appendChild(link);
+    }
   }
   // Static text in the page's HTML carries data-i18n (text), data-i18n-ph (placeholder), data-i18n-aria.
   function applyStatic() {
@@ -586,6 +709,9 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   // Mantra text: strings (with \n for new lines) and {v} parts for filled-in words.
   const renderParts = (parts) => (Array.isArray(parts) ? parts : [parts])
     .map((x) => (typeof x === 'string' ? esc(x) : `<span class="v">${esc(x.v)}</span>`)).join('').replace(/\n/g, '<br>');
+  // A mantra's lines, each its own block with a hanging indent, so a line that wraps on a phone
+  // shows plainly where the next line of the mantra begins.
+  const renderLines = (text) => text.split('\n').map((l) => `<span class="ml">${esc(l)}</span>`).join('');
 
   // India rows: [name, state, lat, lon, kind] at IST. Abroad rows: [name, country, lat, lon, kind, IANA zone].
   const places = [
@@ -680,8 +806,8 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     html += '<div></div>'.repeat(p0.vara);
     for (const p of days) {
       const t = p.tithi[0], first = p === p0 || p.date.d === 1;
-      const cls = ['day', t.index >= 15 ? 'bahula' : '', sameDay(p.date, today) ? 'today' : '',
-        selected && sameDay(p.date, selected) ? 'sel' : ''].join(' ');
+      const cls = ['day', t.index >= 15 ? 'bahula' : '', t.index === 14 ? 'purnima' : '', t.index === 29 ? 'amavasya' : '',
+        sameDay(p.date, today) ? 'today' : '', selected && sameDay(p.date, selected) ? 'sel' : ''].filter(Boolean).join(' ');
       const label = `${nm.vara(p.vara)} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}: ${nm.paksha(t.index)} ${nm.tithi(t.index)}, ${nm.nak(p.nakshatra[0].index)}${p.marks.length ? ', ' + p.marks.map(nm.mark).join(', ') : ''}`;
       html += `<button class="${cls}" data-d="${p.date.y}-${p.date.m}-${p.date.d}" aria-label="${esc(label)}">`
         + `<span class="gd"><b>${p.date.d}</b>${first ? ' ' + MONTHS[p.date.m - 1] : ''}</span>`
@@ -702,20 +828,56 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 
   function selectedDay() { return view.days.find((x) => sameDay(x.date, selected)) || dayOf(selected); }
 
+  // The day bar: today's sun path from sunrise to sunset, the times to avoid (Rahu kaalam,
+  // Yamagandam, Gulika kaalam) as smoke across it, Abhijit on its own gold lane above (hollow on
+  // Budhavaram, when it is not taken), and the sun where it is now. The kaalams are fixed eighths of
+  // each weekday, so the bar is drawn for today only; the rows below give any day's times and carry
+  // the same marks as its key. refreshDayBar() moves the sun and the "now" line every minute.
+  const KAAL = [['rahu', 'Rahu kaalam', 'k-rahu'], ['yamagandam', 'Yamagandam', 'k-yama'], ['gulika', 'Gulika kaalam', 'k-gulika']];
+  const barPc = (p, jd) => Math.max(0, Math.min(100, ((jd - p.sunrise) / (p.sunset - p.sunrise)) * 100));
+  function dayBar(p, now) {
+    const seg = (k, cls, gap) => `<span class="${cls}" style="left:calc(${barPc(p, k.start).toFixed(2)}% + ${gap}px);`
+      + `width:calc(${(barPc(p, k.end) - barPc(p, k.start)).toFixed(2)}% - ${2 * gap}px)"></span>`;
+    return `<div class="daybar" aria-hidden="true">
+      <div class="db-lane">${seg(p.abhijit, 'db-good' + (p.abhijit.observed ? '' : ' off'), 0)}</div>
+      <div class="db-track">${KAAL.map(([k, , cls]) => seg(p[k], 'db-seg ' + cls, 1)).join('')}<span class="db-sun" id="dbSun"></span></div></div>`;
+  }
+  // The kaalam running now, or the next one today.
+  function nowNext(p, now) {
+    const all = [...KAAL.map(([k, en]) => ({ k: p[k], name: nm.kalam(en) })), ...(p.abhijit.observed ? [{ k: p.abhijit, name: nm.kalam('Abhijit') }] : [])];
+    const cur = all.find((x) => now >= x.k.start && now < x.k.end);
+    if (cur) return `${esc(cur.name)} <span class="now">${esc(t('now'))}</span> · ${esc(t('seg.until', { t: fmtTime(cur.k.end) }))}`;
+    const next = all.filter((x) => x.k.start > now).sort((a, b) => a.k.start - b.k.start)[0];
+    return next ? `${esc(t('bar.next'))}: ${esc(next.name)} · ${fmtTime(next.k.start)} – ${fmtTime(next.k.end)}` : '';
+  }
+  function refreshDayBar() {
+    const sun = $('dbSun'); if (!sun || !selected) return;
+    const p = selectedDay(), now = nowJd(), up = now >= p.sunrise && now <= p.sunset;
+    sun.hidden = !up; if (up) sun.style.left = barPc(p, now).toFixed(2) + '%';
+    const line = $('dbNow'); if (line) { const html = nowNext(p, now); if (line.innerHTML !== html) line.innerHTML = html; line.hidden = !html; }
+  }
+
   function renderSheet() {
     const p = selectedDay(), day = p.date, t0 = p.tithi[0];
     const now = nowJd(), isToday = now >= p.sunrise && now < p.nextSunrise, live = isToday ? now : null;
     const kal = (k) => `${fmtTime(k.start)} – ${fmtTime(k.end)}`;
+    const liveK = (k) => (live != null && live >= k.start && live < k.end ? `<span class="now">${esc(t('now'))}</span>` : '');
     $('sheet').innerHTML = `
-      <div class="sheet-head">${moonSVG(p.elongation)}<div>
-        <h3>${esc(nm.vara(p.vara))}, ${day.d} ${MONTHS_LONG[day.m - 1]} ${day.y}</h3>
-        <p>${p.masa.adhika ? esc(t('month.adhika')) + ' ' : ''}${esc(nm.masaPlain(p.masa.index))} ${esc(nm.paksha(t0.index))} ${esc(nm.tithi(t0.index))} · ${esc(placeLabel(place))}</p>
+      <div class="hero-head">${moonSVG(p.elongation)}<div>
+        <span class="eyebrow">${esc(nm.vara(p.vara))}, ${day.d} ${MONTHS_LONG[day.m - 1]} ${day.y}</span>
+        <h3 class="hero-title">${p.masa.adhika ? esc(t('month.adhika')) + ' ' : ''}${esc(nm.masaPlain(p.masa.index))} ${esc(nm.paksha(t0.index))} ${esc(nm.tithi(t0.index))}</h3>
       </div></div>
       ${p.marks.length ? `<div class="chips">${p.marks.map((m) => `<span class="chip">${esc(nm.mark(m))}${m.at ? ` · ${fmtTime(m.at, day)}` : ''}</span>`).join('')}</div>` : ''}
+      ${isToday ? dayBar(p, now) : ''}
       <div class="sun">
         <div><span class="lbl">${esc(t('sun.rise'))}</span><span class="big">${fmtTime(p.sunrise)}</span></div>
         <div><span class="lbl">${esc(t('sun.set'))}</span><span class="big">${fmtTime(p.sunset)}</span></div>
       </div>
+      ${isToday ? '<p class="db-now" id="dbNow" role="status"></p>' : `<div><button class="pill-btn" data-today>${esc(t('cal.today'))}</button></div>`}
+      <div class="sec"><h4>${esc(t('sec.kaalam'))}</h4><dl class="rows">
+        ${KAAL.map(([k, en, cls]) => `<dt><i class="k-sw ${cls}"></i>${esc(nm.kalam(en))}</dt><dd class="bad">${kal(p[k])}${liveK(p[k])}</dd>`).join('')}
+        <dt><i class="k-sw k-abhijit"></i>${esc(nm.kalam('Abhijit'))}</dt><dd class="good">${kal(p.abhijit)}${p.abhijit.observed ? liveK(p.abhijit) : ` <span class="note">${esc(t('abhijit.wed'))}</span>`}</dd>
+      </dl></div>
       <div class="sec"><h4>${esc(t('sec.angam'))}</h4><dl class="rows">
         <dt>${esc(t('row.tithi'))}</dt><dd>${segRows(p.tithi, day, live, (s) => `${nm.paksha(s.index)} ${nm.tithi(s.index)}`)}</dd>
         <dt>${esc(t('row.vara'))}</dt><dd>${esc(nm.vara(p.vara))} <small>(${esc(nm.varaSanskrit(p.vara))})</small></dd>
@@ -726,14 +888,9 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
         <dt>${esc(t('row.sunRasi'))}</dt><dd>${esc(nm.rashi(p.sunRashi))}</dd>
         <dt>${esc(t('row.moon'))}</dt><dd>${esc(p.moonrise != null ? t('moon.rises', { t: fmtTime(p.moonrise, day) }) : t('moon.noRise'))} · ${esc(p.moonset != null ? t('moon.sets', { t: fmtTime(p.moonset, day) }) : t('moon.noSet'))}</dd>
       </dl></div>
-      <div class="sec"><h4>${esc(t('sec.kaalam'))}</h4><dl class="rows">
-        <dt>${esc(nm.kalam('Rahu kaalam'))}</dt><dd class="bad">${kal(p.rahu)}</dd>
-        <dt>${esc(nm.kalam('Yamagandam'))}</dt><dd class="bad">${kal(p.yamagandam)}</dd>
-        <dt>${esc(nm.kalam('Gulika kaalam'))}</dt><dd class="bad">${kal(p.gulika)}</dd>
-        <dt>${esc(nm.kalam('Abhijit'))}</dt><dd class="good">${kal(p.abhijit)}${p.abhijit.observed ? '' : ` <span class="note">${esc(t('abhijit.wed'))}</span>`}</dd>
-      </dl></div>
       <div class="row-between"><button class="link-btn" data-go="sankalpam">${esc(t('link.sankalpam'))}</button>
         ${isToday ? `<button class="link-btn" data-go="sandhya">${esc(t('link.sandhya'))}</button>` : ''}</div>`;
+    refreshDayBar();
   }
 
   // ================= Sankalpam tab =================
@@ -741,6 +898,11 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   const modeCtl = (id, cur) => `<span class="seg-ctl" role="group" aria-label="${esc(t('mode.label'))}" id="${id}">`
     + ['full', 'laghu', 'short'].map((k) => `<button data-mode="${k}" aria-pressed="${k === cur}">${esc(t('mode.' + k))}</button>`).join('')
     + '</span>';
+  // How to read the marks, on the English page: a heading and a short list, open until closed.
+  const keyHtml = () => { const [head, ...items] = t('sd.pron').split('|');
+    return `<details class="card key" id="keyBox"${store.get('panchangam.keyShut') === '1' ? '' : ' open'}><summary>${esc(head)}</summary>`
+      + `<ul>${items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></details>`; };
+  const wireKey = () => $('keyBox')?.addEventListener('toggle', (e) => store.set('panchangam.keyShut', e.target.open ? '0' : '1'));
 
   function sankMoment(p) {
     const now = nowJd();
@@ -750,16 +912,16 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   function renderSankalpam() {
     const p = selectedDay(), d = p.date, o = sankOpts(), desha = deshaFor(place), at = sankMoment(p);
     $('sankWrap').innerHTML = `
-      <div><h2 class="sec-title">${esc(t('sk.title'))}</h2><div class="rule"></div>
-        <p class="note">${esc(nm.vara(p.vara))}, ${d.d} ${MONTHS_LONG[d.m - 1]} ${d.y} · ${esc(placeLabel(place))} · ${esc(at.label)}.
-        <button class="link-btn" data-go="panchangam">${esc(t('sk.otherDay'))}</button></p></div>
+      <div class="sk-grid">
       <div class="card s-card">
+        <div class="s-head"><h2 class="sec-title">${esc(t('sk.title'))}</h2><div class="rule"></div>
+          <p class="note">${esc(nm.vara(p.vara))}, ${d.d} ${MONTHS_LONG[d.m - 1]} ${d.y} · ${esc(placeLabel(place))} · ${esc(at.label)}.
+          <button class="link-btn" data-go="panchangam">${esc(t('sk.otherDay'))}</button></p></div>
         <div class="row-between">${modeCtl('sk-mode', o.mode)}<button class="pill-btn" id="copyBtn">${esc(t('copy'))}</button></div>
         <p class="mantra" id="sankText"></p>
         <p class="note">${esc(t('sk.note'))}</p>
-        ${lang === 'en' ? `<p class="note">${esc(t('sd.pron'))}</p>` : ''}
       </div>
-      <div class="card s-card">
+      <div class="card s-card sk-form">
         <div class="form">
           <label>${esc(t('f.for'))}<select id="sk-purpose">${opt(Object.fromEntries(Object.keys(PURPOSES).map((k) => [k, t('purpose.' + k)])), o.purpose)}</select></label>
           <label id="sk-deity-wrap"${o.purpose === 'puja' ? '' : ' hidden'}>${esc(t('f.deity'))}<input type="text" id="sk-deity" value="${esc(o.deity)}"></label>
@@ -772,7 +934,10 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
         <p class="note">${esc(desha.abroad ? t('desha.abroad') : desha.preset ? t('desha.preset', { place: placeLabel(place) })
           : desha.north ? t('desha.north') : t('desha.deccan', { dir: dirLabel(srisailamDirection(place.lat, place.lon).name) }))}
           ${esc(t('desha.edit'))}</p>
-      </div>`;
+      </div>
+      </div>
+      ${lang === 'en' ? keyHtml() : ''}`;
+    wireKey();
 
     const draw = () => { $('sankText').innerHTML = renderParts(sankParts(p, at.jd, sankOpts())); };
     draw();
@@ -796,7 +961,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   }
   function wireCopy(btnId, textId) {
     $(btnId).addEventListener('click', () => {
-      const btn = $(btnId), text = $(textId).innerText || $(textId).textContent;
+      const btn = $(btnId), text = ($(textId).innerText || $(textId).textContent).replace(/\u00AD/g, '');
       const done = () => { btn.textContent = t('copied'); setTimeout(() => { btn.textContent = t('copy'); }, 1500); };
       const fallback = () => { const r = document.createRange(); r.selectNodeContents($(textId));
         const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = t('copy.selected'); };
@@ -841,54 +1006,47 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const key = sandhyaPick || auto.kind, k = SANDHYA_KINDS[key], me = person();
     // The day this sandhya belongs to: a Sayam in the small hours belongs to the previous day.
     const p = key === auto.kind ? auto.day : pToday;
-    const times = sandhyaTimes(p), status = sandhyaStatus(key, now, p);
     const sayamDay = auto.kind === 'sayam' ? auto.day : pToday, tSayam = sandhyaTimes(sayamDay), tToday = sandhyaTimes(pToday);
     const hint = { pratah: t('hint.pratah', { t: fmtTime(tToday.sunrise) }),
       madhyahnika: `${fmtTime(tToday.madhyahna.start)} – ${fmtTime(tToday.madhyahna.end)}`,
       sayam: t('hint.sayam', { t: fmtTime(tSayam.sunset) }) };
-    const when = {
-      pratah: t('when.pratah', { start: fmtTime(times.pratahStart), rise: fmtTime(times.sunrise) }),
-      madhyahnika: t('when.madhyahnika', { noon: fmtTime(times.noon), start: fmtTime(times.madhyahna.start), end: fmtTime(times.madhyahna.end) }),
-      sayam: t('when.sayam', { start: fmtTime(times.sayamStart), set: fmtTime(times.sunset) }),
-    }[key];
     const steps = localSteps(key), arghyaStep = steps.findIndex((s) => s.arghya) + 1;
-    const statusLine = {
-      early: `<span class="note">${esc(t('status.early'))}</span>`,
-      'on-time': '',
-      late: `<span class="warn">${esc(t('status.late', { n: arghyaStep }))}</span>`,
-      past: `<span class="warn">${esc(t('status.past', { n: arghyaStep }))}</span>`,
-    }[status];
     const mode = store.get('panchangam.sandhya.mode') || 'short';
-    document.documentElement.style.setProperty('--mantra-size', (+(store.get('panchangam.mantraSize') || 18)) + 'px');
+    document.documentElement.style.setProperty('--mantra-size', mantraSize() + 'px');
     // The japa count is kept per day and sandhya, so a refresh or a tap elsewhere does not lose it.
     japa.key = `panchangam.japa.${p.date.y}-${p.date.m}-${p.date.d}.${key}`;
     japa.count = Math.max(0, +(store.get(japa.key) || 0));
+    sd = { key, p, arghyaStep };
 
+    // Each step's number sits in its title: in the margin on a gold thread from 640px, inline on
+    // phones so the mantra gets the full width. A mantra's lines each wrap with a hanging indent.
+    const num = (i) => `<span class="st-num">${i + 1}</span>`;
     const stepHtml = steps.map((s, i) => {
-      if (s.ref) return `<li class="card step ref"><div class="st-num">${i + 1}</div><div class="st-body"><h3>${esc(s.title)}</h3><p class="how">${esc(s.how)}</p></div></li>`;
-      let body = `<h3>${esc(s.title)}</h3><p class="how">${esc(s.how)}</p>`;
+      if (s.ref) return `<li class="step ref"><div class="st-body"><h3>${num(i)}<span>${esc(s.title)}</span></h3><p class="how">${esc(s.how)}</p></div></li>`;
+      let body = `<h3>${num(i)}<span>${esc(s.title)}</span></h3><p class="how">${esc(s.how)}</p>`;
       if (s.sankalpam) body += `<div class="row-between">${modeCtl('sd-mode', mode)}</div><p class="mantra" id="sdSank"></p>`;
       else if (s.abhivadanam) body += `<p class="mantra" id="sdAbhi"></p>`;
       else if (s.mudras) body += mudraHtml(s.id, s.mudras);
-      else body += `<p class="mantra">${renderParts(s.mantra)}</p>`;
+      else body += `<p class="mantra">${typeof s.mantra === 'string' ? renderLines(s.mantra) : renderParts(s.mantra)}</p>`;
       if (s.breath) body += pranaHtml();
       if (s.arghya) body += `<p class="note">${esc(t('arghya.times', { n: k.arghyas }))}</p><p class="timer" id="arghyaTimer" aria-live="polite"></p>`;
       if (s.japa) body += japaHtml();
       if (s.note) body += `<p class="note">${esc(s.note)}</p>`;
-      return `<li class="card step" id="st-${s.id}"><div class="st-num">${i + 1}</div><div class="st-body">${body}</div></li>`;
+      return `<li class="step" id="st-${s.id}"><div class="st-body">${body}</div></li>`;
     }).join('');
 
+    // The hero is tinted by the sandhya's own colour (vidruma, mukta, nila) and says how the hour
+    // stands; the steps below never re-draw on their own while you read (see tick()).
     $('sandhyaWrap').innerHTML = `
-      <div><h2 class="sec-title">${esc(t('sd.title'))}</h2><div class="rule"></div>
-        <p class="note">${esc(t('sd.sub', { place: placeLabel(place), day: `${nm.vara(p.vara)} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}` }))}</p></div>
-      <div class="kinds" role="tablist" aria-label="${esc(t('sd.which'))}" id="kinds">
-        ${Object.entries(SANDHYA_KINDS).map(([kk, x]) => `<button class="kind" role="tab" data-kind="${kk}" aria-selected="${kk === key}">
-          <b>${lang === 'en' ? x.label : esc(t('kind.' + kk))}</b><small>${esc(hint[kk])}</small>${kk === auto.kind ? `<span class="now">${esc(t('now'))}</span>` : ''}</button>`).join('')}
-      </div>
-      <div class="card when${status === 'late' || status === 'past' ? ' late' : ''}">
-        <span class="lbl">${esc(t('title.' + key))}</span><span>${esc(when)}</span>${statusLine}
-        ${key !== auto.kind ? `<span class="note">${esc(t('clock.now', { title: t('title.' + auto.kind) }))} <button class="link-btn" id="followClock">${esc(t('clock.follow'))}</button></span>` : ''}
-      </div>
+      <section class="card sd-hero" id="sdHero" data-kind="${key}">
+        <div><span class="eyebrow">${esc(t('sd.sub', { place: placeLabel(place), day: `${nm.vara(p.vara)} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}` }))}</span>
+          <h2 class="sec-title">${esc(t('title.' + key))}</h2></div>
+        <div class="kinds" role="tablist" aria-label="${esc(t('sd.which'))}" id="kinds">
+          ${Object.entries(SANDHYA_KINDS).map(([kk, x]) => `<button class="kind" role="tab" data-kind="${kk}" aria-selected="${kk === key}">
+            <b>${lang === 'en' ? x.label : esc(t('kind.' + kk))}</b><small>${esc(hint[kk])}</small>${kk === auto.kind ? `<span class="now">${esc(t('now'))}</span>` : ''}</button>`).join('')}
+        </div>
+        <div class="when" id="sdWhen">${sandhyaHeadHtml()}</div>
+      </section>
       <details class="card me"${me.gotra && me.pravara && me.name ? '' : ' open'}>
         <summary>${esc(t('me.summary'))}</summary>
         <div class="form">
@@ -898,12 +1056,14 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
           <label>${esc(t('f.sutra'))}<input type="text" id="sd-sutra" value="${esc(me.sutra)}"></label>
           <label>${esc(t('f.sakha'))}<input type="text" id="sd-sakha" value="${esc(me.sakha)}"></label>
         </div>
-        <p class="note" style="margin-top:0">${esc(t('me.device'))}</p>
+        <p class="note">${esc(t('me.device'))}</p>
       </details>
-      <div class="row-between"><span class="note">${esc(t('steps.note', { n: steps.length }))}</span>
-        <span class="size" aria-label="${esc(t('size.label'))}">${esc(t('size.label'))} <button id="szDown" aria-label="${esc(t('size.smaller'))}">A−</button><button id="szUp" aria-label="${esc(t('size.larger'))}">A+</button></span></div>
-      ${lang === 'en' ? `<p class="note pron">${esc(t('sd.pron'))}</p>` : ''}
+      <div class="card tools"><span class="note">${esc(t('steps.note', { n: steps.length }))}</span>
+        <span class="size" role="group" aria-label="${esc(t('size.label'))}">${esc(t('size.label'))} <button id="szDown" aria-label="${esc(t('size.smaller'))}">A−</button><button id="szUp" aria-label="${esc(t('size.larger'))}">A+</button></span>
+        <button class="solid-btn" id="solidBtn" aria-pressed="${document.documentElement.classList.contains('solid')}">${esc(t('solid.label'))}</button></div>
+      ${lang === 'en' ? keyHtml() : ''}
       <ol class="steps">${stepHtml}</ol>`;
+    wireKey();
 
     const drawSank = () => {
       const o = { ...sankOpts(), purpose: key, mode: store.get('panchangam.sandhya.mode') || 'short' };
@@ -915,18 +1075,62 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       store.set('panchangam.sk.' + f, e.target.value); drawSank(); drawAbhi();
     });
     wireMode('sd-mode', 'panchangam.sandhya.mode', drawSank);
-    $('kinds').addEventListener('click', (e) => {
-      const b = e.target.closest('button[data-kind]'); if (!b || b.dataset.kind === key) return;
-      sandhyaPick = b.dataset.kind === auto.kind ? null : b.dataset.kind; renderSandhya();
+    $('sdHero').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-kind]');
+      if (b) { if (b.dataset.kind !== key) { sandhyaPick = b.dataset.kind === sandhyaNow().auto.kind ? null : b.dataset.kind; renderSandhya(); } return; }
+      if (e.target.closest('[data-follow]')) { sandhyaPick = null; renderSandhya(); }
     });
-    if ($('followClock')) $('followClock').addEventListener('click', () => { sandhyaPick = null; renderSandhya(); });
-    const setSize = (d) => { const s = Math.max(14, Math.min(28, (+(store.get('panchangam.mantraSize') || 18)) + d));
-      store.set('panchangam.mantraSize', String(s)); document.documentElement.style.setProperty('--mantra-size', s + 'px'); };
+    // Text size: the step at the top of the screen stays where it is while the text grows or shrinks.
+    const setSize = (d) => {
+      const anchor = [...document.querySelectorAll('#sandhyaWrap .step')].find((el) => el.getBoundingClientRect().bottom > 80);
+      const before = anchor ? anchor.getBoundingClientRect().top : 0;
+      const s = Math.max(16, Math.min(36, mantraSize() + d));
+      store.set('panchangam.mantraSize', String(s)); document.documentElement.style.setProperty('--mantra-size', s + 'px');
+      if (anchor) window.scrollBy?.(0, anchor.getBoundingClientRect().top - before);
+    };
     $('szDown').addEventListener('click', () => setSize(-2));
     $('szUp').addEventListener('click', () => setSize(2));
+    // Plain background: opaque surfaces and a flat ground, kept on this device.
+    $('solidBtn').addEventListener('click', (e) => {
+      const on = !document.documentElement.classList.contains('solid');
+      document.documentElement.classList.toggle('solid', on); store.set('panchangam.solid', on ? '1' : '0');
+      e.currentTarget.setAttribute('aria-pressed', String(on));
+    });
     wireJapa(); wirePrana();
     for (const s of steps) if (s.mudras) wireMudra(s.id, s.mudras);
     startSandhyaClock(key, p);
+  }
+
+  // The hero's moving parts, re-drawn every minute without touching the steps: when to do it,
+  // whether it is late, the grade of the hour by the sky (Pratah and Sayam), and a note when the
+  // clock has moved on to another sandhya.
+  let sd = null; // what the Sandhya tab shows: { key, p, arghyaStep }
+  const mantraSize = () => Math.max(16, Math.min(36, +(store.get('panchangam.mantraSize') || 20)));
+  function sandhyaHeadHtml() {
+    const { key, p, arghyaStep } = sd, { now, auto } = sandhyaNow(), times = sandhyaTimes(p), status = sandhyaStatus(key, now, p);
+    const when = {
+      pratah: t('when.pratah', { start: fmtTime(times.pratahStart), rise: fmtTime(times.sunrise) }),
+      madhyahnika: t('when.madhyahnika', { noon: fmtTime(times.noon), start: fmtTime(times.madhyahna.start), end: fmtTime(times.madhyahna.end) }),
+      sayam: t('when.sayam', { start: fmtTime(times.sayamStart), set: fmtTime(times.sunset) }),
+    }[key];
+    const statusLine = {
+      early: `<span class="note">${esc(t('status.early'))}</span>`, 'on-time': '',
+      late: `<span class="warn">${esc(t('status.late', { n: arghyaStep }))}</span>`,
+      past: `<span class="warn">${esc(t('status.past', { n: arghyaStep }))}</span>`,
+    }[status];
+    const grade = status === 'on-time' || status === 'late' ? sandhyaGrade(key, sunAltitude(now, place.lat, place.lon)) : null;
+    let gradeLine = '';
+    if (grade) { const g = t(`grade.${key}.${grade}`), i = g.indexOf(':'); gradeLine = `<p class="grade"><b>${esc(g.slice(0, i))}</b><span>${esc(g.slice(i + 1).trim())}</span></p>`; }
+    const clock = key !== auto.kind ? `<p class="note">${esc(t('clock.now', { title: t('title.' + auto.kind) }))} <button class="link-btn" data-follow>${esc(t('clock.follow'))}</button></p>` : '';
+    return `<span>${esc(when)}</span>${statusLine}${gradeLine}${clock}`;
+  }
+  // While the hero is above the screen nothing in it changes (a line added there would push the
+  // mantra being read, in browsers that do not anchor the scroll); it catches up on scrolling back.
+  let headStale = false;
+  function refreshSandhyaHead() {
+    if (!sd || !$('sdWhen')) return;
+    if ($('sdHero').getBoundingClientRect().bottom < 0) { headStale = true; return; }
+    headStale = false; const h = sandhyaHeadHtml(); if ($('sdWhen').innerHTML !== h) $('sdWhen').innerHTML = h;
   }
 
   // ----- timers: arghya countdown and japa time, updated every second while the tab is open -----
@@ -1048,7 +1252,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       <svg class="m-beads" viewBox="0 0 ${list.length * 10} 10" style="width:min(100%, ${list.length * 12.5}px)" aria-hidden="true">${beadRow(list.length, 'mb')}</svg>
       <div class="m-ctl"><button class="nav" data-act="prev" aria-label="${esc(t('mudra.prev'))}">‹</button>
         <button class="pill-btn" data-act="play">${esc(t('mudra.play'))}</button><button class="nav" data-act="next" aria-label="${esc(t('mudra.next'))}">›</button></div>
-      <p class="m-list">${list.map((m, i) => `<span data-i="${i}" role="button" tabindex="0">${esc(mudraLabel(list, i))}</span>`).join(' · ')}</p>
+      <p class="m-list">${list.map((m, i) => `<span data-i="${i}" role="button" tabindex="0">${esc(mudraLabel(list, i))}</span>`).join('')}</p>
       ${d ? `<p class="note m-note">${esc(t('mudra.drawn'))}</p>` : ''}
     </div>`;
   }
@@ -1133,7 +1337,8 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       <div class="japa-ctl">
         <span class="seg-ctl" role="group" aria-label="${esc(t('japa.targets'))}" id="japaTargets">
           ${[108, 28, 10].map((n) => `<button data-n="${n}" aria-pressed="${n === japa.target}">${n}</button>`).join('')}</span>
-        <button class="pill-btn" id="japaReset">${esc(t('japa.again'))}</button>
+        <span class="row"><button class="pill-btn" id="japaLess" aria-label="${esc(t('japa.less'))}">−1</button>
+          <button class="pill-btn" id="japaReset">${esc(t('japa.again'))}</button></span>
       </div></div>
       <p class="timer" id="japaTime" aria-live="off"></p>`;
   }
@@ -1155,7 +1360,13 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       try { if (japa.count === japa.target) navigator.vibrate?.(250); else if (japa.count % 10 === 0) navigator.vibrate?.(30); } catch {}
       drawJapa();
     });
-    $('japaReset').addEventListener('click', () => {
+    $('japaLess').addEventListener('click', () => { if (japa.count > 0) { japa.count--; save(); drawJapa(); } });
+    // Starting over asks for a second tap within 3 s, so a stray tap never loses a count of 108.
+    let armed = 0;
+    $('japaReset').addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      if (!armed && japa.count > 0) { btn.textContent = t('japa.sure'); armed = setTimeout(() => { armed = 0; btn.textContent = t('japa.again'); }, 3000); return; }
+      clearTimeout(armed); armed = 0; btn.textContent = t('japa.again');
       japa.count = 0; save();
       if (japa.key) { store.set(japa.key + '.t0', ''); store.set(japa.key + '.t1', ''); }
       drawJapa();
@@ -1169,23 +1380,67 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     });
   }
 
-  // Keep "today" and the sandhya current when the page stays open: check every minute and
-  // whenever the page comes back into view.
+  // Keep "today", the sky and the sandhya current while the page stays open: every minute and
+  // whenever the page comes back into view. Nothing here re-draws what you are reading: a new day
+  // re-draws the month; the Sandhya tab follows the clock to the next sandhya only while its top
+  // is on screen, and otherwise keeps the one being recited and says the clock has moved on.
   let lastToday = null;
-  function tick(force) {
+  function tick() {
     const t = todayCivil();
+    setSky();
     if (lastToday && !sameDay(t, lastToday)) {
       const wasOnToday = selected && sameDay(selected, lastToday);
-      lastToday = t;
+      lastToday = t; setTabMoon();
       if (wasOnToday) { goTo(t); return; }
       renderMonth();
     }
     lastToday = t;
-    if (tab === 'sandhya' && (force || sandhyaNow().auto.kind !== lastAutoKind)) renderSandhya();
-    else if (force && tab === 'panchangam') renderSheet();
+    if (tab === 'panchangam') refreshDayBar();
+    if (tab === 'sandhya') {
+      const kind = sandhyaNow().auto.kind;
+      if (kind !== lastAutoKind) {
+        lastAutoKind = kind;
+        const reading = $('sdHero') && $('sdHero').getBoundingClientRect().bottom < 0;
+        if (!reading) { renderSandhya(); return; }
+        if (!sandhyaPick && sd) sandhyaPick = sd.key;
+      }
+      refreshSandhyaHead();
+    }
   }
-  setInterval(() => tick(false), 60000);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(true); });
+  setInterval(tick, 60000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { tick(); keepAwake(tab === 'sandhya'); } });
+
+  // ----- the sky behind the page: from the sun's altitude at the chosen place, now -----
+  // data-sky picks the palette (night, dawn, day, dusk); --sun-x/--sun-y place the glow where the
+  // sun is (across the day, and higher as it climbs); --stars fades the kolam dots out between 6
+  // degrees below the horizon and sunrise. The last phase is kept so the next visit paints it at once.
+  let skyNow = null;
+  function setSky() {
+    const jd = nowJd(), p = dayOf(todayCivil()), alt = sunAltitude(jd, place.lat, place.lon), root = document.documentElement;
+    const phase = skyPhase(alt, jd < (p.sunrise + p.sunset) / 2);
+    if (phase !== skyNow) { skyNow = phase; root.setAttribute('data-sky', phase); store.set('panchangam.sky', phase); }
+    const f = Math.max(0, Math.min(1, (jd - p.sunrise) / (p.sunset - p.sunrise)));
+    root.style.setProperty('--sun-x', (8 + 84 * f).toFixed(1) + '%');
+    root.style.setProperty('--sun-y', Math.max(6, Math.min(100, 100 - alt * 1.3)).toFixed(1) + '%');
+    root.style.setProperty('--stars', Math.max(0, Math.min(1, -alt / 6)).toFixed(2));
+    const meta = document.querySelector?.('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', getComputedStyle(root).getPropertyValue('--sky-top').trim() || '#E1E5F1');
+  }
+  try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setSky); } catch {}
+  // The Panchangam tab's icon is tonight's moon.
+  function setTabMoon() { if ($('tabMoon')) $('tabMoon').innerHTML = moonSVG(dayOf(todayCivil()).elongation); }
+
+  // Keep the screen awake while the Sandhya tab is open (pranayamam alone is 84 s hands-off); let it
+  // sleep again on any other tab. Where the browser cannot, nothing changes.
+  let wakeLock = null;
+  async function keepAwake(on) {
+    try {
+      if (on && !wakeLock && navigator.wakeLock && document.visibilityState === 'visible') {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener?.('release', () => { wakeLock = null; });
+      } else if (!on && wakeLock) { const w = wakeLock; wakeLock = null; await w.release(); }
+    } catch { wakeLock = null; }
+  }
 
   // ================= place card: map of lamps + kshetra deity =================
   // India is drawn only as its listed places (no borders), on a simple equirectangular projection.
@@ -1364,27 +1619,50 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
         <span class="lbl">${esc(t('kshetram'))} · ${esc(nm)}</span><h3>${esc(deityLabel(d.deity))}</h3>
         ${d.tags && d.tags.length ? `<div class="tags">${d.tags.map((tg) => `<span class="tag">${esc(tagLabel(tg))}</span>`).join('')}</div>` : ''}</div>`;
     }
-    if (!abroad) { if (animate) flyTo(); else { mapView = { lon: place.lon, lat: place.lat, span: 2.6 }; mapFinal = true; redrawMap(); } }
+    // The zoom plays only where it can be seen; below the fold the map is drawn at rest (↻ replays it).
+    const seen = () => { const r = $('mapWrap').getBoundingClientRect?.(); return !r || (r.top < (window.innerHeight || 800) && r.bottom > 0); };
+    if (!abroad) { if (animate && seen()) flyTo(); else { mapView = { lon: place.lon, lat: place.lat, span: 2.6 }; mapFinal = true; redrawMap(); } }
   }
 
   // ================= tabs, place, events =================
+  // Each tab keeps its own scroll position; tapping the tab you are on does nothing.
+  const tabScroll = {};
   function showTab(name) {
-    tab = TABS.includes(name) ? name : 'panchangam';
+    const next = TABS.includes(name) ? name : 'panchangam';
+    if (next !== tab) tabScroll[tab] = window.scrollY || 0;
+    tab = next;
     for (const t of TABS) { $(t).hidden = t !== tab; $('tab-' + t).setAttribute('aria-selected', String(t === tab)); }
-    if (tab === 'panchangam') redrawMap(); // the canvas has no size while its tab is hidden
+    document.documentElement.classList?.remove('tabs-away');
+    if (tab === 'panchangam') { redrawMap(); refreshDayBar(); } // the canvas has no size while its tab is hidden
     if (tab === 'sankalpam') renderSankalpam();
     if (tab === 'sandhya') renderSandhya();
+    window.scrollTo?.(0, tabScroll[tab] || 0);
+    keepAwake(tab === 'sandhya');
   }
   function go(name) {
+    if (name === tab) return;
     if (location.hash !== '#' + name) location.hash = name; else showTab(name);
-    window.scrollTo?.(0, 0);
   }
   $('tabs').addEventListener('click', (e) => { const b = e.target.closest('button[data-tab]'); if (b) go(b.dataset.tab); });
   window.addEventListener?.('hashchange', () => showTab(location.hash.slice(1)));
   document.addEventListener('click', (e) => {
     const b = e.target.closest?.('button[data-go]'); if (b) go(b.dataset.go);
+    if (e.target.closest?.('[data-today]')) goTo(todayCivil());
     if (!e.target.closest?.('.place')) openPicker(false);
   });
+  // The tab bar steps aside while you type (the keyboard is up) and while you scroll down a
+  // reading tab; it comes back as soon as you scroll up.
+  let lastY = 0;
+  window.addEventListener?.('scroll', () => {
+    const y = window.scrollY || 0, root = document.documentElement;
+    if (tab !== 'panchangam' && y > lastY + 8 && y > 260) root.classList.add('tabs-away');
+    else if (y < lastY - 8 || y < 260) root.classList.remove('tabs-away');
+    lastY = y;
+    if (headStale && tab === 'sandhya') refreshSandhyaHead();
+  }, { passive: true });
+  const typingField = (el) => el && el.matches?.('input[type=text], input[type=search], textarea');
+  document.addEventListener('focusin', (e) => { if (typingField(e.target)) document.documentElement.classList.add('typing'); });
+  document.addEventListener('focusout', (e) => { if (typingField(e.target)) document.documentElement.classList.remove('typing'); });
 
   function goTo(civil) {
     selected = civil;
@@ -1397,8 +1675,9 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const b = e.target.closest('.day'); if (!b) return;
     const [y, m, d] = b.dataset.d.split('-').map(Number);
     selected = { y, m, d }; renderMonth(); renderSheet();
-    // On phones the day sheet sits above the calendar: bring it into view.
-    if (window.matchMedia?.('(max-width: 979px)').matches) $('sheet').scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+    // Where the day sheet sits above the calendar (one column), bring it into view.
+    const sh = $('sheet').getBoundingClientRect?.(), ca = document.querySelector('.calcard')?.getBoundingClientRect?.();
+    if (sh && ca && sh.bottom <= ca.top + 1) $('sheet').scrollIntoView?.({ behavior: 'smooth', block: 'start' });
   });
   $('prev').addEventListener('click', () => { loadMonth(view.month.start - 2); selected = view.days[0].date; renderMonth(); renderSheet(); });
   $('next').addEventListener('click', () => { loadMonth(view.month.end + 2); selected = view.days[0].date; renderMonth(); renderSheet(); });
@@ -1406,7 +1685,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 
   function renderPlaceBtn() {
     const name = place.mine ? t('place.mine') : placeLabel(place), sub = place.mine ? t('place.nearX', { x: placeLabel(place) }) : stateLabel(place.state);
-    $('placeBtn').innerHTML = `${esc(name)} <small>${esc(sub)}</small> <span aria-hidden="true">▾</span>`;
+    $('placeBtn').innerHTML = `<span class="pn">${esc(place.mine ? name : placeShort(place))}</span> <small>${esc(sub)}</small> <span aria-hidden="true">▾</span>`;
   }
   function renderList(q) {
     q = q.trim().toLowerCase();
@@ -1438,7 +1717,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   $('placeSearch').addEventListener('keydown', (e) => { if (e.key === 'Escape') openPicker(false); });
   function choosePlace(p) {
     place = p; store.set('panchangam.place', p.mine ? JSON.stringify(p) : `${place.name}|${place.state}`);
-    renderPlaceBtn(); openPicker(false); goTo(selected || todayCivil());
+    renderPlaceBtn(); openPicker(false); setSky(); setTabMoon(); goTo(selected || todayCivil());
     renderPlaceCard(tab === 'panchangam'); // animate only where it can be seen
   }
   $('placeList').addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) choosePlace(places[+b.dataset.i]); });
@@ -1487,6 +1766,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   setLang(lang);
 
   renderPlaceBtn();
+  setSky(); setTabMoon();
   goTo(todayCivil());
   showTab((typeof location !== 'undefined' && location.hash || '').slice(1));
   renderPlaceCard(tab === 'panchangam');
