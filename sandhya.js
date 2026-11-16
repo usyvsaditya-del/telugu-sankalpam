@@ -67,6 +67,18 @@ export function sandhyaStatus(kind, jd, p) {
   return jd < t.sayamStart ? 'early' : jd <= t.sayamDue ? 'on-time' : 'late';
 }
 
+// The sky the page draws behind its panels for a moment of the civil day `p`: dawn from the start
+// of Pratah sandhya until 90 min after sunrise, day until Sayam begins, dusk until Sayam's arghya
+// is due (72 min after sunset), and night otherwise. `sun` is how far the sun has gone across the
+// sky (0 at sunrise, 1 at sunset; below 0 or above 1 when it is down), for placing its glow.
+export function skyPhase(jd, p) {
+  const t = sandhyaTimes(p), sun = (jd - p.sunrise) / (p.sunset - p.sunrise);
+  const phase = jd >= t.pratahStart && jd < t.sunrise + 90 * MIN ? 'dawn'
+    : jd >= t.sunrise && jd < t.sayamStart ? 'day'
+      : jd >= t.sayamStart && jd < t.sayamDue ? 'dusk' : 'night';
+  return { phase, sun };
+}
+
 // ---------- text ----------
 // The 24 Kesavadi names: three sips, then 21 names, three to a line to keep the phone screen short.
 const ACHAMANAM = [

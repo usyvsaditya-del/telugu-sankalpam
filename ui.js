@@ -1,7 +1,8 @@
 // ui.js — every piece of page text in English, keyed. ui_i18n.js gives the same keys in Telugu,
 // Tamil, Kannada and Hindi; a missing key falls back to English. {name} marks a filled-in value.
 // Mantras and the sankalpam are not here: mantras_te.js and sankalpam_te.js hold them in Telugu
-// letters, the master for Kannada and Devanagari (indic.js); English and Tamil show English letters.
+// letters, the master for Kannada, Devanagari and the English page's Roman letters with
+// pronunciation marks (indic.js); Tamil shows plain English letters.
 
 export const UI_EN = {
   // header and tabs
@@ -34,7 +35,7 @@ export const UI_EN = {
   'sk.title': 'Sankalpam', 'sk.atNow': 'as of {t} now', 'sk.atSunrise': 'as at sunrise', 'sk.otherDay': 'Choose another day',
   'mode.label': 'Sankalpam length', 'mode.full': 'Full', 'mode.laghu': 'Laghu', 'mode.short': 'Short',
   'copy': 'Copy', 'copied': 'Copied', 'copy.selected': 'Selected: press copy',
-  'sk.note': 'Words in red change with the day, the place and you. Laghu says “subha nakshatra, subha yoga, subha karana” after the vaaram; Short keeps only “Mamopatta … preetyartham” and the act.',
+  'sk.note': 'Words in red change with the day, the place and you. Laghu says “śubha nakṣatra, śubha yoga, śubha karaṇa” after the vaaram; Short keeps only “mamopātta … prītyarthaṃ” and the act.',
   'f.for': 'For', 'f.deity': 'Deity', 'f.gotra': 'Gotram', 'f.name': 'Name', 'f.married': 'With dharmapatni',
   'f.venue': 'Sitting at', 'venue.home': 'Home', 'venue.temple': 'Temple', 'venue.river': 'River bank',
   'f.kshetra': 'Kshetra line', 'f.desha': 'Desha line', 'f.pravara': 'Pravara rishis', 'f.sutra': 'Sutram', 'f.sakha': 'Veda sakha',
@@ -60,8 +61,8 @@ export const UI_EN = {
   'clock.now': 'By the clock it is now time for {title}.', 'clock.follow': 'Follow the clock',
   'me.summary': 'Your gotram, pravara and name (for sankalpam and abhivadanam)', 'me.device': 'Kept on this device only. Never sent anywhere.',
   'steps.note': '{n} steps, in the order of Telugu sandhyavandanam books. Families differ in small details; follow your elders where they differ.',
-  // Shown on the English page only, above the mantras: how to read the pronunciation lines.
-  'sd.pron': 'Mantras are in Telugu letters, each line with its pronunciation under it. In the pronunciation: ā ī ū are long; c is ch as in church; ṭ ḍ ṇ ṣ are said with the tongue curled back; ś is a soft sh; ṛ is the vowel said ru; ṃ is a nasal hum; ḥ is a breath that echoes the vowel before it. There are no svara marks: learn the svaras from a guru.',
+  // Shown on the English page only, with the mantras and the sankalpam: how to read the marks.
+  'sd.pron': 'The Sanskrit is in Roman letters with pronunciation marks: ā ī ū are long; c is ch as in church; ṭ ḍ ṇ ṣ ḷ are said with the tongue curled back; ś is a soft sh; ṛ is the vowel said ru; ṅ and ñ are the n of sing and of pinch; ṃ is a nasal hum; ḥ is a breath that echoes the vowel before it. There are no svara marks: learn the svaras from a guru.',
   'size.label': 'Text', 'size.smaller': 'Smaller text', 'size.larger': 'Larger text',
   'japa.count': 'Count one Gayatri', 'japa.of': 'of {n}', 'japa.complete': 'complete', 'japa.again': 'Start again', 'japa.targets': 'Japa count',
   'japa.first': 'The timer starts with your first tap.', 'japa.done': 'Complete in {d}.',
@@ -83,7 +84,7 @@ export const UI_EN = {
   'dur.h': '{h} h {m} min', 'dur.m': '{m} min {s} s', 'dur.s': '{s} s',
   // footer
   'foot.times': 'Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com. Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.',
-  'foot.sandhya': 'Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes, in English letters without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.',
+  'foot.sandhya': 'Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes. On this page its Sanskrit is in Roman letters with pronunciation marks, without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.',
   'foot.mantras': 'In Tamil, mantras and the sankalpam are shown in English letters for now; a version in Tamil script is being prepared and checked.',
   'foot.open': 'The code is open for anyone to use and build on:',
 };

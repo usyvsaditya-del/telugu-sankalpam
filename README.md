@@ -28,8 +28,9 @@ Live: **https://telugu-sankalpam.web.app**
   location".
 - **Languages:** English, Telugu, Tamil, Kannada and Hindi. In Telugu, Kannada and Hindi the
   mantras, the sankalpam and place names are in that script too, all made from one Telugu-script
-  text. Tamil shows mantras in English letters for now, because Tamil script has no letters for
-  the Sanskrit aspirated and voiced sounds.
+  text. The English page shows the mantras and the sankalpam in Roman letters with pronunciation
+  marks (IAST), made from the same Telugu text. Tamil shows mantras in plain English letters for
+  now, because Tamil script has no letters for the Sanskrit aspirated and voiced sounds.
 
 Everything is computed in the browser; nothing is sent to a server. Gotram, name and location
 stay in the phone's own storage.
@@ -62,7 +63,7 @@ The astronomy:
 | `mantras_te.js` | The sandhyavandanam mantras, abhivadanam and mudra names in Telugu script. |
 | `sankalpam_te.js` | The sankalpam's wording and day names in Telugu script (the same table `engine.js` uses in English). |
 | `places_te.js` | Place, state and deity names, and every phrase of the sankalpam's place line, in Telugu script. |
-| `indic.js` | Writes Telugu-script text in Kannada or Devanagari letters (the three share one Unicode layout). |
+| `indic.js` | Writes Telugu-script text in Kannada or Devanagari letters (the three share one Unicode layout), or in Roman letters with pronunciation marks for the English page. |
 | `template.html` | The page: layout, styles and the user-interface script. |
 | `build.sh` | Inlines the modules into `site/public/index.html` (and `panchangam.html`, a single-file copy). |
 | `check.mjs` | Prints Bengaluru values to compare with drikpanchang.com. |
@@ -80,9 +81,10 @@ cd site && npx -y firebase-tools@13 deploy --only hosting --project <your-fireba
 ```
 
 ## Please help
-- **Mantra text** is without svaras, in English letters and in Telugu script (from which the
-  Kannada and Devanagari are made). It is a reading aid, not a substitute for a guru.
-  Corrections from vaidikas are very welcome; a Telugu correction fixes all three scripts.
+- **Mantra text** is without svaras, in Telugu script (from which the Kannada, the Devanagari and
+  the English page's Roman letters with pronunciation marks are made) and in plain English letters
+  for Tamil. It is a reading aid, not a substitute for a guru.
+  Corrections from vaidikas are very welcome; a Telugu correction fixes all four.
 - **Kshetra wordings, river lines and traditional town names** are drafted from common usage and
   checked once. Families and regions differ, and every line can be edited on the page. Please
   open an issue when your family's wording differs.

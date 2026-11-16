@@ -34,9 +34,9 @@ const page = read("template.html").replace("/*ENGINE*/", () => read("engine.js")
 fs.writeFileSync(path.join(dir, "panchangam.html"), page);
 console.log("wrote panchangam.html", page.length, "bytes");
 
-// Website: everything before the masthead (title, fonts, styles) goes in <head>.
-const cut = page.indexOf("<header class=\"mast\">");
-if (cut < 0) throw new Error("build.sh: masthead marker not found in template.html");
+// Website: everything before the <!--page--> marker (title, fonts, styles) goes in <head>.
+const cut = page.indexOf("<!--page-->");
+if (cut < 0) throw new Error("build.sh: <!--page--> marker not found in template.html");
 const head = page.slice(0, cut).replace("<title>Telugu Panchangam</title>", "<title>Sankalpam · Telugu Panchangam</title>");
 const desc = "Daily Telugu panchangam, sankalpam and Yajurveda sandhyavandanam for your town: tithi, nakshatram, Rahu kaalam, and a ready sankalpam with your gotram.";
 const site = `<!doctype html>
