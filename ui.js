@@ -91,6 +91,11 @@ export const UI_EN = {
   'mudra.drawn': 'Each drawing shows the usual form of the mudra. Families differ in small details; follow your guru.',
   'nyasa.prev': 'Previous line', 'nyasa.next': 'Next line',
   'nyasa.drawn': 'Each drawing shows what to touch or do at its line, as this step describes it. Families differ in small details; follow your guru.',
+  'dhyana.pick': 'Choose a picture', 'dhyana.hide': 'Hide the picture', 'dhyana.show': 'Show the picture',
+  'dhyana.alt.pratah': "The Devi's morning form: a maiden in red with four faces, holding a rosary and a water pot, seated on a swan",
+  'dhyana.alt.madhyahnika': "The Devi's midday form: a young woman in yellow, holding a conch and a discus, seated on Garuda",
+  'dhyana.alt.sayam': "The Devi's evening form: an old woman with a crescent moon in her hair, holding a trident with a damaru, seated on a bull",
+  'dhyana.made': "These pictures were made with an AI image tool, asked to follow this verse in the manner of Raja Ravi Varma's paintings. Where a picture and the verse differ, go by the verse.",
   'dur.h': '{h} h {m} min', 'dur.m': '{m} min {s} s', 'dur.s': '{s} s',
   // footer
   'foot.times': 'Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com. Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.',

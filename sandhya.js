@@ -23,7 +23,8 @@
 // Families differ in small details (direction, arghya count, which achamanam, extra
 // namaskarams); the page says so.
 //
-// A step is { id, title, how, mantra, note?, ref?, sankalpam?, japa?, abhivadanam?, arghya? }.
+// A step is { id, title, how, mantra, note?, ref?, sankalpam?, japa?, abhivadanam?, arghya?, breath?,
+// mudras?, nyasa?, pictures? }; `pictures` lists picture files, under site/public, shown above the mantra.
 // `mantra` is a string ("\n" = new line) or an array of parts: strings and { v } for filled-in words.
 // A step that repeats another has `ref` (the id of the step it repeats) and no mantra.
 // Instructions name other steps as "{step:<id>}"; numberStepRefs() turns that into the step's
@@ -315,6 +316,14 @@ const KALA_DHYANAM = {
   ],
 };
 
+// Pictures of the Devi for each sandhya's verse (step kala-dhyanam), an image to fix the mind on,
+// made by the site's owner with an AI image tool from prompts written to the three verses, which
+// asked for the manner of Raja Ravi Varma's paintings (19 Nov 2026). Three of each, the first
+// shown unless the reader picks another; the page says how they were made, and to go by the verse
+// where they differ. Files in site/public/img/, 720 by 900 WebP with no metadata (check_ui.mjs).
+export const DHYANA_PICTURES = Object.fromEntries(['pratah', 'madhyahnika', 'sayam']
+  .map((k) => [k, [1, 2, 3].map((n) => `img/gayatri_${k}_${n}.webp`)]));
+
 const DIG_DEVATA = ['Namah prachyai', 'Namo dakshinayai', 'Namah pratichyai', 'Nama udichyai', 'Nama urdhvayai',
   "Namo'dharayai", "Namo'vantarayai"]
   .map((d) => `${d} dise yas cha devata etasyam prativasanty etabhyas cha namah`).join('\n');
@@ -542,7 +551,7 @@ export function sandhyaSteps(kindKey) {
       mantra: YO_DEVAH },
     { id: 'kala-dhyanam', title: 'Dhyanam for this sandhya',
       how: 'Meditate on the Devi in the sun\'s orb, in the form she takes at this hour.',
-      mantra: lines(KALA_DHYANAM[kindKey]) },
+      pictures: DHYANA_PICTURES[kindKey], mantra: lines(KALA_DHYANAM[kindKey]) },
     { id: 'purvamudra', title: 'Purva mudras: 24 (in many families)', mudras: PURVA_MUDRAS,
       how: 'Before japam, show the 24 Gayatri mudras in this order, with the hand positions your guru taught. Play moves the drawing from one mudra to the next.' },
     { id: 'japam', title: 'Gayatri japam', japa: true,

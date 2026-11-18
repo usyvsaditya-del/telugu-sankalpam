@@ -69,10 +69,11 @@ The astronomy:
 | `indic.js` | Writes Telugu-script text in Kannada or Devanagari letters (the three share one Unicode layout), or in Roman letters with pronunciation marks for the English page. |
 | `template.html` | The page: layout, styles and the user-interface script. The design notes are in the comment at the top of its styles. |
 | `build.sh` | Inlines the modules into `site/public/index.html` (and `panchangam.html`, a single-file copy). |
+| `site/public/img/` | The Devi's pictures for the dhyanam step (`DHYANA_PICTURES` in `sandhya.js`): made for the site with an AI image tool, WebP, 720 by 900, without metadata. |
 | `check.mjs` | Prints Bengaluru values to compare with drikpanchang.com. |
 | `check_mudras.mjs` | Checks that every mudra in the sandhya steps has a drawing, and that each draws and moves cleanly. |
 | `check_te.mjs` | Checks the Telugu-script text: same lines as the English, no stray English letters, every place and phrase covered. |
-| `check_ui.mjs` | Checks the page: every element the script uses exists, page text and every sandhya step's words in all five languages (step numbers filled in, none written by hand), the drawings' colours opaque, and text contrast (WCAG 4.5:1) over every sky, light and dark. |
+| `check_ui.mjs` | Checks the page: every element the script uses exists, page text and every sandhya step's words in all five languages (step numbers filled in, none written by hand), the drawings' colours opaque, text contrast (WCAG 4.5:1) over every sky, light and dark, and the dhyanam pictures (whole 720 by 900 WebP files without metadata, and none unlisted). |
 | `IDEAS.md` | Ideas and open questions for what to build next. |
 
 ## Build and deploy
@@ -100,4 +101,6 @@ cd site && npx -y firebase-tools@13 deploy --only hosting --project <your-fireba
 - **Vrata days** follow the rules computed panchangams use; matha panchangams can differ by a day.
 
 ## Licence
-MIT; see `LICENSE`. The mantras themselves are ancient texts and belong to no one.
+MIT; see `LICENSE`. The mantras themselves are ancient texts and belong to no one. The Devi's
+pictures in `site/public/img/` were made for this site with an AI image tool; whether they share
+the code's licence is an open question (IDEAS.md).

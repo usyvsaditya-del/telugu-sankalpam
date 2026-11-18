@@ -56,8 +56,10 @@ trust it. Each one says what it would take and the main risk.
 ## Later, or only with the right source
 - **Svara audio** only from a pathashala or temple that permits it. Text-to-speech would get the
   svaras wrong.
-- **Deity images** only from temple-approved or public-domain sources (e.g. Raja Ravi Varma);
-  most temples do not permit photos of the moolavirat.
+- **Deity images** only from temple-approved or public-domain sources (e.g. Raja Ravi Varma's
+  paintings), or made for the site with an AI image tool, checked against the verse they show and
+  labelled on the page as made so (as the Gayatri pictures on the dhyanam step are). Most temples
+  do not permit photos of the moolavirat.
 - **Tamil script for the mantras.** Telugu, Kannada and Hindi now show the mantras and the
   sankalpam in their own script, made from one Telugu-script text. Tamil still shows English
   letters: Tamil script has no aspirated or voiced letters, so Sanskrit needs a choice of style.
@@ -162,10 +164,22 @@ trust it. Each one says what it would take and the main risk.
     haindavam.org have neither the longer form nor that verse. The full words?
   - For the site's owner: "35 has brahma" (the Harihara step, 19 Nov 2026). Is that the line
     "నమో బ్రహ్మణ్యదేవాయ …" already there, or a verse to Brahma your family adds?
-  - For the site's owner: pictures of the Devi for the time-of-day verse (the morning, midday and
-    evening forms), in the manner of Raja Ravi Varma's paintings, as an image to fix the mind
-    on, with a few to choose from. The owner will make them with an image tool from prompts
-    written to the three verses; each is to be checked against its verse before it goes on.
+  - Done 19 Nov 2026: pictures of the Devi for the time-of-day verse (the morning, midday and
+    evening forms), as an image to fix the mind on. The owner made them with an AI image tool,
+    from prompts written to the three verses that asked for the manner of Raja Ravi Varma's
+    paintings; they came out looking more like modern digital paintings.
+    Three of each are on the page, above the verse, chosen with 1 2 3 and kept per sandhya on
+    the device; the picture can be hidden. A note under it says how they were made, and to go
+    by the verse where a picture differs. Files: site/public/img/gayatri_<sandhya>_<n>.webp,
+    720 by 900, with no metadata.
+  - For the site's owner: the picks and their order, from the pictures you made: morning, the
+    6th, the 3rd (feet showing) and the 5th of the seven; midday, the 4th, the 1st and the 2nd
+    of the eight; evening, the 1st (feet showing), the 3rd (feet showing) and the 2nd of the
+    second set of three. The first of each is shown unless the reader picks another. Keep these?
+    (In all three midday pictures the discus looks like a flat golden plate.)
+  - For the site's owner: the licence. MIT lets anyone copy and reuse what is in this repository;
+    the Devi pictures, committed here, would come under it too unless the README says otherwise.
+    Keep MIT for both, or keep the pictures' rights reserved?
   - For a vaidika: the kara and anga nyasa add "brahmatmane, vishnvatmane …" to the padas, as
     haindavam.org, vignanam.org and hindupad.com print them.
   - For the site's owner: vignanam.org and haindavam.org open the japa sankalpam with "పూర్వోక్త

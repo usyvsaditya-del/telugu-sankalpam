@@ -8,6 +8,8 @@
 //    --kumkum, --mantra-bg, the moon) are opaque hex in the light and the dark token blocks;
 //  - every page-text key the page uses exists in English and in Telugu, Tamil, Kannada and Hindi
 //    (a missing key would put English on another language's page), except keys shown on one page only;
+//  - the Devi's pictures for the dhyanam step are there and no others: whole 720 by 900 WebP files
+//    under 200 KB, holding the image and nothing else (no EXIF, XMP or colour profile);
 //  - every sandhya step, drawn in each of the five languages as the page draws it, has its own
 //    title and instructions (no English fallback, nothing empty, no placeholder left unfilled),
 //    and no step number is written by hand;
@@ -16,7 +18,7 @@
 //    ink and muted text straight on the sky and on each glass tint; the "now" pill and today's
 //    date on kumkum. Small text never sits on the bare sky in gold: the masthead is a glass band.
 // Run: node check_ui.mjs   (exits 1 on any failure)
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 import { UI_EN } from './ui.js';
 import { UI_I18N } from './ui_i18n.js';
 import { SANDHYA_KINDS, sandhyaSteps, localizeSteps } from './sandhya.js';
@@ -58,6 +60,7 @@ const families = {
   'purpose.': ['sankalpam', 'puja', 'pratah', 'madhyahnika', 'sayam'], 'mode.': ['full', 'laghu', 'short'],
   'kind.': ['pratah', 'madhyahnika', 'sayam', 'metro', 'tier1', 'tier2', 'tier3', 'pilgrimage', 'usa', 'world'],
   'title.': ['pratah', 'madhyahnika', 'sayam'], 'venue.': ['home', 'temple', 'river'],
+  'dhyana.alt.': ['pratah', 'madhyahnika', 'sayam'],
   'grade.': ['pratah.uttama', 'pratah.madhyama', 'pratah.adhama', 'sayam.uttama', 'sayam.madhyama', 'sayam.adhama'],
 };
 for (const [pre, list] of Object.entries(families)) for (const x of list) used.add(pre + x);
@@ -116,6 +119,48 @@ for (const l of ['te', 'ta', 'kn', 'hi']) for (const key of Object.keys(UI_I18N[
 }
 fails.push(...stepFails);
 
+// ---- the Devi's pictures (step kala-dhyanam) ----
+// Every sandhya's dhyanam step has its pictures, and site/public/img holds no others (the deploy
+// sends whatever is there). Each is a whole WebP file (the size in its header is the file's, and
+// its chunks end where the file ends), 720 by 900 as the page's <img> says, under 200 KB, and
+// holds the image and nothing else: a plain lossy (VP8) or lossless (VP8L) image, or the extended
+// form (VP8X, with ALPH for transparency). No EXIF, XMP, colour profile (ICCP) or other chunk,
+// which could say where, when or with what a picture was made. To clear one: cwebp -metadata none.
+const IMAGE_CHUNKS = new Set(['VP8X', 'VP8 ', 'VP8L', 'ALPH']);
+const listed = new Set();
+let pictures = 0;
+for (const k of kinds) {
+  const st = sandhyaSteps(k).find((s) => s.id === 'kala-dhyanam');
+  if (!st?.pictures?.length) { fails.push(`${k}: the dhyanam step has no pictures`); continue; }
+  for (const f of st.pictures) {
+    if (listed.has(f)) continue;
+    listed.add(f);
+    let b;
+    try { b = readFileSync(new URL('./site/public/' + f, import.meta.url)); } catch { fails.push(`picture ${f} is missing from site/public`); continue; }
+    pictures++;
+    const bad = (why) => fails.push(`picture ${f} ${why}`);
+    if (b.length < 30 || b.toString('latin1', 0, 4) !== 'RIFF' || b.toString('latin1', 8, 12) !== 'WEBP') { bad('is not a WebP'); continue; }
+    if (b.readUInt32LE(4) + 8 !== b.length) { bad(`is not whole: its header says ${b.readUInt32LE(4) + 8} bytes, the file has ${b.length}`); continue; }
+    if (b.length > 200 * 1024) bad(`is ${Math.round(b.length / 1024)} KB; keep each under 200 KB`);
+    const chunks = [];
+    let at = 12;
+    for (; at + 8 <= b.length; at += 8 + b.readUInt32LE(at + 4) + (b.readUInt32LE(at + 4) & 1)) chunks.push([b.toString('latin1', at, at + 4), at]);
+    if (at !== b.length) { bad('is not whole: its last chunk runs past the end of the file'); continue; }
+    for (const [id] of chunks) if (!IMAGE_CHUNKS.has(id)) bad(`holds a chunk named "${id.trim()}"; keep only the image (cwebp -metadata none)`);
+    // Sizes: VP8X gives the canvas (width-1 and height-1, 3 bytes each), the VP8 frame header and
+    // the VP8L header the image's own. Every one there must say 720 by 900.
+    const sizes = chunks.map(([id, c]) => (id === 'VP8X' ? [b.readUIntLE(c + 12, 3) + 1, b.readUIntLE(c + 15, 3) + 1]
+      : id === 'VP8 ' ? [b.readUInt16LE(c + 14) & 0x3fff, b.readUInt16LE(c + 16) & 0x3fff]
+      : id === 'VP8L' ? [(b.readUInt32LE(c + 9) & 0x3fff) + 1, ((b.readUInt32LE(c + 9) >>> 14) & 0x3fff) + 1] : null)).filter(Boolean);
+    const said = [...new Set(sizes.map((s) => s.join(' by ')))];
+    if (!said.length) bad('has no readable size');
+    else if (said.length > 1 || said[0] !== '720 by 900') bad(`gives its size as ${said.join(' and ')}; it must be 720 by 900 throughout`);
+  }
+}
+let others = [];
+try { others = readdirSync(new URL('./site/public/img/', import.meta.url)).filter((n) => !n.startsWith('.') && !listed.has('img/' + n)); } catch {}
+for (const n of others) fails.push(`site/public/img/${n} is not a picture sandhya.js lists; remove it, or list it in DHYANA_PICTURES`);
+
 // ---- contrast ----
 const parse = (v, T) => {
   if (!v) return null;
@@ -160,5 +205,5 @@ for (const theme of ['light', 'dark']) {
 }
 
 console.log(fails.length ? `FAIL\n  ${fails.slice(0, 40).join('\n  ')}`
-  : `ok: ${looked.size} element lookups found; no "#" links; tab icons safe; drawing colours opaque in both themes; ${used.size} page-text keys in all five languages; ${stepIds.size} sandhya steps drawn in five languages (${stepTexts} texts, no English fallback, ${stepRefs} step numbers filled in); ${pairs} colour pairs at 4.5:1 or more (lowest ${lowest.r.toFixed(2)}:1, ${lowest.what})`);
+  : `ok: ${looked.size} element lookups found; no "#" links; tab icons safe; drawing colours opaque in both themes; ${used.size} page-text keys in all five languages; ${stepIds.size} sandhya steps drawn in five languages (${stepTexts} texts, no English fallback, ${stepRefs} step numbers filled in); ${pictures} dhyanam pictures, 720 by 900 WebP without metadata; ${pairs} colour pairs at 4.5:1 or more (lowest ${lowest.r.toFixed(2)}:1, ${lowest.what})`);
 process.exit(fails.length ? 1 : 0);

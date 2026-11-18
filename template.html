@@ -402,6 +402,15 @@ ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; po
   background: var(--glass-solid); font-size: 14px; color: var(--muted); cursor: pointer; }
 .m-list .on { color: var(--glass-solid); background: var(--kumkum); border-color: var(--kumkum); font-weight: 600; }
 .m-note { text-align: center; max-width: 60ch; }
+/* The Devi's picture above the verse of the hour (step kala-dhyanam): a portrait in a thin gold
+   frame, 1 2 3 to choose another, and a button to hide it. */
+.dhyana { display: grid; gap: 8px; justify-items: center; margin: 2px 0 10px; }
+.dh-fig { margin: 0; width: min(100%, 320px); aspect-ratio: 4 / 5; border: 1px solid var(--zari-line); border-radius: 14px;
+  overflow: hidden; background: var(--paper-read); box-shadow: var(--shadow); }
+.dh-fig img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.dh-ctl { display: flex; gap: 14px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.dh-ctl .seg-ctl button { min-width: 44px; min-height: 44px; }
+.dh-note { text-align: center; max-width: 52ch; }
 @keyframes mswap { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
 /* beads of the japa mala and the mudra ring: unlit in the line colour, counted in gold, the
    current one kumkum with a small pulse; the meru (top) a kumkum diamond */
@@ -1031,6 +1040,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       else if (s.abhivadanam) body += `<p class="mantra" id="sdAbhi"></p>`;
       else if (s.mudras) body += mudraHtml(s.id, s.mudras);
       else body += `${s.nyasa ? mudraHtml('ny-' + s.id, s.nyasa, kits[s.id] = nyasaKit(s.nyasa, s.mantra.split('\n'))) : ''}`
+        + `${s.pictures ? dhyanaHtml(key, s.pictures) : ''}`
         + `<p class="mantra">${typeof s.mantra === 'string' ? renderLines(s.mantra) : renderParts(s.mantra)}</p>`;
       if (s.breath) body += pranaHtml();
       if (s.arghya) body += `<p class="note">${esc(t('arghya.times', { n: k.arghyas }))}</p><p class="timer" id="arghyaTimer" aria-live="polite"></p>`;
@@ -1109,6 +1119,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     });
     wireJapa(); wirePrana();
     for (const s of steps) if (s.mudras) wireMudra(s.id, s.mudras); else if (kits[s.id]) wireMudra('ny-' + s.id, s.nyasa, kits[s.id]);
+    wireDhyana(key, steps.find((s) => s.pictures)?.pictures);
     startSandhyaClock(key, p);
   }
 
@@ -1346,6 +1357,41 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     }
   }
 
+  // The Devi's picture for this sandhya's verse (DHYANA_PICTURES in sandhya.js). The reader's
+  // choice is kept on this device for each sandhya, and hiding it holds for all three. Only the
+  // picture shown is fetched, and only when the step comes near the screen (loading="lazy").
+  const dhyanaIndex = (key, n) => Math.min(n, Math.max(1, Math.round(+store.get('panchangam.dhyana.' + key)) || 1)) - 1;
+  function dhyanaHtml(key, pics) {
+    const off = store.get('panchangam.dhyana.hidden') === '1', i = dhyanaIndex(key, pics.length), hide = off ? ' hidden' : '';
+    return `<div class="dhyana" id="dhyana">
+      <figure class="dh-fig"${hide}><img id="dhyanaImg" src="${esc(pics[i])}" alt="${esc(t('dhyana.alt.' + key))}" width="720" height="900" loading="lazy" decoding="async"></figure>
+      <div class="dh-ctl">
+        <span class="seg-ctl" role="group" aria-label="${esc(t('dhyana.pick'))}" id="dhyanaPick"${hide}>
+          ${pics.map((_, j) => `<button data-i="${j}" aria-pressed="${j === i}">${j + 1}</button>`).join('')}</span>
+        <button class="link-btn" id="dhyanaShow">${esc(off ? t('dhyana.show') : t('dhyana.hide'))}</button>
+      </div>
+      <p class="note dh-note"${hide}>${esc(t('dhyana.made'))}</p>
+    </div>`;
+  }
+  function wireDhyana(key, pics) {
+    const root = $('dhyana');
+    if (!root || !pics) return;
+    root.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-i]');
+      if (b) {
+        store.set('panchangam.dhyana.' + key, String(+b.dataset.i + 1));
+        $('dhyanaImg').src = pics[+b.dataset.i];
+        for (const x of $('dhyanaPick').children) x.setAttribute('aria-pressed', String(x === b));
+        return;
+      }
+      const btn = e.target.closest('#dhyanaShow');
+      if (!btn) return;
+      const off = !root.querySelector('.dh-fig').hidden; // shown now, so this tap hides it
+      store.set('panchangam.dhyana.hidden', off ? '1' : '0');
+      for (const el of root.querySelectorAll('.dh-fig, #dhyanaPick, .dh-note')) el.hidden = off;
+      btn.textContent = off ? t('dhyana.show') : t('dhyana.hide');
+    });
+  }
   // Gayatri japa counter: a mala of 108 (or 28, 10) beads that light up as you tap.
   function japaHtml() {
     return `<div class="japa">
