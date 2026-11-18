@@ -283,15 +283,21 @@ const GAYATRI_NYASAM = [
 export const NYASA_LINES = ['angushtha', 'tarjani', 'madhyama', 'anamika', 'kanishthika', 'karatala',
   'hridaya', 'siras', 'sikha', 'kavacha', 'netra', 'astra', 'digbandha'];
 
-// The Devi's form at each sandhya, said after the Gayatri dhyanam: Brahmi in the morning,
-// Vishnu's form at midday, Siva's form in the evening. The site's owner named the morning and
-// evening verses by their first words; the midday one completes the set, and he said it stays
-// (19 Nov 2026). The words are as a Hindi Shukla Yajurveda sandhya-vidhi prints them (copies on
-// narindersharmasite.wordpress.com and transliteral.org), without the morning verse's closing
-// instruction, "mantrenavahayed devim ayantim surya mandalat" ("one should invite the Devi coming
-// from the sun's orb"). No Telugu printing has been found. The Taittiriya tarpanam (step
-// tarpanam) names Raudri at midday and Vaishnavi in the evening, the other way round: a known
-// difference, and the owner said both stay as they are (19 Nov 2026). Do not "correct" either.
+// The nyasam after the japam: the same lines, but the last releases the directions (digvimokah),
+// the vyahritis in the reverse order, as haindavam.org gives it.
+const GAYATRI_NYASAM_AFTER = GAYATRI_NYASAM.replace(/[^\n]*$/, 'Suvar bhuvar bhurom iti digvimokah');
+export const NYASA_LINES_AFTER = [...NYASA_LINES.slice(0, -1), 'digvimoka'];
+
+// The Devi's form at each sandhya, said after the Gayatri dhyanam and "yo devas savita": Brahmi
+// in the morning, Vishnu's form at midday, Siva's form in the evening. The site's owner named
+// the morning and evening verses by their first words; the midday one completes the set, and he
+// said it stays (19 Nov 2026). The words are as a Hindi Shukla Yajurveda sandhya-vidhi prints
+// them (copies on narindersharmasite.wordpress.com and transliteral.org), without the morning
+// verse's closing instruction, "mantrenavahayed devim ayantim surya mandalat" ("one should
+// invite the Devi coming from the sun's orb"). No Telugu printing has been found. The Taittiriya
+// tarpanam (step tarpanam) names Raudri at midday and Vaishnavi in the evening, the other way
+// round: a known difference, and the owner said both stay as they are (19 Nov 2026). Do not
+// "correct" either.
 const KALA_DHYANAM = {
   pratah: [
     'Balam vidyam tu gayatrim, lohitam chaturananam',
@@ -342,8 +348,8 @@ const HIRANYAVARNA = [
   'Sarvagum agnigum rapsushado huve vo, mayi varcho balam ojo nidhatta',
 ].join('\n');
 
-// Said before the japam, after the 24 mudras as vignanam.org has it (haindavam.org puts it after
-// the dhyanam): the meaning of the Gayatri.
+// The meaning of the Gayatri, said right after the Gayatri dhyanam as haindavam.org has it, at
+// the site owner's word (19 Nov 2026); vignanam.org says it after the 24 mudras.
 const YO_DEVAH = [
   'Yo devas savita\'smakam, dhiyo dharmadi gocharah',
   'Prerayet tasya yad bhargah, tad varenyam upasmahe',
@@ -357,16 +363,20 @@ const MUNI_NAMASKARAM = [
 
 // The closing namaskarams after the udvasanam, as vignanam.org gives them, its spelling slips
 // corrected (janardanam, jagattrayam, upabruve, vrijanam as in Rig Veda 1.185.11). Its
-// "akasat patitam" verse is in the Surya Narayana step here, with the refrain vignanam adds to it
-// ("sri kesavam pratigacchaty om nama iti"). Its "namo brahmanya devaya", which vignanam says after
-// the Harihara verses, before the udvasanam, is at the end of the Harihara step here. The owner
-// says both (19 Nov 2026).
+// "akasat patitam" verse comes before "sarva vedeshu", with the refrain vignanam adds to it ("sri
+// kesavam pratigacchaty om nama iti"); the owner dropped the Surya Narayana step it was in before,
+// keeping only these lines here, and dropped the Yama vandanam too (19 Nov 2026). Its "namo
+// brahmanya devaya", which vignanam says after the Harihara verses, before the udvasanam, is at
+// the end of the Harihara step here. The owner says both.
 // "Stutva devam janardana om nama iti" is vignanam's reading, vocative or a slip for janardanam.
 const BHAGAVAN_NAMASKARAM = [
   'Namo\'stv anantaya sahasra murtaye, sahasra padakshi siroru bahave',
   'Sahasra namne purushaya sasvate, sahasra koti yuga dharine namah',
   'Idam dyavaprithivi satyam astu, pitar matar yad ihopabruve vam',
   'Bhutam devanam avame avobhih, vidyamesham vrijanam jiradanum',
+  'Akasat patitam toyam, yatha gacchati sagaram',
+  'Sarva deva namaskarah, kesavam prati gacchati',
+  'Sri kesavam pratigacchaty om nama iti',
   'Sarva vedeshu yat punyam, sarva tirtheshu yat phalam',
   'Tat phalam purusha apnoti, stutva devam janardanam',
   'Stutva devam janardana om nama iti',
@@ -384,26 +394,6 @@ const HARIHARA = [
   'Yathantaram na pasyami, tatha me svastir ayushi',
   'Namo brahmanya devaya, go brahmana hitaya cha',
   'Jagad dhitaya krishnaya, govindaya namo namah',
-].join('\n');
-
-const SURYA_NARAYANA = [
-  'Namah savitre jagadeka chakshushe, jagat prasuti sthiti nasa hetave',
-  'Trayimayaya trigunatma dharine, virinchi narayana sankaratmane',
-  '',
-  'Dhyeyah sada savitri mandala madhyavarti, narayanas sarasijasana sannivishtah',
-  'Keyuravan makara kundalavan kiriti, hari hiranmaya vapur dhrita sankha chakrah',
-  '',
-  'Akasat patitam toyam, yatha gacchati sagaram',
-  'Sarva deva namaskarah, kesavam prati gacchati',
-  'Sri kesavam pratigacchaty om nama iti',
-].join('\n');
-
-const YAMA_VANDANAM = [
-  'Yamaya dharmarajaya mrityave chantakaya cha',
-  'Vaivasvataya kalaya sarvabhuta kshayaya cha',
-  'Audumbaraya dadhnaya nilaya parameshthine',
-  'Vrikodaraya chitraya chitraguptaya vai namah',
-  'Chitraguptaya vai nama om nama iti',
 ].join('\n');
 
 const SAMARPANAM = [
@@ -516,7 +506,7 @@ export function sandhyaSteps(kindKey) {
     { id: 'arghyam', title: `Arghya pradanam: ${k.arghyas} arghyas`, arghya: true,
       how: k.arghyaHow,
       mantra: `${mamopatta}${k.japaName} arghya pradanam karishye\n\n${kindKey === 'madhyahnika' ? HAMSAS + '\n' : ''}${GAYATRI}`,
-      note: 'If the right time has passed, first say "Kalatita prayaschittartham turiyarghya pradanam karishye" and offer one more arghya with the Gayatri: the prayaschitta arghya, which some books call the turiyarghya.' },
+      note: 'If the right time has passed, first say "Kalatita dosha pariharartham prayaschittartham turiyarghya pradanam karishye" and offer one more arghya with the Gayatri: the prayaschitta arghya, which some books call the turiyarghya.' },
     { id: 'pradakshinam', title: 'Atma pradakshinam',
       how: 'Take water in the right palm, turn around once clockwise where you stand, and sprinkle the water around you.',
       mantra: 'Udyantam astam yantam adityam abhidhyayan\nKurvan brahmano vidvan sakalam bhadram asnute\nAsav adityo brahmeti, brahmaiva san brahmapyeti ya evam veda\nAsav adityo brahma' },
@@ -545,17 +535,26 @@ export function sandhyaSteps(kindKey) {
     { id: 'dhyanam', title: 'Gayatri dhyanam',
       how: 'Meditate on the Devi in this form.',
       mantra: DHYANAM },
+    // "Yo devas savita" belongs to the dhyanam (the site's owner, 19 Nov 2026), right after the
+    // Gayatri dhyanam as haindavam.org has it, and before the verse for this sandhya.
+    { id: 'yo-devah', title: 'Yo devas savita',
+      how: 'Still meditating on the Devi, say this verse, which gives the meaning of the Gayatri.',
+      mantra: YO_DEVAH },
     { id: 'kala-dhyanam', title: 'Dhyanam for this sandhya',
       how: 'Meditate on the Devi in the sun\'s orb, in the form she takes at this hour.',
       mantra: lines(KALA_DHYANAM[kindKey]) },
     { id: 'purvamudra', title: 'Purva mudras: 24 (in many families)', mudras: PURVA_MUDRAS,
       how: 'Before japam, show the 24 Gayatri mudras in this order, with the hand positions your guru taught. Play moves the drawing from one mudra to the next.' },
-    { id: 'yo-devah', title: 'Yo devas savita (before japam)',
-      how: 'Say this verse, which gives the meaning of the Gayatri, before you begin the japam.',
-      mantra: YO_DEVAH },
     { id: 'japam', title: 'Gayatri japam', japa: true,
       how: `${k.japaHow} Say the Gayatri 108 times, or 28, or at least 10. Tap the counter for each one.`,
       mantra: GAYATRI },
+    // After the japam the nyasam is said again, ending with the digvimokam, which releases the
+    // directions bound before the japam (the site's owner, 19 Nov 2026; haindavam.org's
+    // japavasanam has it too). The page has the fingers go round the head the other way; neither
+    // the owner nor haindavam.org says which way, so IDEAS.md asks.
+    { id: 'nyasam2', title: 'Nyasam again (after the japam)', nyasa: NYASA_LINES_AFTER,
+      how: 'Do the kara and anga nyasam again, as in step {step:nyasam}. At the last line, snap the fingers round the head the other way, to release the directions.',
+      mantra: GAYATRI_NYASAM_AFTER },
     { id: 'uttaramudra', title: 'Uttara mudras: 8 (in many families)', mudras: UTTARA_MUDRAS,
       how: 'After japam, show the 8 closing mudras in this order.' },
     { id: 'brahmarpanam', title: 'Japa samarpanam',
@@ -573,11 +572,11 @@ export function sandhyaSteps(kindKey) {
       how: 'Bid the Devi farewell.',
       mantra: 'Uttame sikhare jate, bhumyam parvata murdhani\nBrahmanebhyo\'bhyanujnata, gaccha devi yathasukham\nStuto maya varada vedamata, prachodayanti pavane dvijata\nAyuh prithivyam dravinam brahmavarchasam, mahyam dattva prajatum brahmalokam' },
     { id: 'namaskarams', title: 'Bhagavan namaskaram', how: 'Bow with joined palms.', mantra: BHAGAVAN_NAMASKARAM },
-    { id: 'suryanarayana', title: 'Surya Narayana vandanam', how: 'Face the sun (or east) and bow.', mantra: SURYA_NARAYANA },
-    { id: 'yama', title: 'Yama vandanam (in some families)', how: 'Face south and bow. Not every Telugu family says this; follow your elders.', mantra: YAMA_VANDANAM },
     { id: 'abhivadanam', title: 'Abhivadanam', abhivadanam: true,
       how: 'Touch both ears, then bow, introducing yourself by pravara, gotram, sutra and veda. Fill in your details above.' },
-    again(8),
+    // After the abhivadanam the achamanam is the Kesava names (the site's owner, 19 Nov 2026).
+    { id: 'achamanam8', title: 'Achamanam (Kesava names)', ref: 'achamanam-kesava',
+      how: 'Do achamanam with the Kesava names, as in step {step:achamanam-kesava}.' },
     { id: 'samarpanam', title: 'Samarpanam',
       how: 'Offer the whole act to Narayana.',
       mantra: SAMARPANAM },

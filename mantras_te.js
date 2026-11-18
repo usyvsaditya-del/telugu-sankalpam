@@ -178,6 +178,8 @@ const GAYATRI_NYASAM = [
   'ప్రచోదయాత్సర్వాత్మనే అస్త్రాయ ఫట్',
   'ఓం భూర్భువస్సువరోమితి దిగ్బంధః',
 ].join('\n');
+// After the japam: the same lines, the last releasing the directions (దిగ్విమోకః), as haindavam.org has it.
+const GAYATRI_NYASAM_AFTER = GAYATRI_NYASAM.replace(/[^\n]*$/, 'సువర్భువర్భూరోమితి దిగ్విమోకః');
 
 // The Devi's form at each sandhya (see sandhya.js KALA_DHYANAM for the source).
 const KALA_DHYANAM = {
@@ -239,6 +241,9 @@ const BHAGAVAN_NAMASKARAM = [
   'సహస్రనామ్నే పురుషాయ శాశ్వతే, సహస్రకోటీయుగధారిణే నమః',
   'ఇదం ద్యావాపృథివీ సత్యమస్తు, పితర్మాతర్యదిహోపబ్రువే వామ్',
   'భూతం దేవానామవమే అవోభిః, విద్యామేషం వృజనం జీరదానుమ్',
+  'ఆకాశాత్పతితం తోయం, యథా గచ్ఛతి సాగరమ్',
+  'సర్వదేవ నమస్కారః, కేశవం ప్రతి గచ్ఛతి',
+  'శ్రీ కేశవం ప్రతిగచ్ఛత్యోన్నమ ఇతి',
   'సర్వవేదేషు యత్పుణ్యం, సర్వతీర్థేషు యత్ఫలమ్',
   'తత్ఫలం పురుష ఆప్నోతి, స్తుత్వా దేవం జనార్దనమ్',
   'స్తుత్వా దేవం జనార్దన ఓం నమ ఇతి',
@@ -256,26 +261,6 @@ const HARIHARA = [
   'యథాంతరం న పశ్యామి, తథా మే స్వస్తిరాయుషి',
   'నమో బ్రహ్మణ్యదేవాయ, గోబ్రాహ్మణహితాయ చ',
   'జగద్ధితాయ కృష్ణాయ, గోవిందాయ నమో నమః',
-].join('\n');
-
-const SURYA_NARAYANA = [
-  'నమః సవిత్రే జగదేకచక్షుషే, జగత్ప్రసూతి స్థితి నాశ హేతవే',
-  'త్రయీమయాయ త్రిగుణాత్మధారిణే, విరించి నారాయణ శంకరాత్మనే',
-  '',
-  'ధ్యేయః సదా సవితృమండల మధ్యవర్తీ, నారాయణస్సరసిజాసన సన్నివిష్టః',
-  'కేయూరవాన్మకరకుండలవాన్కిరీటీ, హారీ హిరణ్మయవపుర్ధృతశంఖచక్రః',
-  '',
-  'ఆకాశాత్పతితం తోయం, యథా గచ్ఛతి సాగరమ్',
-  'సర్వదేవ నమస్కారః, కేశవం ప్రతి గచ్ఛతి',
-  'శ్రీ కేశవం ప్రతిగచ్ఛత్యోన్నమ ఇతి',
-].join('\n');
-
-const YAMA_VANDANAM = [
-  'యమాయ ధర్మరాజాయ మృత్యవే చాంతకాయ చ',
-  'వైవస్వతాయ కాలాయ సర్వభూతక్షయాయ చ',
-  'ఔదుంబరాయ దధ్నాయ నీలాయ పరమేష్ఠినే',
-  'వృకోదరాయ చిత్రాయ చిత్రగుప్తాయ వై నమః',
-  'చిత్రగుప్తాయ వై నమ ఓం నమ ఇతి',
 ].join('\n');
 
 const SAMARPANAM = [
@@ -311,6 +296,7 @@ export function sandhyaMantrasTe(kindKey) {
     // No rishi, chandas and devata lines after the japa sankalpam (the site's owner, 19 Nov 2026).
     'japa-prep': `${MAMOPATTA}${jn}ంగ యథాశక్తి గాయత్రీ మహామంత్ర జపం కరిష్యే`,
     nyasam: GAYATRI_NYASAM,
+    nyasam2: GAYATRI_NYASAM_AFTER,
     dhyanam: DHYANAM,
     'kala-dhyanam': lines(KALA_DHYANAM[kindKey]),
     'yo-devah': YO_DEVAH,
@@ -323,15 +309,14 @@ export function sandhyaMantrasTe(kindKey) {
     udvasanam: UDVASANAM,
     namaskarams: BHAGAVAN_NAMASKARAM,
     harihara: HARIHARA,
-    suryanarayana: SURYA_NARAYANA,
-    yama: YAMA_VANDANAM,
     samarpanam: SAMARPANAM,
   };
 }
 
 // The sankalpam for the prayaschitta arghya (the turiyarghya), said when the right time has
-// passed (quoted in a step note).
-export const TURIYARGHYA_TE = 'కాలాతీత ప్రాయశ్చిత్తార్థం తురీయార్ఘ్యప్రదానం కరిష్యే';
+// passed (quoted in a step note), as read from what the site's owner typed (19 Nov 2026); he is
+// to confirm it (IDEAS.md).
+export const TURIYARGHYA_TE = 'కాలాతీత దోష పరిహారార్థం ప్రాయశ్చిత్తార్థం తురీయార్ఘ్యప్రదానం కరిష్యే';
 
 // Mudra names as the Telugu book used for the drawings prints them, index-aligned with PURVA_MUDRAS /
 // UTTARA_MUDRAS. That book also prints చక్రమ్ and కూర్మః as alternates at uttara 3 and 5, and

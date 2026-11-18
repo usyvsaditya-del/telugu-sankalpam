@@ -91,8 +91,16 @@ trust it. Each one says what it would take and the main risk.
     dhimahi swaha, dhiyo yo nah prachodayat swaha"?
   - Answered 19 Nov 2026: the fourth arghya, given when the time has passed, is the prayaschitta
     arghya in the owner's family; the page's own words now call it that and name the
-    turiyarghya once. Still for him: does the sankalpam before it say "turiyarghya pradanam
-    karishye", as books print it, or other words?
+    turiyarghya once. Its sankalpam, as the page reads what he typed ("Kalatitka dosha
+    pariharardha praschittaam turiya"): "kalatita dosha pariharartham prayaschittartham
+    turiyarghya pradanam karishye".
+  - For the site's owner: is that reading of your sankalpam right? vignanam.org has
+    "kalatikrama dosha pariharartham chaturtha arghyapradanam karishye"; haindavam.org has
+    "(mukhya kalatikramana dosha nivrittyartham prayaschitta arghya pradana purvaka) …
+    sandhyanga arghyapradanam karishye".
+  - For the site's owner or a vaidika: the page's note on the prayaschitta arghya shows at all
+    three sandhyas. haindavam.org marks the extra arghya only in the morning and the evening
+    ("3 (+1)"); at midday it has two arghyas and no extra. Is it given at midday too?
   - For the site's owner: keep the Kesava-names achamanam as step 3, for families who use it in place of
     step 2's (most printed Telugu books open with it), or show only step 2?
   - For the site's owner: you gave the first and last lines; are the four between (GRETIL's text) what
@@ -138,6 +146,26 @@ trust it. Each one says what it would take and the main risk.
   - Answered 19 Nov 2026: the rishi, chandas and devata lines ("Pranavasya rishir brahma …")
     that followed the japa sankalpam are dropped, at the owner's word; no Telugu text checked
     had them there.
+  - Answered 19 Nov 2026: "yo devas savita" belongs to the dhyanam; it now follows the Gayatri
+    dhyanam, as haindavam.org has it, before the verse for the time of day. After the japam the
+    nyasam comes again, ending "suvar bhuvar bhurom iti digvimokah", before the eight mudras.
+  - For the site's owner or a vaidika: at the digvimokam the page has the fingers snap round the
+    head the other way from the digbandham. Neither the owner nor haindavam.org says which way.
+    Which way does your family go?
+  - For the site's owner: haindavam.org's japavasanam also has achamanam, pranayamam and a
+    sankalpam before that second nyasam, and the dhyanam and "yo devas savita" after it. Does
+    your family say those too?
+  - For the site's owner: the japa samarpanam after the eight mudras is longer, "… gayatri maha
+    mantra japam … tat sat …"; the page has only "Om tat sad brahmarpanam astu". The full words?
+  - For the site's owner: the samarpanam at the end is longer, about six verses with "yasya
+    smrityā ca namoktya …"; the page has "kayena vacha …" and "om tat sat". vignanam.org and
+    haindavam.org have neither the longer form nor that verse. The full words?
+  - For the site's owner: "35 has brahma" (the Harihara step, 19 Nov 2026). Is that the line
+    "నమో బ్రహ్మణ్యదేవాయ …" already there, or a verse to Brahma your family adds?
+  - For the site's owner: pictures of the Devi for the time-of-day verse (the morning, midday and
+    evening forms), in the manner of Raja Ravi Varma's paintings, as an image to fix the mind
+    on, with a few to choose from. The owner will make them with an image tool from prompts
+    written to the three verses; each is to be checked against its verse before it goes on.
   - For a vaidika: the kara and anga nyasa add "brahmatmane, vishnvatmane …" to the padas, as
     haindavam.org, vignanam.org and hindupad.com print them.
   - For the site's owner: vignanam.org and haindavam.org open the japa sankalpam with "పూర్వోక్త
@@ -162,15 +190,13 @@ trust it. Each one says what it would take and the main risk.
     కృష్ణాయ గోవిందాయ నమో నమః" after the Harihara verses, as vignanam.org has it; it is now on
     the page, at the end of that step.
   - Answered 19 Nov 2026: the owner says the refrain "శ్రీ కేశవం ప్రతిగచ్ఛత్యోన్నమ ఇతి" too; it
-    now follows "ఆకాశాత్పతితం తోయం …" in the Surya Narayana step.
-  - For the site's owner: you added "sarva vedeshu also". "సర్వవేదేషు యత్పుణ్యం …", with its refrain,
-    is already in the Bhagavan namaskaram step, before the Surya Narayana step. Should it stay
-    there, or follow "ఆకాశాత్పతితం తోయం …", as vignanam.org orders them?
-  - For a vaidika: the page says "ఓం భూర్భువస్సువః" after both marjanams and has Surya Narayana
-    and Yama vandanam; vignanam has none of these, and does achamanam twice after the
-    pradakshinam. haindavam.org also repeats the
-    nyasa and the dhyanam after the japam, before the eight mudras (the japavasanam), ending
-    "suvar bhuvar bhur om iti digvimokah"; the page does not. Which is right?
+    now follows "ఆకాశాత్పతితం తోయం …".
+  - Answered 19 Nov 2026: the Surya Narayana vandanam is dropped, keeping only its last lines
+    ("ఆకాశాత్పతితం తోయం …" and the refrain), now in the Bhagavan namaskaram before "సర్వవేదేషు",
+    as vignanam.org and haindavam.org order them; this also settles "sarva vedeshu also". The
+    Yama vandanam is dropped. The achamanam after the abhivadanam is the Kesava names.
+  - For a vaidika: the page says "ఓం భూర్భువస్సువః" after both marjanams; vignanam has neither,
+    and does achamanam twice after the pradakshinam. Which is right?
 - Four points the Telugu mantra review rated low confidence; the site has the first form of each:
   చతుర్వింశత్యక్షరా or చతుర్విగ్ంశత్యక్షరా (avahanam); భవామ శరదశ్శతమ్, శృణవామ or
   భవామ శరదశ్శతగ్ం శృణవామ (Surya upasthanam); ఆంగీరస or అంగీరస (a year's name);

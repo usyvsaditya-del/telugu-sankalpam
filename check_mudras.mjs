@@ -1,9 +1,9 @@
 // check_mudras.mjs — checks the mudra and nyasa drawings: every mudra the sandhya steps name has a
 // pose, every nyasa line a pose and the marks of what it touches, every drawing draws without
-// broken numbers, and the hands can move between each pair of neighbours. The nyasa step's lines
+// broken numbers, and the hands can move between each pair of neighbours. Each nyasa step's lines
 // and its drawings must stay in step.
 // Run: node check_mudras.mjs   (exits 1 on any failure)
-import { PURVA_MUDRAS, UTTARA_MUDRAS, NYASA_LINES, localizeSteps } from './sandhya.js';
+import { PURVA_MUDRAS, UTTARA_MUDRAS, NYASA_LINES, NYASA_LINES_AFTER, localizeSteps } from './sandhya.js';
 import { MUDRA_POSES, NYASA_POSES, NYASA_CUES, resolvePose, blendPose, mudraSvg } from './mudra_rig.js';
 
 const fails = [];
@@ -36,14 +36,18 @@ function check(label, names, poses, cues) {
 check('mudra', PURVA_MUDRAS, MUDRA_POSES);
 check('mudra', UTTARA_MUDRAS, MUDRA_POSES);
 check('nyasa', NYASA_LINES, NYASA_POSES, NYASA_CUES);
+check('nyasa after the japam', NYASA_LINES_AFTER, NYASA_POSES, NYASA_CUES);
 const extra = Object.keys(MUDRA_POSES).filter((n) => !PURVA_MUDRAS.includes(n) && !UTTARA_MUDRAS.includes(n));
 if (extra.length) fails.push(`poses with no step: ${extra.join(', ')}`);
-const extraNyasa = [...new Set([...Object.keys(NYASA_POSES), ...Object.keys(NYASA_CUES)])].filter((n) => !NYASA_LINES.includes(n));
+const extraNyasa = [...new Set([...Object.keys(NYASA_POSES), ...Object.keys(NYASA_CUES)])].filter((n) => !NYASA_LINES.includes(n) && !NYASA_LINES_AFTER.includes(n));
 if (extraNyasa.length) fails.push(`nyasa drawings with no line: ${extraNyasa.join(', ')}`);
 for (const kind of ['pratah', 'madhyahnika', 'sayam']) {
-  const st = localizeSteps(kind, null).find((s) => s.nyasa);
-  const n = st ? st.mantra.split('\n').length : 0;
-  if (!st || n !== NYASA_LINES.length) fails.push(`${kind}: the nyasa step has ${n} lines for ${NYASA_LINES.length} drawings`);
+  const nyasaSteps = localizeSteps(kind, null).filter((s) => s.nyasa);
+  if (nyasaSteps.length !== 2) fails.push(`${kind}: ${nyasaSteps.length} nyasa steps, 2 expected`);
+  for (const st of nyasaSteps) {
+    const n = st.mantra.split('\n').length;
+    if (n !== st.nyasa.length) fails.push(`${kind} ${st.id}: ${n} lines for ${st.nyasa.length} drawings`);
+  }
 }
-console.log(fails.length ? `FAIL\n  ${fails.join('\n  ')}` : `ok: ${PURVA_MUDRAS.length} purva + ${UTTARA_MUDRAS.length} uttara mudras and ${NYASA_LINES.length} nyasa lines draw and move`);
+console.log(fails.length ? `FAIL\n  ${fails.join('\n  ')}` : `ok: ${PURVA_MUDRAS.length} purva + ${UTTARA_MUDRAS.length} uttara mudras and ${NYASA_LINES.length} nyasa lines, before and after the japam, draw and move`);
 process.exit(fails.length ? 1 : 0);

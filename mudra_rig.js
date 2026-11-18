@@ -474,7 +474,8 @@ export const MUDRA_POSES = {
 // forefinger strokes the thumb at the first line); at the sixth, one hand shows its palm and the
 // other its back, both coloured, turning over. Anga nyasam: the seated figure, the right hand at
 // the place the line names, with a ring on it; astra circles the head with the right hand and
-// claps on the left palm; the digbandham snaps the fingers round the head.
+// claps on the left palm; the digbandham snaps the fingers round the head, and the digvimokam
+// after the japam goes round the other way.
 // Set from the step's own description of the acts, not traced from any picture.
 const KARA = { R: { at: [-62, 0, 0], s: { i: 4, m: 1, r: -2, l: -5 }, t: { ab: 50, op: 5, f: [3, 3] } }, cam: [0, 42, 240] };
 const REST_L = { at: [-150, -185, 40], rx: 90, rz: 180, f: all([10, 10, 5]), t: { ab: 30, op: 10, f: [5, 5] } };
@@ -484,7 +485,8 @@ const CAM_CROWN = [0, 150, 470];                  // the same, with room for a r
 const CROWN = [0, 268, 64, 15];                   // that ring: centre x, y and its two radii
 const anga = (R, more = {}) => ({ R: { ...FLAT, ...R }, L: REST_L, body: 1, cam: CAM_NYASA, ...more });
 // The right hand raised beside the head, its fingertips at the ring's near end, thumb on the
-// middle finger to snap at each direction: the digbandham before the japam.
+// middle finger to snap at each direction: the digbandham before the japam, and the digvimokam
+// after it.
 const DIGBANDHA = anga({ at: [-84, 182, 10], rz: -8, f: { i: [10, 10, 5], m: [35, 45, 25], r: [92, 100, 65], l: [92, 100, 65] },
   s: { i: 0, m: 0, r: 0, l: 0 }, t: { ab: 20, op: 55, f: [20, 25] } }, { cam: CAM_CROWN });
 export const NYASA_POSES = {
@@ -507,6 +509,9 @@ export const NYASA_POSES = {
   astra: anga({ at: [-84, 182, 6], rz: -8, f: { i: [2, 2, 0], m: [2, 2, 0], r: [92, 100, 65], l: [92, 100, 65] }, t: { ab: 20, op: 40, f: [20, 20] } },
     { L: { at: [-34, 22, 40], rx: -90, ry: -90, f: all([4, 4, 2]), s: together, t: { ab: 10, op: 5, f: [5, 5] } }, cam: CAM_CROWN }),
   digbandha: DIGBANDHA,
+  // after the japam: the same hand; its ring goes round the other way (neither the site's owner
+  // nor haindavam.org says which way; IDEAS.md asks)
+  digvimoka: DIGBANDHA,
 };
 // What each line touches (part names: R or L, then t thumb, i m r l fingers, palm) and its marks.
 export const NYASA_CUES = {
@@ -523,4 +528,5 @@ export const NYASA_CUES = {
   netra: { rings: [[-15, 210, 7], [0, 223, 6], [15, 210, 7]] },
   astra: { orbit: CROWN, clap: [-4, 40] },
   digbandha: { orbit: CROWN, dotted: true, snaps: 4 },
+  digvimoka: { orbit: CROWN, dotted: true, snaps: 4, reverse: true },
 };
