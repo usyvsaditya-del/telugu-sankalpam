@@ -128,6 +128,23 @@ const ACHAMANAM_APASTAMBA = [
   'Athapa upaspriset',
 ].join('\n');
 
+// Srautachamanam, the achamanam with Vedic words: three sips with the three padas of the Gayatri,
+// then one act for each phrase of Apo hi shtha, the seven vyahritis, the Gayatri and Apo jyotih,
+// at the 24 places of the Kesava names ("devyah padais tribhih pitva, ablingair navabhih sprset",
+// as a Telugu book of 1914 quotes it). A line here groups the acts the step's "how" lists together.
+// Said before the japam (the site's owner, 19 Nov 2026).
+const SRAUTACHAMANAM = [
+  'Om tat savitur varenyagum swaha', 'Bhargo devasya dhimahi swaha', 'Dhiyo yo nah prachodayat swaha',
+  'Apo hi shtha mayobhuvah, ta na urje dadhatana',
+  'Mahe ranaya chakshase, yo vah sivatamo rasah',
+  'Tasya bhajayateha nah, usatir iva matarah',
+  'Tasma aranga mama vah, yasya kshayaya jinvatha, apo janayatha cha nah',
+  'Om bhuh, Om bhuvah, Ogum suvah',
+  'Om mahah, Om janah, Om tapah, Ogum satyam',
+  'Om tat savitur varenyam, bhargo devasya dhimahi, dhiyo yo nah prachodayat',
+  'Om apo jyoti raso\'mritam brahma, bhur bhuvas suvarom',
+].join('\n');
+
 // The 24 Kesavadi names: three sips, then 21 names, three to a line to keep the phone screen short.
 const KESAVADI = [
   'Om Kesavaya swaha', 'Om Narayanaya swaha', 'Om Madhavaya swaha',
@@ -219,15 +236,6 @@ const UPASTHANAM = {
 };
 
 const OMITYEKAKSHARAM = 'Om ityekaksharam brahma, agnir devata, brahma ity arsham, gayatram chandam, paramatmam sarupam, sayujyam viniyogam';
-
-const NYASAM = [
-  'Pranavasya rishir brahma, daivi gayatri chandah, paramatma devata',
-  'Bhuradi sapta vyahritinam, atri bhrigu kutsa vasishtha gautama kasyapa angirasa rishayah',
-  'Gayatri ushnik anushtup brihati pankti trishtup jagatyas chandamsi',
-  'Agni vayu arka vagisa varuna indra visvedeva devatah',
-  'Gayatrya visvamitra rishih, gayatri chandah, savita devata',
-  'Gayatri sirasah brahma rishih, anushtup chandah, paramatma devata',
-].join('\n');
 
 const AVAHANAM = [
   'Ayatu varada devi, aksharam brahma sammitam',
@@ -344,9 +352,10 @@ const MUNI_NAMASKARAM = [
 
 // The closing namaskarams after the udvasanam, as vignanam.org gives them, its spelling slips
 // corrected (janardanam, jagattrayam, upabruve, vrijanam as in Rig Veda 1.185.11). Its
-// "akasat patitam" verse is already in the Surya Narayana step here, without the refrain vignanam
-// adds to it ("sri kesavam pratigacchaty om nama iti"), and its "namo brahmanya devaya" verse
-// after the Harihara verses is not on the page; both are questions for the owner (IDEAS.md).
+// "akasat patitam" verse is in the Surya Narayana step here, with the refrain vignanam adds to it
+// ("sri kesavam pratigacchaty om nama iti"). Its "namo brahmanya devaya", which vignanam says after
+// the Harihara verses, before the udvasanam, is at the end of the Harihara step here. The owner
+// says both (19 Nov 2026).
 // "Stutva devam janardana om nama iti" is vignanam's reading, vocative or a slip for janardanam.
 const BHAGAVAN_NAMASKARAM = [
   'Namo\'stv anantaya sahasra murtaye, sahasra padakshi siroru bahave',
@@ -361,11 +370,15 @@ const BHAGAVAN_NAMASKARAM = [
   'Sri vasudeva namo\'stu te om nama iti',
 ].join('\n');
 
+// The Harihara verses, then "namo brahmanya devaya", which vignanam.org's text says next and the
+// site's owner says too (19 Nov 2026).
 const HARIHARA = [
   'Sivaya vishnurupaya, sivarupaya vishnave',
   'Sivasya hridayam vishnur, vishnos cha hridayam sivah',
   'Yatha sivamayo vishnur, evam vishnumayah sivah',
   'Yathantaram na pasyami, tatha me svastir ayushi',
+  'Namo brahmanya devaya, go brahmana hitaya cha',
+  'Jagad dhitaya krishnaya, govindaya namo namah',
 ].join('\n');
 
 const SURYA_NARAYANA = [
@@ -377,6 +390,7 @@ const SURYA_NARAYANA = [
   '',
   'Akasat patitam toyam, yatha gacchati sagaram',
   'Sarva deva namaskarah, kesavam prati gacchati',
+  'Sri kesavam pratigacchaty om nama iti',
 ].join('\n');
 
 const YAMA_VANDANAM = [
@@ -497,7 +511,7 @@ export function sandhyaSteps(kindKey) {
     { id: 'arghyam', title: `Arghya pradanam: ${k.arghyas} arghyas`, arghya: true,
       how: k.arghyaHow,
       mantra: `${mamopatta}${k.japaName} arghya pradanam karishye\n\n${kindKey === 'madhyahnika' ? HAMSAS + '\n' : ''}${GAYATRI}`,
-      note: 'If the right time has passed, first say "Kalatita prayaschittartham turiyarghya pradanam karishye" and offer one more arghya (the turiyarghya) with the Gayatri.' },
+      note: 'If the right time has passed, first say "Kalatita prayaschittartham turiyarghya pradanam karishye" and offer one more arghya with the Gayatri: the prayaschitta arghya, which some books call the turiyarghya.' },
     { id: 'pradakshinam', title: 'Atma pradakshinam',
       how: 'Take water in the right palm, turn around once clockwise where you stand, and sprinkle the water around you.',
       mantra: 'Udyantam astam yantam adityam abhidhyayan\nKurvan brahmano vidvan sakalam bhadram asnute\nAsav adityo brahmeti, brahmaiva san brahmapyeti ya evam veda\nAsav adityo brahma' },
@@ -509,13 +523,17 @@ export function sandhyaSteps(kindKey) {
     { id: 'avahanam', title: 'Gayatri avahanam',
       how: 'Invite the Devi with palms joined.',
       mantra: `${OMITYEKAKSHARAM}\n${AVAHANAM}` },
-    // The japam starts with a different achamanam (the site's owner, 19 Nov 2026): the Kesava
-    // names, as vignanam.org has it before the japa sankalpam.
-    { id: 'achamanam6', title: 'Achamanam (Kesava names)', ref: 'achamanam-kesava',
-      how: 'Before the japam, do achamanam with the Kesava names, as in step {step:achamanam-kesava}.' },
+    // The japam starts with the srautachamanam, the achamanam with the Gayatri's padas (the site's
+    // owner, 19 Nov 2026: "not Kesava, it is Om tat savitur ... swaha"). vignanam.org says the
+    // Kesava names here; a Telugu Srauta Saiva text says the Gayatri's padas.
+    { id: 'achamanam6', title: 'Srautachamanam (before the japam)',
+      how: 'Sip a little water from the right palm at each of the first three lines. Then do one thing for each phrase that follows: wash both palms with water, twice; wipe the upper, then the lower lip with the right thumb; sprinkle water on the head, twice; sprinkle water on the left hand, both feet and the head. Then touch the chin; the left and right nostril with thumb and forefinger; the left and right eye and the left and right ear with thumb and ring finger; the navel with thumb and little finger, then the heart and the head; and the left and right shoulder.',
+      mantra: SRAUTACHAMANAM },
+    // The rishi, chandas and devata lines once said after the japa sankalpam are dropped (the
+    // site's owner, 19 Nov 2026); no Telugu text checked had them there.
     { id: 'japa-prep', title: 'Preparing for Gayatri japam',
-      how: 'Do pranayamam (step {step:pranayamam}). Say the japa sankalpam, then touch the head, mouth and heart as the rishi, chandas and devata are named.',
-      mantra: `${mamopatta}${k.japaName}nga yathasakti gayatri maha mantra japam karishye\n\n` + NYASAM },
+      how: 'Do pranayamam (step {step:pranayamam}). Then say the japa sankalpam.',
+      mantra: `${mamopatta}${k.japaName}nga yathasakti gayatri maha mantra japam karishye` },
     { id: 'nyasam', title: 'Kara nyasam and anga nyasam',
       how: 'With the kara nyasam, touch the fingers each line names: draw the forefingers along the thumbs, then the thumbs along the forefingers, middle, ring and little fingers, from base to tip; at the sixth line, pass the palms and the backs of the hands over each other. With the anga nyasam, touch the heart, the head, the crown, both shoulders with the arms crossed, and both eyes and the point between the brows; at "astraya phat" circle the right hand around the head and clap it on the left palm. At the last line, snap the fingers around the head to close the directions (some families hook the two forefingers together).',
       mantra: GAYATRI_NYASAM },

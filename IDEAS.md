@@ -85,6 +85,14 @@ trust it. Each one says what it would take and the main risk.
   achamanam (1.5.16.2-8). Step 2 now recites it, a line per act. Two earlier builds are gone:
   the achamanam with the Gayatri at 24 places, and the Taittiriya Aranyaka's "Hastav avanijya,
   trir achamet …".
+  - For the site's owner: after "trir achamed hridayangamabhir adbhih" your family says three
+    swahas (19 Nov 2026). Which three: "Om kesavaya swaha, Om narayanaya swaha, Om madhavaya
+    swaha", or the Gayatri's three padas, "Om tat savitur varenyagum swaha, bhargo devasya
+    dhimahi swaha, dhiyo yo nah prachodayat swaha"?
+  - Answered 19 Nov 2026: the fourth arghya, given when the time has passed, is the prayaschitta
+    arghya in the owner's family; the page's own words now call it that and name the
+    turiyarghya once. Still for him: does the sankalpam before it say "turiyarghya pradanam
+    karishye", as books print it, or other words?
   - For the site's owner: keep the Kesava-names achamanam as step 3, for families who use it in place of
     step 2's (most printed Telugu books open with it), or show only step 2?
   - For the site's owner: you gave the first and last lines; are the four between (GRETIL's text) what
@@ -114,26 +122,32 @@ trust it. Each one says what it would take and the main risk.
   haindavam.org's Telugu text gives them) after the japa sankalpam, and after the Gayatri
   dhyanam a verse for the Devi's form at each sandhya: "Balam vidyam tu gayatrim …" in the
   morning, "Madhyahne vishnu rupam cha …" at midday, "Sayahne siva rupam cha …" in the evening.
-  - Settled 19 Nov 2026: the japam now starts with the Kesava-names achamanam, as vignanam.org
-    and hindupad.com have it; the owner pointed to vignanam and did not object. (A Telugu Srauta
-    Saiva text says the achamanam with the Gayatri's padas there.)
+  - Corrected 19 Nov 2026: the owner says the japam starts with the srautachamanam ("Om tat
+    savitur varenyagum swaha …", the achamanam with the Gayatri's padas), not the Kesava names
+    the page had put there that morning; the page now has it. vignanam.org and hindupad.com say
+    the Kesava names there; a Telugu Srauta Saiva text says the Gayatri's padas.
+  - For the site's owner: you numbered pranayamam before this achamanam (20, then 21). The page
+    has the achamanam first, then pranayamam and the japa sankalpam, as "acamya pranan ayamya"
+    and vignanam.org have it. Which order does your family keep?
   - Answered 19 Nov 2026: the midday verse stays as it is. The verses give Vishnu's form to
     midday and Siva's to the evening, while the Taittiriya tarpanam names Raudri at midday and
     Vaishnavi in the evening; the owner says this difference is known and both stay. The words
     of all three verses come from a Hindi Shukla Yajurveda sandhya-vidhi, since no Telugu
     printing has been found, and the page leaves out its closing instruction line for the
     morning ("one should invite the Devi coming from the sun's orb").
-  - For the site's owner: the page says the rishi, chandas and devata lines ("Pranavasya rishir brahma …")
-    after the japa sankalpam, but no Telugu text checked has them there; vignanam.org has only
-    "Daivi gayatri chandah pranayame viniyogah" before the first pranayamam. Move them there,
-    use vignanam's one line instead, or drop them?
+  - Answered 19 Nov 2026: the rishi, chandas and devata lines ("Pranavasya rishir brahma …")
+    that followed the japa sankalpam are dropped, at the owner's word; no Telugu text checked
+    had them there.
   - For a vaidika: the kara and anga nyasa add "brahmatmane, vishnvatmane …" to the padas, as
     haindavam.org, vignanam.org and hindupad.com print them.
+  - For the site's owner: vignanam.org and haindavam.org open the japa sankalpam with "పూర్వోక్త
+    ఏవంగుణ విశేషణ విశిష్టాయాం శుభతిథౌ" before "మమోపాత్త …"; the page does not. Add it?
 - From the 19 Nov 2026 comparison with vignanam.org's Telugu sandhya ("Nitya Sandhya Vandanam",
   Taittiriya): the same order through the japam, and about 40 word differences in the shared
   mantras, nearly all vignanam's slips (swapped aspirates such as జనార్ధనాయ, అభిథ్యాయన్, శుందంతు).
-  The page's one error, దేవీ for దైవీ in "ప్రణవస్య ఋషిర్బ్రహ్మా, దైవీ గాయత్రీ ఛందః", is fixed. vignanam
-  says the Kesava names at every achamanam.
+  The page's one error, దేవీ for దైవీ in "ప్రణవస్య ఋషిర్బ్రహ్మా, దైవీ గాయత్రీ ఛందః", was fixed; that
+  line has since been dropped at the owner's word. vignanam says the Kesava names at every
+  achamanam.
   - Answered 19 Nov 2026: the owner confirmed seven of the pieces below, now on the page (the third
     marjanam, "yo devas savita", "tat sad brahmarpanam astu", muni namaskaram, the whole
     sandhyadevata namaskaram, "stuto maya" and the closing namaskarams), and not the Kesava
@@ -144,9 +158,11 @@ trust it. Each one says what it would take and the main risk.
     after the 24 mudras and "ఓం తత్సద్బ్రహ్మార్పణమస్తు" after the 8; muni namaskaram; the rest of
     the sandhyadevata namaskaram; "స్తుతో మయా వరదా వేదమాతా …" in the udvasanam; and the closing
     namaskarams (నమోఽస్త్వనంతాయ, ఇదం ద్యావాపృథివీ, సర్వవేదేషు, వాసనాద్వాసుదేవస్య).
-  - For the site's owner: two more of vignanam's pieces, not put to you before: "నమో బ్రహ్మణ్యదేవాయ
-    గోబ్రాహ్మణహితాయ చ, జగద్ధితాయ కృష్ణాయ గోవిందాయ నమో నమః" after the Harihara verses, and the
-    refrain "శ్రీ కేశవం ప్రతిగచ్ఛత్యోన్నమ ఇతి" after "ఆకాశాత్పతితం తోయం …". Do you say them?
+  - Answered 19 Nov 2026: the owner says "నమో బ్రహ్మణ్యదేవాయ గోబ్రాహ్మణహితాయ చ, జగద్ధితాయ
+    కృష్ణాయ గోవిందాయ నమో నమః" after the Harihara verses, as vignanam.org has it; it is now on
+    the page, at the end of that step.
+  - Answered 19 Nov 2026: the owner says the refrain "శ్రీ కేశవం ప్రతిగచ్ఛత్యోన్నమ ఇతి" too; it
+    now follows "ఆకాశాత్పతితం తోయం …" in the Surya Narayana step.
   - For a vaidika: the page says "ఓం భూర్భువస్సువః" after both marjanams and has Surya Narayana
     and Yama vandanam; vignanam has none of these, and does achamanam twice after the
     pradakshinam. haindavam.org also repeats the
@@ -161,7 +177,8 @@ trust it. Each one says what it would take and the main risk.
 - Hyderabad comes out "Srisailasya Uttara" by the map: it lies at 344° from Srisailam, just west
   of north. Some families may say Vayavya (north-west). Which does your family say? The line can
   now be edited either way.
-- Default sankalpam inside sandhya: Short (as now) or Full?
+- Answered 19 Nov 2026: the sankalpam inside the sandhya is laghu only. It was Short by default,
+  with a switch; the switch is gone there, and the Sankalpam tab keeps all three forms.
 - A custom domain for the site later?
 - The uttara mudras: the site uses Surabhi, Jnana, Vairagya, Yoni, Sankha, Pankaja, Linga, Nirvana.
   The Telugu compilations a reviewer checked list Chakra, Kurma and Niryana in place of Vairagya,
@@ -186,6 +203,9 @@ trust it. Each one says what it would take and the main risk.
   - Kannada paksha: ಕೃಷ್ಣ or ಬಹುಳ.
   - Kannada nakshatras: ಪುಬ್ಬ/ಉತ್ತರ/ಚಿತ್ತ or ಪೂರ್ವ ಫಲ್ಗುಣಿ/ಉತ್ತರ ಫಲ್ಗುಣಿ/ಚಿತ್ರಾ.
   - Kannada: ಪ್ರಮಾದಿ or ಪ್ರಮಾಥಿ (a year's name); ಕಾರ್ತಿಕ or ಕಾರ್ತೀಕ.
+  - The month కార్తీక (the everyday Telugu spelling) becomes "kārtīka" on the English page and
+    ಕಾರ್ತೀಕ / कार्तीक in Kannada and Hindi; the Sanskrit of a sankalpam is kārtika. The sandhya's
+    laghu sankalpam names the month every day. Should the sankalpam say కార్తిక?
   - Tamil paksha: வளர்பிறை/தேய்பிறை or சுக்ல/கிருஷ்ண.
   - Tamil Vishti: பத்திரை or விஷ்டி.
   - Tamil sankramana: தை மாதப் பிறப்பு or மகர சங்கராந்தி.

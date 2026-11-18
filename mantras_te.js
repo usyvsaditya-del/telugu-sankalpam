@@ -26,6 +26,22 @@ const ACHAMANAM_APASTAMBA = [
   'అథాప ఉపస్పృశేత్',
 ].join('\n');
 
+// శ్రౌతాచమనం: the first line's anusvara before స్వాహా follows this file's Yajurveda rule
+// (వరేణ్యగ్ం స్వాహా, as Telugu Wikipedia's ఆచమనము and haindavam.org print it); poojalu.com's
+// Krishna Yajurveda text prints వరేణ్యమ్ స్వాహా. The last line breaks after బ్రహ్మ (left
+// shoulder, then right), as haindavam.org has it; poojalu.com breaks before బ్రహ్మ.
+const SRAUTACHAMANAM = [
+  'ఓం తత్సవితుర్వరేణ్యగ్ం స్వాహా', 'భర్గో దేవస్య ధీమహి స్వాహా', 'ధియో యో నః ప్రచోదయాత్స్వాహా',
+  'ఆపో హి ష్ఠా మయోభువః, తా న ఊర్జే దధాతన',
+  'మహే రణాయ చక్షసే, యో వః శివతమో రసః',
+  'తస్య భాజయతేహ నః, ఉశతీరివ మాతరః',
+  'తస్మా అరంగ మామ వః, యస్య క్షయాయ జిన్వథ, ఆపో జనయథా చ నః',
+  'ఓం భూః, ఓం భువః, ఓగ్ం సువః',
+  'ఓం మహః, ఓం జనః, ఓం తపః, ఓగ్ం సత్యమ్',
+  'ఓం తత్సవితుర్వరేణ్యం, భర్గో దేవస్య ధీమహి, ధియో యో నః ప్రచోదయాత్',
+  'ఓమాపో జ్యోతీ రసోఽమృతం బ్రహ్మ, భూర్భువస్సువరోమ్',
+].join('\n');
+
 const KESAVADI = [
   'ఓం కేశవాయ స్వాహా', 'ఓం నారాయణాయ స్వాహా', 'ఓం మాధవాయ స్వాహా',
   'ఓం గోవిందాయ నమః, ఓం విష్ణవే నమః, ఓం మధుసూదనాయ నమః',
@@ -119,19 +135,8 @@ const UPASTHANAM = {
   ],
 };
 
-// Opens the avahanam in Telugu books. The rishi, chandas and devata lines (NYASAM) follow the
-// japa sankalpam on this page; the Telugu texts checked on 19 Nov 2026 do not have them there
-// (see IDEAS.md).
+// Opens the avahanam in Telugu books.
 const OMITYEKAKSHARAM = 'ఓమిత్యేకాక్షరం బ్రహ్మ, అగ్నిర్దేవతా, బ్రహ్మ ఇత్యార్షమ్, గాయత్రం ఛందమ్, పరమాత్మం సరూపమ్, సాయుజ్యం వినియోగమ్';
-
-const NYASAM = [
-  'ప్రణవస్య ఋషిర్బ్రహ్మా, దైవీ గాయత్రీ ఛందః, పరమాత్మా దేవతా',
-  'భూరాది సప్త వ్యాహృతీనామ్, అత్రి భృగు కుత్స వసిష్ఠ గౌతమ కాశ్యప ఆంగిరస ఋషయః',
-  'గాయత్రీ ఉష్ణిక్ అనుష్టుప్ బృహతీ పంక్తి త్రిష్టుప్ జగత్యశ్ఛందాంసి',
-  'అగ్ని వాయు అర్క వాగీశ వరుణ ఇంద్ర విశ్వేదేవా దేవతాః',
-  'గాయత్ర్యా విశ్వామిత్ర ఋషిః, గాయత్రీ ఛందః, సవితా దేవతా',
-  'గాయత్రీ శిరసః బ్రహ్మా ఋషిః, అనుష్టుప్ ఛందః, పరమాత్మా దేవతా',
-].join('\n');
 
 const AVAHANAM = [
   'ఆయాతు వరదా దేవీ, అక్షరం బ్రహ్మ సమ్మితమ్',
@@ -249,6 +254,8 @@ const HARIHARA = [
   'శివస్య హృదయం విష్ణుర్విష్ణోశ్చ హృదయం శివః',
   'యథా శివమయో విష్ణురేవం విష్ణుమయః శివః',
   'యథాంతరం న పశ్యామి, తథా మే స్వస్తిరాయుషి',
+  'నమో బ్రహ్మణ్యదేవాయ, గోబ్రాహ్మణహితాయ చ',
+  'జగద్ధితాయ కృష్ణాయ, గోవిందాయ నమో నమః',
 ].join('\n');
 
 const SURYA_NARAYANA = [
@@ -260,6 +267,7 @@ const SURYA_NARAYANA = [
   '',
   'ఆకాశాత్పతితం తోయం, యథా గచ్ఛతి సాగరమ్',
   'సర్వదేవ నమస్కారః, కేశవం ప్రతి గచ్ఛతి',
+  'శ్రీ కేశవం ప్రతిగచ్ఛత్యోన్నమ ఇతి',
 ].join('\n');
 
 const YAMA_VANDANAM = [
@@ -288,6 +296,7 @@ export function sandhyaMantrasTe(kindKey) {
     apavitra: APAVITRA,
     achamanam: ACHAMANAM_APASTAMBA,
     'achamanam-kesava': KESAVADI,
+    achamanam6: SRAUTACHAMANAM,
     bhutocchatanam: BHUTOCCHATANAM,
     pranayamam: PRANAYAMAM,
     marjanam: `${APO_HI_SHTHA}\n${VYAHRITI}`,
@@ -299,7 +308,8 @@ export function sandhyaMantrasTe(kindKey) {
     pradakshinam: 'ఉద్యంతమస్తం యంతమాదిత్యమభిధ్యాయన్\nకుర్వన్బ్రాహ్మణో విద్వాన్సకలం భద్రమశ్నుతే\nఅసావాదిత్యో బ్రహ్మేతి, బ్రహ్మైవ సన్బ్రహ్మాప్యేతి య ఏవం వేద\nఅసావాదిత్యో బ్రహ్మ',
     tarpanam: lines(TARPANAM[kindKey]),
     avahanam: `${OMITYEKAKSHARAM}\n${AVAHANAM}`,
-    'japa-prep': `${MAMOPATTA}${jn}ంగ యథాశక్తి గాయత్రీ మహామంత్ర జపం కరిష్యే\n\n${NYASAM}`,
+    // No rishi, chandas and devata lines after the japa sankalpam (the site's owner, 19 Nov 2026).
+    'japa-prep': `${MAMOPATTA}${jn}ంగ యథాశక్తి గాయత్రీ మహామంత్ర జపం కరిష్యే`,
     nyasam: GAYATRI_NYASAM,
     dhyanam: DHYANAM,
     'kala-dhyanam': lines(KALA_DHYANAM[kindKey]),
@@ -319,7 +329,8 @@ export function sandhyaMantrasTe(kindKey) {
   };
 }
 
-// The turiyarghya sankalpam, said when the right time has passed (quoted in a step note).
+// The sankalpam for the prayaschitta arghya (the turiyarghya), said when the right time has
+// passed (quoted in a step note).
 export const TURIYARGHYA_TE = 'కాలాతీత ప్రాయశ్చిత్తార్థం తురీయార్ఘ్యప్రదానం కరిష్యే';
 
 // Mudra names as the Telugu book used for the drawings prints them, index-aligned with PURVA_MUDRAS /

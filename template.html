@@ -1003,7 +1003,6 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       madhyahnika: `${fmtTime(tToday.madhyahna.start)} – ${fmtTime(tToday.madhyahna.end)}`,
       sayam: t('hint.sayam', { t: fmtTime(tSayam.sunset) }) };
     const steps = localSteps(key), arghyaStep = steps.findIndex((s) => s.arghya) + 1;
-    const mode = store.get('panchangam.sandhya.mode') || 'short';
     document.documentElement.style.setProperty('--mantra-size', mantraSize() + 'px');
     // The japa count is kept per day and sandhya, so a refresh or a tap elsewhere does not lose it.
     japa.key = `panchangam.japa.${p.date.y}-${p.date.m}-${p.date.d}.${key}`;
@@ -1016,7 +1015,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     const stepHtml = steps.map((s, i) => {
       if (s.ref) return `<li class="step ref"><div class="st-body"><h3>${num(i)}<span>${esc(s.title)}</span></h3><p class="how">${esc(s.how)}</p></div></li>`;
       let body = `<h3>${num(i)}<span>${esc(s.title)}</span></h3><p class="how">${esc(s.how)}</p>`;
-      if (s.sankalpam) body += `<div class="row-between">${modeCtl('sd-mode', mode)}</div><p class="mantra" id="sdSank"></p>`;
+      if (s.sankalpam) body += `<p class="mantra" id="sdSank"></p>`;
       else if (s.abhivadanam) body += `<p class="mantra" id="sdAbhi"></p>`;
       else if (s.mudras) body += mudraHtml(s.id, s.mudras);
       else body += `<p class="mantra">${typeof s.mantra === 'string' ? renderLines(s.mantra) : renderParts(s.mantra)}</p>`;
@@ -1057,16 +1056,23 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       <ol class="steps">${stepHtml}</ol>`;
     wireKey();
 
+    // The sankalpam names the tithi and the rest at the moment the sandhya is done: a sandhya still
+    // ahead at its own time (sunrise, noon, sunset), so a Sayam read in the morning names the
+    // evening's tithi; one whose time has come or passed now, as the status line asks.
+    const st = sandhyaTimes(p);
+    const sankAt = sandhyaStatus(key, now, p) !== 'early' ? now
+      : key === 'pratah' ? st.sunrise : key === 'madhyahnika' ? st.noon : st.sunset;
     const drawSank = () => {
-      const o = { ...sankOpts(), purpose: key, mode: store.get('panchangam.sandhya.mode') || 'short' };
-      $('sdSank').innerHTML = renderParts(sankParts(p, now, o));
+      // The sankalpam inside the sandhya is always the laghu form (the site's owner, 19 Nov 2026);
+      // the Sankalpam tab keeps the Full, Laghu and Short forms.
+      const o = { ...sankOpts(), purpose: key, mode: 'laghu' };
+      $('sdSank').innerHTML = renderParts(sankParts(p, sankAt, o));
     };
     const drawAbhi = () => { $('sdAbhi').innerHTML = renderParts(fromTe() ? reciteParts(abhivadanamTe(person())) : abhivadanam(person())); };
     drawSank(); drawAbhi(); drawJapa();
     for (const f of ['gotra', 'name', 'pravara', 'sutra', 'sakha']) $('sd-' + f).addEventListener('input', (e) => {
       store.set('panchangam.sk.' + f, e.target.value); drawSank(); drawAbhi();
     });
-    wireMode('sd-mode', 'panchangam.sandhya.mode', drawSank);
     $('sdHero').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-kind]');
       if (b) { if (b.dataset.kind !== key) { sandhyaPick = b.dataset.kind === sandhyaNow().auto.kind ? null : b.dataset.kind; renderSandhya(); } return; }
