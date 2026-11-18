@@ -74,9 +74,84 @@ trust it. Each one says what it would take and the main risk.
 ## Open questions for the review
 - Who reviews the mantra text and the kshetra wordings before wider sharing? The scripture
   reviews found these Telugu pieces still missing, left out because they should come from a
-  vaidika rather than from memory: "Apavitrah pavitro va ..." at the start, the third marjanam
-  ("Hiranyavarnah suchayah pavakah ..."), the tarpanam sankalpam, kara nyasa and anga nyasa,
-  muni namaskaram, and the farewell verse "Stuto maya varada vedamata ...".
+  vaidika rather than from memory: the tarpanam sankalpam. Pieces once on this list were added
+  at the site owner's word: "Apavitrah pavitro va" on 18 Nov 2026; the Gayatri kara nyasa and anga
+  nyasa, and from vignanam.org's text the third marjanam ("Hiranyavarnah suchayah pavakah
+  ..."), muni namaskaram and the farewell verse "Stuto maya varada vedamata ...", on 19 Nov 2026.
+- From the 18 Nov 2026 sandhya correction (the site's owner: it begins with Apavitrah pavitro va, then the
+  srautachamanam, and achamanam is done again after each part). Asked which achamanam he meant,
+  he answered "the trir achamet mantram"; on 19 Nov he gave its start and end: "trir achamed
+  dhridayangamabhir adbhih" to "athapa upaspriset", the Apastamba Dharmasutra's own rule for
+  achamanam (1.5.16.2-8). Step 2 now recites it, a line per act. Two earlier builds are gone:
+  the achamanam with the Gayatri at 24 places, and the Taittiriya Aranyaka's "Hastav avanijya,
+  trir achamet …".
+  - For the site's owner: keep the Kesava-names achamanam as step 3, for families who use it in place of
+    step 2's (most printed Telugu books open with it), or show only step 2?
+  - For the site's owner: you gave the first and last lines; are the four between (GRETIL's text) what
+    your family says, "dvir ity eke" ("some say twice") included? And what does your family
+    call this achamanam: srautachamanam, srutyachamanam (your "sroutya" may be this), or
+    smrityachamanam? The page titles it by its opening words; its note gives the usual name,
+    smrityachamanam.
+  - For a vaidika: the act for each line, as Haradatta explains the sutra. The page sips a
+    little water three times (Haradatta: as much as covers a grain of urad), so that it reaches
+    the heart; wipes the lips three times with the right thumb (Telugu practice; Haradatta names
+    no finger); touches them once with the three middle fingers; sprinkles the left hand, then
+    the feet and the head; touches the eyes (thumb and ring finger), nostrils (thumb and
+    forefinger) and ears (thumb and little finger); and washes the hands at the end. Is the page
+    right?
+  - For a vaidika: books name the achamanams differently. Telugu Wikipedia calls an achamanam by
+    Apastamba's rule the smrtyachamanam; haindavam.org and Telugu Wikipedia give the srauta name
+    to the one said with the Gayatri (Om tat savitur varenyagum swaha …), which poojalu.com
+    prints at the start of its Krishna Yajurveda sandhya. An earlier review also found printed
+    texts saying the Gayatri one at the end of the japam, where the page repeats step 2. Which
+    is right?
+  - For a vaidika: achamanam twice after atma pradakshinam (four texts; the page has once), an
+    achamanam before the turiyarghya (one text), and the japam's achamanam before the closing
+    mudras rather than after them (one text).
+- From the 19 Nov 2026 japam correction (the site's owner: the Gayatri japam starts with a different
+  achamanam and pranayamam, then nyasa, then dhyana, then the verse for the time of day, then
+  the purva mudras, the japa and the uttara mudras). The page now has kara and anga nyasa (as
+  haindavam.org's Telugu text gives them) after the japa sankalpam, and after the Gayatri
+  dhyanam a verse for the Devi's form at each sandhya: "Balam vidyam tu gayatrim …" in the
+  morning, "Madhyahne vishnu rupam cha …" at midday, "Sayahne siva rupam cha …" in the evening.
+  - Settled 19 Nov 2026: the japam now starts with the Kesava-names achamanam, as vignanam.org
+    and hindupad.com have it; the owner pointed to vignanam and did not object. (A Telugu Srauta
+    Saiva text says the achamanam with the Gayatri's padas there.)
+  - For the site's owner: is the midday verse right? You gave the morning and evening ones; the words of
+    all three come from a Hindi Shukla Yajurveda sandhya-vidhi, since no Telugu printing has
+    been found, and the page leaves out its closing instruction line for the morning ("one
+    should invite the Devi coming from the sun's orb"). The verses give Vishnu's form to midday
+    and Siva's to the evening, while the Taittiriya tarpanam names Raudri at midday and
+    Vaishnavi in the evening.
+  - For the site's owner: the page says the rishi, chandas and devata lines ("Pranavasya rishir brahma …")
+    after the japa sankalpam, but no Telugu text checked has them there; vignanam.org has only
+    "Daivi gayatri chandah pranayame viniyogah" before the first pranayamam. Move them there,
+    use vignanam's one line instead, or drop them?
+  - For a vaidika: the kara and anga nyasa add "brahmatmane, vishnvatmane …" to the padas, as
+    haindavam.org, vignanam.org and hindupad.com print them.
+- From the 19 Nov 2026 comparison with vignanam.org's Telugu sandhya ("Nitya Sandhya Vandanam",
+  Taittiriya): the same order through the japam, and about 40 word differences in the shared
+  mantras, nearly all vignanam's slips (swapped aspirates such as జనార్ధనాయ, అభిథ్యాయన్, శుందంతు).
+  The page's one error, దేవీ for దైవీ in "ప్రణవస్య ఋషిర్బ్రహ్మా, దైవీ గాయత్రీ ఛందః", is fixed. vignanam
+  says the Kesava names at every achamanam.
+  - Answered 19 Nov 2026: the owner confirmed seven of the pieces below, now on the page (the third
+    marjanam, "yo devas savita", "tat sad brahmarpanam astu", muni namaskaram, the whole
+    sandhyadevata namaskaram, "stuto maya" and the closing namaskarams), and not the Kesava
+    last line or the pranayama viniyoga line. The question was:
+  - For the site's owner: add vignanam's pieces the page lacks? The third marjanam (హిరణ్యవర్ణాః శుచయః …);
+    the Kesava achamanam's last line (ఓం శ్రీకృష్ణ పరబ్రహ్మణే నమో నమః) and its act for each name;
+    "దైవీ గాయత్రీ ఛందః ప్రాణాయామే వినియోగః" before the first pranayamam; "యో దేవస్సవితాఽస్మాకం …"
+    after the 24 mudras and "ఓం తత్సద్బ్రహ్మార్పణమస్తు" after the 8; muni namaskaram; the rest of
+    the sandhyadevata namaskaram; "స్తుతో మయా వరదా వేదమాతా …" in the udvasanam; and the closing
+    namaskarams (నమోఽస్త్వనంతాయ, ఇదం ద్యావాపృథివీ, సర్వవేదేషు, వాసనాద్వాసుదేవస్య).
+  - For the site's owner: two more of vignanam's pieces, not put to you before: "నమో బ్రహ్మణ్యదేవాయ
+    గోబ్రాహ్మణహితాయ చ, జగద్ధితాయ కృష్ణాయ గోవిందాయ నమో నమః" after the Harihara verses, and the
+    refrain "శ్రీ కేశవం ప్రతిగచ్ఛత్యోన్నమ ఇతి" after "ఆకాశాత్పతితం తోయం …". Do you say them?
+  - For a vaidika: the page says "ఓం భూర్భువస్సువః" after both marjanams and has Surya Narayana
+    and Yama vandanam; vignanam has none of these, and does achamanam twice after the
+    pradakshinam. haindavam.org also repeats the
+    nyasa and the dhyanam after the japam, before the eight mudras (the japavasanam), ending
+    "suvar bhuvar bhur om iti digvimokah"; the page does not. Which is right?
 - Four points the Telugu mantra review rated low confidence; the site has the first form of each:
   చతుర్వింశత్యక్షరా or చతుర్విగ్ంశత్యక్షరా (avahanam); భవామ శరదశ్శతమ్, శృణవామ or
   భవామ శరదశ్శతగ్ం శృణవామ (Surya upasthanam); ఆంగీరస or అంగీరస (a year's name);
@@ -128,7 +203,9 @@ trust it. Each one says what it would take and the main risk.
     Gayatri, Savitri and Sarasvati as commonly described. Texts differ; a purohit should confirm.
   - The mantras mark pada breaks with commas. Should they use the danda (।) instead?
   - The new page words (the three grades, "One less", "Tap again to start over", "Plain
-    background", "Next") in Telugu, Tamil, Kannada and Hindi need a native reader's check.
+    background", "Next") in Telugu, Tamil, Kannada and Hindi need a native reader's check, and
+    so do the sandhya instructions added on 18 Nov 2026 (the Suddhi, the srautachamanam and its
+    acts, the Kesava names, the repeated achamanam).
   - Tamil: the mantras could use the English page's marked letters (oṃ, ś, ṣ …) in place of plain
     English letters.
   - "Glass colours" is built as frosted tints. The other reading is Indian glass painting:

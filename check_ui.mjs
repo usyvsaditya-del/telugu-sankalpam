@@ -8,6 +8,9 @@
 //    --kumkum, --mantra-bg, the moon) are opaque hex in the light and the dark token blocks;
 //  - every page-text key the page uses exists in English and in Telugu, Tamil, Kannada and Hindi
 //    (a missing key would put English on another language's page), except keys shown on one page only;
+//  - every sandhya step, drawn in each of the five languages as the page draws it, has its own
+//    title and instructions (no English fallback, nothing empty, no placeholder left unfilled),
+//    and no step number is written by hand;
 //  - WCAG text contrast of at least 4.5:1: the text colours on card glass over each sky (night,
 //    dawn, day, dusk; top, middle, horizon and glow), on the reading paper and on the tab bar;
 //    ink and muted text straight on the sky and on each glass tint; the "now" pill and today's
@@ -16,6 +19,7 @@
 import { readFileSync } from 'fs';
 import { UI_EN } from './ui.js';
 import { UI_I18N } from './ui_i18n.js';
+import { SANDHYA_KINDS, sandhyaSteps, localizeSteps } from './sandhya.js';
 
 const src = readFileSync(new URL('./template.html', import.meta.url), 'utf8');
 const fails = [];
@@ -65,6 +69,53 @@ for (const k of used) {
   for (const l of ONLY[k] ?? ['te', 'ta', 'kn', 'hi']) if (!(k in UI_I18N[l])) fails.push(`page text "${k}" is missing in ${l} (ui_i18n.js)`);
 }
 
+// ---- sandhya steps in every language ----
+// Renders every step of the three sandhyas in each language with localizeSteps (sandhya.js), the
+// function the page itself uses, and fails where the page would show something wrong: a title,
+// instruction or note that is empty, keeps a placeholder in braces (a "{step:…}" naming no step
+// of that sandhya, or mistyped) or falls back to English. In the texts as written: no step number
+// written by hand (use {step:<id>}), no translation for a step that no longer exists, and none of
+// a repeated step's own, which would hide the shared step.again.<ref> text.
+const kinds = Object.keys(SANDHYA_KINDS);
+const stepIds = new Set(kinds.flatMap((k) => sandhyaSteps(k).map((s) => s.id)));
+const repeats = new Set(kinds.flatMap((k) => sandhyaSteps(k).filter((s) => s.ref).map((s) => s.id)));
+const handNumber = /\bstep \d|\d+వ అంశ|படி \d|ಹಂತ \d|चरण \d/;
+const stepFails = new Set();
+let stepTexts = 0, stepRefs = 0;
+for (const k of kinds) {
+  const en = localizeSteps(k, null);
+  for (const st of en) if (st.ref && !en.some((s) => s.id === st.ref)) stepFails.add(`${k}/${st.id} repeats "${st.ref}", which ${k} does not have`);
+  for (const l of ['en', 'te', 'ta', 'kn', 'hi']) {
+    const out = l === 'en' ? en : localizeSteps(k, UI_I18N[l]);
+    out.forEach((st, i) => {
+      for (const f of ['title', 'how', 'note']) {
+        if (typeof en[i][f] !== 'string') continue;
+        stepTexts++;
+        const where = `${l} ${k}/${st.id} ${f}`;
+        if (!st[f].trim()) stepFails.add(`${where} is empty`);
+        else if (/[{}]/.test(st[f])) stepFails.add(`${where} keeps a placeholder: ${st[f].match(/\{[^}]*\}?|\}/)[0]}`);
+        if (l !== 'en' && st[f] === en[i][f]) stepFails.add(`${where} falls back to English (no translation in ui_i18n.js)`);
+      }
+    });
+  }
+}
+const written = [
+  ...kinds.flatMap((k) => sandhyaSteps(k).flatMap((s) => ['title', 'how', 'note'].filter((f) => typeof s[f] === 'string').map((f) => [`en ${k}/${s.id} ${f}`, s[f]]))),
+  ...['te', 'ta', 'kn', 'hi'].flatMap((l) => Object.entries(UI_I18N[l]).filter(([key]) => key.startsWith('step.')).map(([key, v]) => [`${l} "${key}"`, v])),
+];
+for (const [where, v] of written) {
+  if (!v.trim()) stepFails.add(`${where} is empty`);
+  stepRefs += (v.match(/\{step:/g) || []).length;
+  if (handNumber.test(v)) stepFails.add(`${where}: a step number written by hand; use {step:<id>}`);
+}
+for (const l of ['te', 'ta', 'kn', 'hi']) for (const key of Object.keys(UI_I18N[l])) {
+  const m = key.match(/^step\.(again\.)?([\w-]+)\./);
+  if (!m) continue;
+  if (!stepIds.has(m[2])) stepFails.add(`${l}: "${key}" is for a sandhya step that does not exist`);
+  else if (!m[1] && repeats.has(m[2])) stepFails.add(`${l}: "${key}" would hide the shared step.again text of this repeated step`);
+}
+fails.push(...stepFails);
+
 // ---- contrast ----
 const parse = (v, T) => {
   if (!v) return null;
@@ -109,5 +160,5 @@ for (const theme of ['light', 'dark']) {
 }
 
 console.log(fails.length ? `FAIL\n  ${fails.slice(0, 40).join('\n  ')}`
-  : `ok: ${looked.size} element lookups found; no "#" links; tab icons safe; drawing colours opaque in both themes; ${used.size} page-text keys in all five languages; ${pairs} colour pairs at 4.5:1 or more (lowest ${lowest.r.toFixed(2)}:1, ${lowest.what})`);
+  : `ok: ${looked.size} element lookups found; no "#" links; tab icons safe; drawing colours opaque in both themes; ${used.size} page-text keys in all five languages; ${stepIds.size} sandhya steps drawn in five languages (${stepTexts} texts, no English fallback, ${stepRefs} step numbers filled in); ${pairs} colour pairs at 4.5:1 or more (lowest ${lowest.r.toFixed(2)}:1, ${lowest.what})`);
 process.exit(fails.length ? 1 : 0);

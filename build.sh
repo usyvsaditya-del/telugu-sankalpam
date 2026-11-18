@@ -8,7 +8,7 @@
 #                          manifest and icons, and a base CSS reset
 # The `export` keywords are stripped so the modules run as plain inline script. mudra_rig.js is wrapped
 # in its own function scope (as MR), and the Telugu-script modules in theirs (only their exports are
-# visible), so their internal names (ACHAMANAM, TITHI …) cannot clash with sandhya.js or engine.js.
+# visible), so their internal names (KESAVADI, TITHI …) cannot clash with sandhya.js or engine.js.
 # Deploy: cd site && npx -y firebase-tools@13 deploy --only hosting --project <your-firebase-project>
 set -e
 DIR="$(cd "$(dirname "$0")" && pwd)"

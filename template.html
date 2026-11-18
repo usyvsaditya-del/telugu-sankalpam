@@ -970,22 +970,14 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   }
 
   // ================= Sandhyavandanam tab =================
-  // Sandhya steps with their titles and instructions in the chosen language. Keys, most specific
-  // first: step.<id>.title.<kind>, step.<id>.title, and the same for .how and .note. English
-  // (from sandhya.js) when a translation is missing. Mantras are not translated.
+  // Sandhya steps in the chosen language: localizeSteps (sandhya.js) gives each step's title,
+  // instructions and note with the step numbers filled in; the mantra then goes in the page's
+  // script. Telugu, Kannada, Hindi: the mantra in that script. English: Roman letters with
+  // pronunciation marks. Tamil keeps the English-letters text until its script is chosen.
   function localSteps(key) {
-    const steps = sandhyaSteps(key), X = UIX[lang];
-    // Telugu, Kannada, Hindi: the mantra in that script. English: Roman letters with pronunciation
-    // marks. Tamil keeps the English-letters text until its script is chosen.
+    const steps = localizeSteps(key, lang === 'en' ? null : UIX[lang]);
     const TE = fromTe() ? sandhyaMantrasTe(key) : null;
-    const script = (st) => (!TE || !TE[st.id] ? st : { ...st, mantra: recite(TE[st.id]) });
-    if (lang === 'en' || !X) return steps.map(script);
-    const pick = (field, id) => X[`step.${id}.${field}.${key}`] ?? X[`step.${id}.${field}`];
-    const fill = (str) => str.replace(/\{n\}/g, String(SANDHYA_KINDS[key].arghyas));
-    return steps.map((st) => {
-      const title = pick('title', st.id), how = pick('how', st.id), note = pick('note', st.id);
-      return script({ ...st, title: title ? fill(title) : st.title, how: how ? fill(how) : st.how, note: st.note && note ? fill(note) : st.note });
-    });
+    return steps.map((st) => (!TE || !TE[st.id] ? st : { ...st, mantra: recite(TE[st.id]) }));
   }
 
   // The vaidika day runs from sunrise to sunrise: in the small hours it is still the previous

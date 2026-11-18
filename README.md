@@ -72,7 +72,7 @@ The astronomy:
 | `check.mjs` | Prints Bengaluru values to compare with drikpanchang.com. |
 | `check_mudras.mjs` | Checks that every mudra in the sandhya steps has a drawing, and that each draws and moves cleanly. |
 | `check_te.mjs` | Checks the Telugu-script text: same lines as the English, no stray English letters, every place and phrase covered. |
-| `check_ui.mjs` | Checks the page: every element the script uses exists, page text in all five languages, the drawings' colours opaque, and text contrast (WCAG 4.5:1) over every sky, light and dark. |
+| `check_ui.mjs` | Checks the page: every element the script uses exists, page text and every sandhya step's words in all five languages (step numbers filled in, none written by hand), the drawings' colours opaque, and text contrast (WCAG 4.5:1) over every sky, light and dark. |
 | `IDEAS.md` | Ideas and open questions for what to build next. |
 
 ## Build and deploy
