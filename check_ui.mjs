@@ -41,7 +41,7 @@ function block(sel) {
   return Object.fromEntries([...body.matchAll(/(--[\w-]+):\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
 }
 const light = block(':root'), darkBase = block(':root[data-theme="dark"]');
-const opaque = ['--maroon', '--gold', '--gold-ink', '--paper', '--line', '--kumkum', '--mantra-bg', '--moon-lit', '--moon-dark', '--moon-rim'];
+const opaque = ['--maroon', '--gold', '--gold-ink', '--paper', '--line', '--kumkum', '--touch', '--mantra-bg', '--moon-lit', '--moon-dark', '--moon-rim'];
 for (const [name, T] of [['light', light], ['dark', darkBase]])
   for (const k of opaque) if (!/^#[0-9a-f]{6}$/i.test(T[k] || '')) fails.push(`${name} ${k} is "${T[k]}": the drawings need an opaque hex colour`);
 // The media-query copy of the dark tokens must say the same as the [data-theme="dark"] block.

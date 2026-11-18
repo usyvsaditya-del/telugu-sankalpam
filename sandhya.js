@@ -278,6 +278,11 @@ const GAYATRI_NYASAM = [
   'Om bhur bhuvas suvarom iti digbandhah',
 ].join('\n');
 
+// The drawing for each line of GAYATRI_NYASAM, in order (mudra_rig.js, NYASA_POSES and NYASA_CUES):
+// the kara nyasam's thumbs, four fingers and palms, the anga nyasam's six places, the digbandham.
+export const NYASA_LINES = ['angushtha', 'tarjani', 'madhyama', 'anamika', 'kanishthika', 'karatala',
+  'hridaya', 'siras', 'sikha', 'kavacha', 'netra', 'astra', 'digbandha'];
+
 // The Devi's form at each sandhya, said after the Gayatri dhyanam: Brahmi in the morning,
 // Vishnu's form at midday, Siva's form in the evening. The site's owner named the morning and
 // evening verses by their first words; the midday one completes the set, and he said it stays
@@ -536,7 +541,7 @@ export function sandhyaSteps(kindKey) {
       mantra: `${mamopatta}${k.japaName}nga yathasakti gayatri maha mantra japam karishye` },
     { id: 'nyasam', title: 'Kara nyasam and anga nyasam',
       how: 'With the kara nyasam, touch the fingers each line names: draw the forefingers along the thumbs, then the thumbs along the forefingers, middle, ring and little fingers, from base to tip; at the sixth line, pass the palms and the backs of the hands over each other. With the anga nyasam, touch the heart, the head, the crown, both shoulders with the arms crossed, and both eyes and the point between the brows; at "astraya phat" circle the right hand around the head and clap it on the left palm. At the last line, snap the fingers around the head to close the directions (some families hook the two forefingers together).',
-      mantra: GAYATRI_NYASAM },
+      mantra: GAYATRI_NYASAM, nyasa: NYASA_LINES },
     { id: 'dhyanam', title: 'Gayatri dhyanam',
       how: 'Meditate on the Devi in this form.',
       mantra: DHYANAM },

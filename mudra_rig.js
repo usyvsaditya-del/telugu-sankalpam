@@ -257,23 +257,100 @@ function bodySvg(elbows, lw) {
   return out.join('');
 }
 
+// A nyasa's marks over its drawing, in kumkum (see NYASA_CUES): an arrow along each finger the
+// line strokes, from base to tip; a ring on each place it touches; a ring round the crown (astra,
+// the digbandham), seen a little from above, its far half fine-dashed and its near half solid
+// with the arrowhead, going clockwise as seen from above (a pradakshina), or the other way when
+// reversed; dotted for the digbandham, with a tick at each snap; a turning arrow round each wrist
+// (the hands turn over); a burst where the hands clap. Cue points are world [x, y]; the marks are
+// drawn in screen coordinates.
+function cueSvg(cue, parts, lw) {
+  const w = lw * 1.5, out = [];
+  const pt = (p) => `${fx(p[0])} ${fx(p[1])}`;
+  const line = (a, b) => out.push(`<path class="ar" d="M${pt(a)}L${pt(b)}" stroke-width="${fx(w)}"/>`);
+  // an arrowhead with its tip at tip, pointing along the unit vector (ux, uy)
+  const head = (tip, ux, uy) => {
+    const h = 5 * w, hw = 2 * w, b = [tip[0] - ux * h, tip[1] - uy * h];
+    out.push(`<path class="arh" d="M${pt(tip)}L${pt([b[0] - uy * hw, b[1] + ux * hw])}L${pt([b[0] + uy * hw, b[1] - ux * hw])}Z"/>`);
+  };
+  // the point at angle deg (degrees; increasing turns clockwise as seen) on an ellipse about c
+  const on = (c, rx, ry, deg) => [c[0] + rx * Math.cos(deg * RAD), c[1] + ry * Math.sin(deg * RAD)];
+  // an elliptical arc from a0 to a1 as a polyline (exact for any ellipse), with a look:
+  // 'solid', 'dash' (the far side) or 'dots'
+  const arc = (c, rx, ry, a0, a1, look) => {
+    const n = Math.max(8, Math.ceil(Math.abs(a1 - a0) / 4)), P = [];
+    for (let k = 0; k <= n; k++) P.push(on(c, rx, ry, a0 + ((a1 - a0) * k) / n));
+    const dash = look === 'dash' ? ` stroke-dasharray="${fx(w * 1.6)} ${fx(w * 1.6)}"` : look === 'dots' ? ` stroke-dasharray="${fx(w * 0.05)} ${fx(w * 2.4)}"` : '';
+    out.push(`<path class="ar" d="M${P.map(pt).join('L')}" stroke-width="${fx(look === 'dash' ? w * 0.7 : w)}"${dash}/>`);
+    return P;
+  };
+  // a ring seen a little from above: the far half (screen top) dashed, the near half drawn with an
+  // arrowhead; clockwise from above, the near half runs right to left; reversed, left to right
+  const ring = (c, rx, ry, { dotted = false, reverse = false } = {}) => {
+    arc(c, rx, ry, 186, 354, dotted ? 'dots' : 'dash');
+    const [a0, a1] = reverse ? [174, 6] : [6, 174];
+    const k = dotted ? (a1 - a0) * 0.72 : 0;                 // dots for most of it, then solid
+    if (dotted) arc(c, rx, ry, a0, a0 + k, 'dots');
+    const P = arc(c, rx, ry, a0 + k, a1 - (a1 - a0) * 0.08, 'solid');
+    const tip = on(c, rx, ry, a1), q = P[P.length - 1], d = Math.hypot(tip[0] - q[0], tip[1] - q[1]) || 1;
+    head(tip, (tip[0] - q[0]) / d, (tip[1] - q[1]) / d);
+  };
+  for (const name of cue.stroke || []) {
+    const P = parts.find((q) => q.name === name);
+    if (!P || !P.joints) continue;
+    const J = P.joints.map(scr), a = J[0], z = J[J.length - 1];
+    const dx = z[0] - a[0], dy = z[1] - a[1], d = Math.hypot(dx, dy) || 1;
+    const tip = [a[0] + dx * 0.97, a[1] + dy * 0.97];
+    line([a[0] + dx * 0.08, a[1] + dy * 0.08], [tip[0] - (dx / d) * 4.5 * w, tip[1] - (dy / d) * 4.5 * w]);
+    head(tip, dx / d, dy / d);
+  }
+  for (const [x, y, r] of cue.rings || []) out.push(`<circle class="ar" cx="${fx(x)}" cy="${fx(-y)}" r="${fx(r)}" stroke-width="${fx(w)}"/>`);
+  if (cue.orbit) {
+    const [x, y, rx, ry] = cue.orbit, c = [x, -y];
+    ring(c, rx, ry, { dotted: cue.dotted, reverse: cue.reverse });
+    for (let k = 0; k < (cue.snaps || 0); k++) {
+      const deg = 45 + (k * 360) / cue.snaps, p = on(c, rx, ry, deg);
+      let nx = Math.cos(deg * RAD) / rx, ny = Math.sin(deg * RAD) / ry;
+      const nl = Math.hypot(nx, ny); nx /= nl; ny /= nl;
+      line([p[0] + nx * 2.5 * w, p[1] + ny * 2.5 * w], [p[0] + nx * 6 * w, p[1] + ny * 6 * w]);
+    }
+  }
+  for (const [x, y, rx, ry, rev] of cue.twists || []) ring([x, -y], rx, ry, { reverse: !!rev });
+  if (cue.clap) {
+    const [x, y] = cue.clap;
+    for (const deg of [-150, -120, -90, -60, -30]) {
+      const c = Math.cos(deg * RAD), sn = Math.sin(deg * RAD);
+      line([x + c * 6 * w, -y + sn * 6 * w], [x + c * 11 * w, -y + sn * 11 * w]);
+    }
+  }
+  return out.join('');
+}
+
 // The drawing for a resolved pose: { viewBox, svg } (SVG markup). CSS classes: .o outline (fill
-// and stroke in the line colour), .f fill (paper colour), .mk marks, .dot the bottu.
+// and stroke in the line colour), .f fill (paper colour), .mk marks, .dot the bottu. With a cue
+// (o.cue, a nyasa's): .hl around a part the line touches, and .ar (stroke) and .arh (fill) for the
+// kumkum marks.
 export function mudraSvg(rp, o = {}) {
   const lw = o.lw ?? 1.3 * (rp.cam[2] / 190);
   const T = tiltFn(rp.tilt);
   const parts = [...placeHand(rp.R, false, T), ...placeHand(rp.L, true, T)];
   for (const P of parts) P.z = P.depthPts.reduce((s, v) => s + v[2], 0) / P.depthPts.length;
   parts.sort((a, b) => a.z - b.z);
-  const hands = parts.map((P) =>
-    shape(P.segs.map(([a, b, ra, rb]) => tube(scr(a), scr(b), ra, rb)).join(''), lw, marks(P, lw))).join('');
+  const lit = new Set((o.cue && o.cue.hl) || []);
+  const tubes = (segs) => segs.map(([a, b, ra, rb]) => tube(scr(a), scr(b), ra, rb)).join('');
+  const hands = parts.map((P) => {
+    if (!lit.has(P.name)) return shape(tubes(P.segs), lw, marks(P, lw));
+    // a coloured palm leaves its forearm (its last tube) in the paper colour
+    const arm = P.name.endsWith('palm') ? P.segs.slice(-1) : [], own = P.segs.slice(0, P.segs.length - arm.length);
+    return (arm.length ? shape(tubes(arm), lw) : '') + `<g class="hl">${shape(tubes(own), lw, marks(P, lw))}</g>`;
+  }).join('');
   let body = '';
   if (rp.body > 0.01) {
     const el = parts.filter((P) => P.elbow).sort((a, b) => a.name.localeCompare(b.name)).map((P) => P.elbow);
     body = `<g opacity="${fx(Math.min(1, rp.body))}">${bodySvg([el[1], el[0]], lw)}</g>`;   // R, L
   }
   const [cx, cy, w] = rp.cam, h = w * ASPECT;
-  return { viewBox: `${fx(cx - w / 2)} ${fx(-cy - h / 2)} ${fx(w)} ${fx(h)}`, svg: body + hands };
+  return { viewBox: `${fx(cx - w / 2)} ${fx(-cy - h / 2)} ${fx(w)} ${fx(h)}`, svg: body + hands + (o.cue ? cueSvg(o.cue, parts, lw) : '') };
 }
 
 // ---- the mudras -------------------------------------------------------------------------------
@@ -388,4 +465,62 @@ export const MUDRA_POSES = {
   // wrists crossed, the hands pressed together, fingers up and meeting at the tips
   Nirvana: { R: { at: [7, 0, 4], ry: 70, rz: 12, w: [32, 0], f: all([6, 6, 4]), t: { ab: 0, op: -15, f: [5, 5] } },
     L: { at: [7, 0, -4], ry: 70, rz: 12, w: [32, 0], f: all([6, 6, 4]), t: { ab: 0, op: -15, f: [5, 5] } } },
+};
+
+// ---- the nyasas -------------------------------------------------------------------------------
+// One drawing for each line of the Gayatri kara and anga nyasam (GAYATRI_NYASAM and NYASA_LINES in
+// sandhya.js), in the style of the mudras. Kara nyasam: both hands open, palms to the front; each
+// line colours the fingers it names, with an arrow from base to tip for the stroke of the thumb (the
+// forefinger strokes the thumb at the first line); at the sixth, one hand shows its palm and the
+// other its back, both coloured, turning over. Anga nyasam: the seated figure, the right hand at
+// the place the line names, with a ring on it; astra circles the head with the right hand and
+// claps on the left palm; the digbandham snaps the fingers round the head.
+// Set from the step's own description of the acts, not traced from any picture.
+const KARA = { R: { at: [-62, 0, 0], s: { i: 4, m: 1, r: -2, l: -5 }, t: { ab: 50, op: 5, f: [3, 3] } }, cam: [0, 42, 240] };
+const REST_L = { at: [-150, -185, 40], rx: 90, rz: 180, f: all([10, 10, 5]), t: { ab: 30, op: 10, f: [5, 5] } };
+const FLAT = { f: all([4, 4, 2]), s: together, t: { ab: 8, op: 15, f: [8, 8] } };
+const CAM_NYASA = [0, 128, 460];                  // the seated figure from the chest up, room above the head
+const CAM_CROWN = [0, 150, 470];                  // the same, with room for a ring round the crown
+const CROWN = [0, 268, 64, 15];                   // that ring: centre x, y and its two radii
+const anga = (R, more = {}) => ({ R: { ...FLAT, ...R }, L: REST_L, body: 1, cam: CAM_NYASA, ...more });
+// The right hand raised beside the head, its fingertips at the ring's near end, thumb on the
+// middle finger to snap at each direction: the digbandham before the japam.
+const DIGBANDHA = anga({ at: [-84, 182, 10], rz: -8, f: { i: [10, 10, 5], m: [35, 45, 25], r: [92, 100, 65], l: [92, 100, 65] },
+  s: { i: 0, m: 0, r: 0, l: 0 }, t: { ab: 20, op: 55, f: [20, 25] } }, { cam: CAM_CROWN });
+export const NYASA_POSES = {
+  angushtha: KARA, tarjani: KARA, madhyama: KARA, anamika: KARA, kanishthika: KARA,
+  // the right hand shows its palm, the left its back
+  karatala: { ...KARA, L: { ...KARA.R, ry: 180 } },
+  // the right palm flat on the heart, fingers towards the left shoulder
+  hridaya: anga({ at: [-30, -22, 40], ry: 180, rz: -35 }),
+  // the fingertips on the forehead, below the hair line
+  siras: anga({ at: [-62, 158, 40], ry: 180, rz: -36 }),
+  // the fingertips on the sikha at the crown
+  sikha: anga({ at: [-70, 205, 20], ry: 180, rz: -50 }),
+  // arms crossed, each hand on the other shoulder
+  kavacha: anga({ at: [25, 40, 50], ry: 180, rz: -45 }, { L: { ...FLAT, at: [25, 40, 40], ry: 180, rz: -45 } }),
+  // forefinger, middle and ring fingers on the right eye, the point between the brows and the left eye
+  netra: anga({ at: [5, 126, 60], ry: 180, f: { i: [2, 2, 0], m: [2, 2, 0], r: [2, 2, 0], l: [92, 100, 65] },
+    s: { i: 13, m: 0, r: -13, l: -10 }, t: { ab: 10, op: 45, f: [30, 30] } }),
+  // the right hand raised beside the head to circle it (forefinger and middle finger out); the
+  // left palm held flat for the clap
+  astra: anga({ at: [-84, 182, 6], rz: -8, f: { i: [2, 2, 0], m: [2, 2, 0], r: [92, 100, 65], l: [92, 100, 65] }, t: { ab: 20, op: 40, f: [20, 20] } },
+    { L: { at: [-34, 22, 40], rx: -90, ry: -90, f: all([4, 4, 2]), s: together, t: { ab: 10, op: 5, f: [5, 5] } }, cam: CAM_CROWN }),
+  digbandha: DIGBANDHA,
+};
+// What each line touches (part names: R or L, then t thumb, i m r l fingers, palm) and its marks.
+export const NYASA_CUES = {
+  angushtha: { hl: ['Rt', 'Lt'], stroke: ['Rt', 'Lt'] },
+  tarjani: { hl: ['Ri', 'Li'], stroke: ['Ri', 'Li'] },
+  madhyama: { hl: ['Rm', 'Lm'], stroke: ['Rm', 'Lm'] },
+  anamika: { hl: ['Rr', 'Lr'], stroke: ['Rr', 'Lr'] },
+  kanishthika: { hl: ['Rl', 'Ll'], stroke: ['Rl', 'Ll'] },
+  karatala: { hl: ['Rpalm', 'Lpalm'], twists: [[-62, 2, 18, 5], [62, 2, 18, 5, true]] },
+  hridaya: { rings: [[14, 48, 16]] },
+  siras: { rings: [[0, 238, 15]] },
+  sikha: { rings: [[0, 258, 12]] },
+  kavacha: { rings: [[-100, 106, 18], [100, 106, 18]] },
+  netra: { rings: [[-15, 210, 7], [0, 223, 6], [15, 210, 7]] },
+  astra: { orbit: CROWN, clap: [-4, 40] },
+  digbandha: { orbit: CROWN, dotted: true, snaps: 4 },
 };

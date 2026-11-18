@@ -163,6 +163,9 @@ trust it. Each one says what it would take and the main risk.
     the page, at the end of that step.
   - Answered 19 Nov 2026: the owner says the refrain "శ్రీ కేశవం ప్రతిగచ్ఛత్యోన్నమ ఇతి" too; it
     now follows "ఆకాశాత్పతితం తోయం …" in the Surya Narayana step.
+  - For the site's owner: you added "sarva vedeshu also". "సర్వవేదేషు యత్పుణ్యం …", with its refrain,
+    is already in the Bhagavan namaskaram step, before the Surya Narayana step. Should it stay
+    there, or follow "ఆకాశాత్పతితం తోయం …", as vignanam.org orders them?
   - For a vaidika: the page says "ఓం భూర్భువస్సువః" after both marjanams and has Surya Narayana
     and Yama vandanam; vignanam has none of these, and does achamanam twice after the
     pradakshinam. haindavam.org also repeats the
@@ -185,7 +188,9 @@ trust it. Each one says what it would take and the main risk.
   Sankha and Nirvana, and the Telugu book used for the drawings shows both sets. Which does your
   family say?
 - Mudra drawings to confirm with someone who does them daily: Kurmam and Varaham (books describe
-  them differently), Sammukhonmukham (the book's picture is unclear), Yamapasam.
+  them differently), Sammukhonmukham (the book's picture is unclear), Yamapasam. The same for the
+  13 nyasa drawings added on 19 Nov 2026 at the owner's word, drawn from the step's own
+  description of the acts.
 - Place wordings the Telugu pass found doubtful in the English source (places_te.js follows the
   English for now): "Shakini Dakini sangame" is usually Śaṅkhinī–Ḍaṅkinī; "Biraja" is the Odia
   form of Virajā; "Omkareswara Mamaleswara" may be a mis-split of Omkara + Amaleswara;

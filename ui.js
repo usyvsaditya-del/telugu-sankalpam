@@ -89,6 +89,8 @@ export const UI_EN = {
   'prana.note': 'Puraka: breathe in. Kumbhaka: hold, saying the mantra in the mind. Rechaka: breathe out. Keep to what your guru taught, and stop at once if it is uncomfortable.',
   'mudra.play': 'Play', 'mudra.pause': 'Pause', 'mudra.prev': 'Previous mudra', 'mudra.next': 'Next mudra', 'mudra.of': '{i} of {n}',
   'mudra.drawn': 'Each drawing shows the usual form of the mudra. Families differ in small details; follow your guru.',
+  'nyasa.prev': 'Previous line', 'nyasa.next': 'Next line',
+  'nyasa.drawn': 'Each drawing shows what to touch or do at its line, as this step describes it. Families differ in small details; follow your guru.',
   'dur.h': '{h} h {m} min', 'dur.m': '{m} min {s} s', 'dur.s': '{s} s',
   // footer
   'foot.times': 'Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com. Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.',

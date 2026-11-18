@@ -21,7 +21,7 @@ const opt = (f) => (has(f) ? "\n" + read(f) : "");
 const places = read("places.js") + opt("places_abroad.js") + opt("deities.js") + opt("local_rivers.js")
   + "\n" + read("ui.js") + opt("ui_i18n.js") + opt("names_i18n.js");
 const rig = "\nconst MR = (() => {\n" + read("mudra_rig.js")
-  + "\nreturn { MUDRA_POSES, resolvePose, blendPose, mudraSvg };\n})();\n";
+  + "\nreturn { MUDRA_POSES, NYASA_POSES, NYASA_CUES, resolvePose, blendPose, mudraSvg };\n})();\n";
 // A module in its own scope; its exports (export const/function NAME) become page-level names.
 const scoped = (f) => {
   const raw = fs.readFileSync(path.join(dir, f), "utf8");

@@ -40,7 +40,7 @@
   --kumkum: #B3121F; --v-bg: rgb(179 18 31 / .08); --zari: #795815; --zari-line: #C9A24A;
   --maroon: #5C0F18; --on-maroon: #FBEEDB;
   /* names read by the drawings and scripts (mudra hands, beads, map, moon): kept opaque */
-  --paper: #FFFDF8; --line: #D9CDBF; --gold: #C9A24A; --gold-ink: #795815; --turmeric: #7D5A0F; --mantra-bg: #FFFDF8;
+  --paper: #FFFDF8; --line: #D9CDBF; --gold: #C9A24A; --gold-ink: #795815; --turmeric: #7D5A0F; --mantra-bg: #FFFDF8; --touch: #EFCB6E;
   --moon-lit: #FFF3D1; --moon-dark: #4A4258; --moon-rim: #B9A27A;
   --sukla: rgb(255 253 248 / .84); --bahula: rgb(222 228 242 / .8);
   /* type: Anek for the frame; Tiro for titles; the recited word in a reading face per script */
@@ -70,7 +70,7 @@
     --mukta: #26232E; --vidruma: #3A2026; --hema: #33290F; --nila: #1B2140; --dhumra: #2B2830; --kesari: #3A2614;
     --vidruma-ink: #FF9E86; --hema-ink: #F0C25A; --nila-ink: #A9B8FF; --dhumra-ink: #B8B1C0; --kesari-ink: #F5A25C;
     --kumkum: #FF8A7A; --v-bg: rgb(255 138 122 / .13); --zari: #E2B65C; --zari-line: #D4A84A; --maroon: #3F0A11; --on-maroon: #F6E7CF;
-    --paper: #1C1930; --line: #4A4358; --gold: #D4A84A; --gold-ink: #E2B65C; --turmeric: #F0C25A; --mantra-bg: #1C1930;
+    --paper: #1C1930; --line: #4A4358; --gold: #D4A84A; --gold-ink: #E2B65C; --turmeric: #F0C25A; --mantra-bg: #1C1930; --touch: #61430F;
     --moon-lit: #F6E9C4; --moon-dark: #2E2840; --moon-rim: #6B5E80; --sukla: rgb(40 37 64 / .8); --bahula: rgb(16 15 32 / .74);
   }
 }
@@ -83,7 +83,7 @@
   --mukta: #26232E; --vidruma: #3A2026; --hema: #33290F; --nila: #1B2140; --dhumra: #2B2830; --kesari: #3A2614;
   --vidruma-ink: #FF9E86; --hema-ink: #F0C25A; --nila-ink: #A9B8FF; --dhumra-ink: #B8B1C0; --kesari-ink: #F5A25C;
   --kumkum: #FF8A7A; --v-bg: rgb(255 138 122 / .13); --zari: #E2B65C; --zari-line: #D4A84A; --maroon: #3F0A11; --on-maroon: #F6E7CF;
-  --paper: #1C1930; --line: #4A4358; --gold: #D4A84A; --gold-ink: #E2B65C; --turmeric: #F0C25A; --mantra-bg: #1C1930;
+  --paper: #1C1930; --line: #4A4358; --gold: #D4A84A; --gold-ink: #E2B65C; --turmeric: #F0C25A; --mantra-bg: #1C1930; --touch: #61430F;
   --moon-lit: #F6E9C4; --moon-dark: #2E2840; --moon-rim: #6B5E80; --sukla: rgb(40 37 64 / .8); --bahula: rgb(16 15 32 / .74);
 }
 /* dark skies by phase: indigo above, the phase's colour only as a low glow at the horizon */
@@ -379,6 +379,17 @@ ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; po
 .mh .f { fill: var(--paper); }
 .mh .mk { fill: none; stroke: var(--mline); stroke-linecap: round; }
 .mh .dot { fill: var(--kumkum); }
+/* A nyasa drawing: what each line touches is coloured (--touch, chosen so the kumkum marks and the
+   line colour both stand out on it in either theme); the movement is marked in kumkum. */
+.mh .hl .f { fill: var(--touch); }
+.mh .ar { fill: none; stroke: var(--kumkum); stroke-linecap: round; stroke-linejoin: round; }
+.mh .arh { fill: var(--kumkum); }
+.ny .m-name, .ny .m-sizer { font-family: var(--font-read); font-weight: 400; font-size: 19px; line-height: 1.4; overflow-wrap: anywhere; }
+/* The nyasa line keeps the height of the longest of its lines, so the buttons below never move. */
+.m-namebox { display: grid; }
+.m-namebox > .m-name, .m-namebox > .m-sizer, .m-sizer > span { grid-area: 1 / 1; }
+.m-namebox > .m-name { align-self: center; }
+.m-sizer { display: grid; visibility: hidden; }
 :root[data-theme="dark"] .m-fig { --mline: var(--gold-ink); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .m-fig { --mline: var(--gold-ink); } }
 .m-beads { height: auto; display: block; }
@@ -1012,13 +1023,15 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     // Each step's number sits in its title: in the margin on a gold thread from 640px, inline on
     // phones so the mantra gets the full width. A mantra's lines each wrap with a hanging indent.
     const num = (i) => `<span class="st-num">${i + 1}</span>`;
+    const kits = {};   // the nyasa players' frames, by step (see nyasaKit)
     const stepHtml = steps.map((s, i) => {
       if (s.ref) return `<li class="step ref"><div class="st-body"><h3>${num(i)}<span>${esc(s.title)}</span></h3><p class="how">${esc(s.how)}</p></div></li>`;
       let body = `<h3>${num(i)}<span>${esc(s.title)}</span></h3><p class="how">${esc(s.how)}</p>`;
       if (s.sankalpam) body += `<p class="mantra" id="sdSank"></p>`;
       else if (s.abhivadanam) body += `<p class="mantra" id="sdAbhi"></p>`;
       else if (s.mudras) body += mudraHtml(s.id, s.mudras);
-      else body += `<p class="mantra">${typeof s.mantra === 'string' ? renderLines(s.mantra) : renderParts(s.mantra)}</p>`;
+      else body += `${s.nyasa ? mudraHtml('ny-' + s.id, s.nyasa, kits[s.id] = nyasaKit(s.nyasa, s.mantra.split('\n'))) : ''}`
+        + `<p class="mantra">${typeof s.mantra === 'string' ? renderLines(s.mantra) : renderParts(s.mantra)}</p>`;
       if (s.breath) body += pranaHtml();
       if (s.arghya) body += `<p class="note">${esc(t('arghya.times', { n: k.arghyas }))}</p><p class="timer" id="arghyaTimer" aria-live="polite"></p>`;
       if (s.japa) body += japaHtml();
@@ -1095,7 +1108,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       e.currentTarget.setAttribute('aria-pressed', String(on));
     });
     wireJapa(); wirePrana();
-    for (const s of steps) if (s.mudras) wireMudra(s.id, s.mudras);
+    for (const s of steps) if (s.mudras) wireMudra(s.id, s.mudras); else if (kits[s.id]) wireMudra('ny-' + s.id, s.nyasa, kits[s.id]);
     startSandhyaClock(key, p);
   }
 
@@ -1229,12 +1242,20 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 
   // ----- mudras: a drawing of the hands (mudra_rig.js, inlined as MR) that moves from one mudra to
   // the next, a bead per mudra beneath, and the full order; tap a name to go straight to it -----
-  const mudraTimers = {}, mudraRafs = {}, mudraPoses = {};
+  const mudraTimers = {}, mudraRafs = {}, mudraPoses = {}, nyasaPoses = {};
   const mudraPose = (name) => (name in mudraPoses ? mudraPoses[name]
     : (mudraPoses[name] = MR.MUDRA_POSES[name] ? MR.resolvePose(MR.MUDRA_POSES[name]) : null));
+  const nyasaPose = (key) => (key in nyasaPoses ? nyasaPoses[key]
+    : (nyasaPoses[key] = MR.NYASA_POSES[key] ? MR.resolvePose(MR.NYASA_POSES[key]) : null));
+  // What a player shows frame by frame: the mudras, each by its name; or the nyasa lines, each the
+  // line itself with a drawing of what it touches (its pose, and the marks from NYASA_CUES).
+  const mudraKit = (list) => ({ n: list.length, pose: (i) => mudraPose(list[i]), label: (i) => mudraLabel(list, i),
+    cue: () => undefined, names: true, prev: t('mudra.prev'), next: t('mudra.next'), note: t('mudra.drawn'), cls: '' });
+  const nyasaKit = (keys, lines) => ({ n: keys.length, pose: (i) => nyasaPose(keys[i]), label: (i) => lines[i] || '',
+    cue: (i) => MR.NYASA_CUES[keys[i]], names: false, steady: true, prev: t('nyasa.prev'), next: t('nyasa.next'), note: t('nyasa.drawn'), cls: ' ny' });
   const reduceMotion = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch { return false; } };
-  function drawMudra(svg, pose) {
-    const d = MR.mudraSvg(pose);
+  function drawMudra(svg, pose, cue) {
+    const d = MR.mudraSvg(pose, { cue });
     svg.setAttribute('viewBox', d.viewBox); svg.innerHTML = d.svg;
   }
   function beadRow(n, cls) {
@@ -1242,44 +1263,44 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     for (let i = 0; i < n; i++) out.push(`<circle class="bd ${cls}" data-i="${i}" cx="${5 + i * 10}" cy="5" r="2.6"/>`);
     return out.join('');
   }
-  function mudraHtml(id, list) {
-    const pose = mudraPose(list[0]), d = pose && MR.mudraSvg(pose);
-    return `<div class="mudra" id="mu-${id}">
-      ${d ? `<figure class="m-fig"><svg class="mh" viewBox="${d.viewBox}" role="img" aria-label="${esc(mudraLabel(list, 0))}">${d.svg}</svg></figure>` : ''}
-      <span class="m-in" aria-live="polite"><small class="m-idx">${esc(t('mudra.of', { i: 1, n: list.length }))}</small><b class="m-name">${esc(mudraLabel(list, 0))}</b></span>
-      <svg class="m-beads" viewBox="0 0 ${list.length * 10} 10" style="width:min(100%, ${list.length * 12.5}px)" aria-hidden="true">${beadRow(list.length, 'mb')}</svg>
-      <div class="m-ctl"><button class="nav" data-act="prev" aria-label="${esc(t('mudra.prev'))}">‹</button>
-        <button class="pill-btn" data-act="play">${esc(t('mudra.play'))}</button><button class="nav" data-act="next" aria-label="${esc(t('mudra.next'))}">›</button></div>
-      <p class="m-list">${list.map((m, i) => `<span data-i="${i}" role="button" tabindex="0">${esc(mudraLabel(list, i))}</span>`).join('')}</p>
-      ${d ? `<p class="note m-note">${esc(t('mudra.drawn'))}</p>` : ''}
+  function mudraHtml(id, list, kit = mudraKit(list)) {
+    const pose = kit.pose(0), d = pose && MR.mudraSvg(pose, { cue: kit.cue(0) });
+    return `<div class="mudra${kit.cls}" id="mu-${id}">
+      ${d ? `<figure class="m-fig"><svg class="mh" viewBox="${d.viewBox}" role="img" aria-label="${esc(kit.label(0))}">${d.svg}</svg></figure>` : ''}
+      <span class="m-in" aria-live="polite"><small class="m-idx">${esc(t('mudra.of', { i: 1, n: kit.n }))}</small>${kit.steady ? `<span class="m-namebox"><b class="m-name">${esc(kit.label(0))}</b><span class="m-sizer" aria-hidden="true">${Array.from({ length: kit.n }, (_, i) => `<span>${esc(kit.label(i))}</span>`).join('')}</span></span>` : `<b class="m-name">${esc(kit.label(0))}</b>`}</span>
+      <svg class="m-beads" viewBox="0 0 ${kit.n * 10} 10" style="width:min(100%, ${kit.n * 12.5}px)" aria-hidden="true">${beadRow(kit.n, 'mb')}</svg>
+      <div class="m-ctl"><button class="nav" data-act="prev" aria-label="${esc(kit.prev)}">‹</button>
+        <button class="pill-btn" data-act="play">${esc(t('mudra.play'))}</button><button class="nav" data-act="next" aria-label="${esc(kit.next)}">›</button></div>
+      ${kit.names ? `<p class="m-list">${list.map((m, i) => `<span data-i="${i}" role="button" tabindex="0">${esc(kit.label(i))}</span>`).join('')}</p>` : ''}
+      ${d ? `<p class="note m-note">${esc(kit.note)}</p>` : ''}
     </div>`;
   }
-  function wireMudra(id, list) {
+  function wireMudra(id, list, kit = mudraKit(list)) {
     const root = $('mu-' + id); if (!root || !root.querySelector) return;
     const q = (s) => root.querySelector(s), fig = q('.mh');
-    let i = 0, shown = mudraPose(list[0]);
+    let i = 0, shown = kit.pose(0);
     // Move the drawing to a pose: blend joint by joint over 0.7 s, or jump when motion is reduced.
     const moveTo = (target, jump) => {
       caf(mudraRafs[id]); mudraRafs[id] = 0;
       if (!fig || !target) return;
-      if (jump || !shown || reduceMotion()) { shown = target; drawMudra(fig, target); return; }
+      if (jump || !shown || reduceMotion()) { shown = target; drawMudra(fig, target, kit.cue(i)); return; }
       const from = shown, t0 = performance.now(), dur = 700;
       const frame = (now) => {
         const k = Math.min(1, (now - t0) / dur), e = k < 0.5 ? 2 * k * k : 1 - ((-2 * k + 2) ** 2) / 2;
-        shown = MR.blendPose(from, target, e); drawMudra(fig, shown);
+        shown = MR.blendPose(from, target, e); drawMudra(fig, shown, kit.cue(i));
         mudraRafs[id] = k < 1 ? raf(frame) : 0;
       };
       mudraRafs[id] = raf(frame);
     };
     const show = (n, jump) => {
-      i = (n + list.length) % list.length;
-      const name = q('.m-name'); name.textContent = mudraLabel(list, i);
+      i = (n + kit.n) % kit.n;
+      const name = q('.m-name'); name.textContent = kit.label(i);
       name.classList.remove('swap'); void name.offsetWidth; name.classList.add('swap');
-      q('.m-idx').textContent = t('mudra.of', { i: i + 1, n: list.length });
+      q('.m-idx').textContent = t('mudra.of', { i: i + 1, n: kit.n });
       lightBeads(q('.m-beads'), i, i);
       root.querySelectorAll('.m-list span').forEach((s) => s.classList.toggle('on', +s.dataset.i === i));
-      if (fig) fig.setAttribute('aria-label', mudraLabel(list, i));
-      moveTo(mudraPose(list[i]), jump);
+      if (fig) fig.setAttribute('aria-label', kit.label(i));
+      moveTo(kit.pose(i), jump);
     };
     const stop = () => { clearInterval(mudraTimers[id]); mudraTimers[id] = 0; q('[data-act="play"]').textContent = t('mudra.play'); };
     root.addEventListener('keydown', (e) => {
@@ -1293,10 +1314,10 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
       if (b.dataset.act === 'prev') { stop(); show(i - 1); return; }
       if (b.dataset.act === 'next') { stop(); show(i + 1); return; }
       if (mudraTimers[id]) { stop(); return; }
-      if (i === list.length - 1) show(0);
+      if (i === kit.n - 1) show(0);
       b.textContent = t('mudra.pause');
       mudraTimers[id] = setInterval(() => {
-        if (i >= list.length - 1) { stop(); return; }
+        if (i >= kit.n - 1) { stop(); return; }
         show(i + 1); try { navigator.vibrate?.(20); } catch {}
       }, 3000);
     });
