@@ -272,12 +272,13 @@ const GAYATRI_NYASAM = [
 
 // The Devi's form at each sandhya, said after the Gayatri dhyanam: Brahmi in the morning,
 // Vishnu's form at midday, Siva's form in the evening. The site's owner named the morning and
-// evening verses by their first words (19 Nov 2026); the midday one completes the set and waits
-// for his word. The words are as a Hindi Shukla Yajurveda sandhya-vidhi prints them (copies on
+// evening verses by their first words; the midday one completes the set, and he said it stays
+// (19 Nov 2026). The words are as a Hindi Shukla Yajurveda sandhya-vidhi prints them (copies on
 // narindersharmasite.wordpress.com and transliteral.org), without the morning verse's closing
 // instruction, "mantrenavahayed devim ayantim surya mandalat" ("one should invite the Devi coming
-// from the sun's orb"). No Telugu printing has been found. Note that the Taittiriya tarpanam
-// (step tarpanam) names Raudri at midday and Vaishnavi in the evening, the other way round.
+// from the sun's orb"). No Telugu printing has been found. The Taittiriya tarpanam (step
+// tarpanam) names Raudri at midday and Vaishnavi in the evening, the other way round: a known
+// difference, and the owner said both stay as they are (19 Nov 2026). Do not "correct" either.
 const KALA_DHYANAM = {
   pratah: [
     'Balam vidyam tu gayatrim, lohitam chaturananam',

@@ -117,12 +117,12 @@ trust it. Each one says what it would take and the main risk.
   - Settled 19 Nov 2026: the japam now starts with the Kesava-names achamanam, as vignanam.org
     and hindupad.com have it; the owner pointed to vignanam and did not object. (A Telugu Srauta
     Saiva text says the achamanam with the Gayatri's padas there.)
-  - For the site's owner: is the midday verse right? You gave the morning and evening ones; the words of
-    all three come from a Hindi Shukla Yajurveda sandhya-vidhi, since no Telugu printing has
-    been found, and the page leaves out its closing instruction line for the morning ("one
-    should invite the Devi coming from the sun's orb"). The verses give Vishnu's form to midday
-    and Siva's to the evening, while the Taittiriya tarpanam names Raudri at midday and
-    Vaishnavi in the evening.
+  - Answered 19 Nov 2026: the midday verse stays as it is. The verses give Vishnu's form to
+    midday and Siva's to the evening, while the Taittiriya tarpanam names Raudri at midday and
+    Vaishnavi in the evening; the owner says this difference is known and both stay. The words
+    of all three verses come from a Hindi Shukla Yajurveda sandhya-vidhi, since no Telugu
+    printing has been found, and the page leaves out its closing instruction line for the
+    morning ("one should invite the Devi coming from the sun's orb").
   - For the site's owner: the page says the rishi, chandas and devata lines ("Pranavasya rishir brahma …")
     after the japa sankalpam, but no Telugu text checked has them there; vignanam.org has only
     "Daivi gayatri chandah pranayame viniyogah" before the first pranayamam. Move them there,
