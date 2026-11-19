@@ -429,6 +429,20 @@ footer { padding-block: 0 28px; }
 footer .inner { background: var(--glass); border: 1px solid var(--hair); border-radius: 18px; padding: 16px 18px; color: var(--muted); font-size: 14px; }
 footer p { max-width: 80ch; margin: 0 0 8px; }
 footer a { color: var(--zari); text-underline-offset: 3px; overflow-wrap: anywhere; }
+/* The feedback form in the footer: a report goes to the site's owner (the script's feedback part). */
+footer .fb { margin: 12px 0 0; }
+footer .fb summary { cursor: pointer; color: var(--zari); font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+footer .fb form { display: grid; gap: 10px; margin-top: 6px; max-width: 60ch; }
+footer .fb label { display: grid; gap: 4px; color: var(--ink); }
+footer .fb textarea, footer .fb input[type=text] { width: 100%; box-sizing: border-box; min-height: 44px; padding: 8px 12px; border-radius: 12px;
+  border: 1px solid var(--control-edge); background: var(--glass-solid); color: var(--ink); font: inherit; font-size: 16px; }
+footer .fb textarea { resize: vertical; }
+footer .fb .fb-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+footer .fb .pill-btn { justify-self: start; }
+footer .fb .pill-btn[aria-disabled="true"] { opacity: .55; cursor: default; }
+footer .fb p { margin: 0; }
+.sd-whose { margin: 6px 0 0; max-width: 72ch; }
+.sd-whose a { color: var(--zari); text-underline-offset: 3px; }
 footer .dedication { margin: 18px auto 0; text-align: center; max-width: none; font-family: var(--font-display); font-style: italic; font-size: 17px; color: var(--ink); }
 footer .dedication::before { content: ""; display: block; width: 120px; height: 8px; margin: 0 auto 12px; background:
   radial-gradient(circle, var(--zari-line) 3px, transparent 3.5px) center / 8px 8px no-repeat,
@@ -579,10 +593,23 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
 
 <footer class="gutter"><div class="inner">
   <p data-i18n="foot.times">Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com. Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.</p>
-  <p data-i18n="foot.sandhya">Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes. On this page its Sanskrit is in Roman letters with pronunciation marks, without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.</p>
+  <p data-i18n="foot.sandhya">Sandhyavandanam here follows one Telugu Krishna Yajurveda (Apastamba) family's practice. On this page its Sanskrit is in Roman letters with pronunciation marks, without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.</p>
   <p data-i18n="foot.mantras" id="footMantras" hidden>In Tamil, mantras and the sankalpam are shown in English letters for now; a version in Tamil script is being prepared and checked.</p>
   <p class="open"><span data-i18n="foot.open">The code is open for anyone to use and build on:</span>
     <a href="https://github.com/usyvsaditya-del/telugu-sankalpam" rel="noopener">github.com/usyvsaditya-del/telugu-sankalpam</a></p>
+  <details class="fb" id="fbBox">
+    <summary data-i18n="fb.open">Report a problem or suggest a correction</summary>
+    <form id="fbForm" novalidate>
+      <label><span data-i18n="fb.msg">What is wrong, or what should it say?</span>
+        <textarea id="fbMsg" rows="4" maxlength="2000"></textarea></label>
+      <label><span data-i18n="fb.contact">Your name and phone or email, if you would like a reply (optional)</span>
+        <input type="text" id="fbContact" maxlength="200" autocomplete="off"></label>
+      <input type="text" id="fbHp" class="fb-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="note" data-i18n="fb.privacy">This goes to the site's owner with the tab you are on, the language and the place set here. Do not write anything you would not want kept.</p>
+      <button type="submit" class="pill-btn" id="fbSend" data-i18n="fb.send">Send</button>
+      <p class="note" id="fbStatus" role="status" aria-live="polite"></p>
+    </form>
+  </details>
   <p class="dedication">In fond remembrance of Yeragudipati Bhujanga Rao</p>
 </div></footer>
 
@@ -1054,7 +1081,9 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     $('sandhyaWrap').innerHTML = `
       <section class="card sd-hero" id="sdHero" data-kind="${key}">
         <div><span class="eyebrow">${esc(t('sd.sub', { place: placeLabel(place), day: `${nm.vara(p.vara)} ${p.date.d} ${MONTHS_LONG[p.date.m - 1]}` }))}</span>
-          <h2 class="sec-title">${esc(t('title.' + key))}</h2></div>
+          <h2 class="sec-title">${esc(t('title.' + key))}</h2>
+          <p class="note sd-whose">${esc(t('sd.whose'))} <a href="https://github.com/usyvsaditya-del/telugu-sankalpam/issues/new?template=family-version.md" rel="noopener">${esc(t('sd.suggest'))}</a></p>
+          <button class="link-btn" data-report>${esc(t('sd.report'))}</button></div>
         <div class="kinds" role="tablist" aria-label="${esc(t('sd.which'))}" id="kinds">
           ${Object.entries(SANDHYA_KINDS).map(([kk, x]) => `<button class="kind" role="tab" data-kind="${kk}" aria-selected="${kk === key}">
             <b>${lang === 'en' ? x.label : esc(t('kind.' + kk))}</b><small>${esc(hint[kk])}</small>${kk === auto.kind ? `<span class="now">${esc(t('now'))}</span>` : ''}</button>`).join('')}
@@ -1099,6 +1128,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     $('sdHero').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-kind]');
       if (b) { if (b.dataset.kind !== key) { sandhyaPick = b.dataset.kind === sandhyaNow().auto.kind ? null : b.dataset.kind; renderSandhya(); } return; }
+      if (e.target.closest('[data-report]')) { fbOpen(); return; }
       if (e.target.closest('[data-follow]')) { sandhyaPick = null; renderSandhya(); }
     });
     // Text size: the step at the top of the screen stays where it is while the text grows or shrinks.
@@ -1708,6 +1738,57 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
     if (name === tab) return;
     if (location.hash !== '#' + name) location.hash = name; else showTab(name);
   }
+  // ----- feedback: the footer form sends a report to the site's owner, in Firestore. The rules
+  // (site/firestore.rules) let anyone add a report with exactly these fields and nothing else, and
+  // let nobody read one back; the owner reads them in the Firebase console. A report carries the
+  // tab (and the sandhya, or the day, on screen), the language and the place's name; the time is
+  // the server's. A hidden field people never fill keeps out the simplest bots, and after a report
+  // the button rests for a while; neither stops anyone writing to the database directly, which is
+  // why the rules keep each report small.
+  const FB_URL = 'https://firestore.googleapis.com/v1/projects/telugu-sankalpam/databases/(default)/documents:commit';
+  let fbBusy = false, fbSending = false; // busy: sending, or resting after a report
+  function fbOpen() {
+    const box = $('fbBox');
+    box.open = true;
+    box.scrollIntoView?.({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+    setTimeout(() => $('fbMsg').focus?.({ preventScroll: true }), 450);
+  }
+  function fbWhere() {
+    if (tab === 'sandhya' && sd) return `sandhya/${sd.key}`;
+    if (tab === 'panchangam' && selected) return `panchangam/${selected.y}-${selected.m}-${selected.d}`;
+    return tab;
+  }
+  $('fbForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = $('fbStatus');
+    if (fbBusy) { status.textContent = fbSending ? t('fb.sending') : t('fb.wait'); return; }
+    const msg = $('fbMsg').value.trim(), contact = $('fbContact').value.trim();
+    if (!msg) { status.textContent = t('fb.empty'); $('fbMsg').focus(); return; }
+    if ($('fbHp').value) { status.textContent = t('fb.sent'); return; } // only a bot fills the hidden field
+    // The button stays enabled (aria-disabled), so keyboard focus stays on it.
+    fbBusy = fbSending = true; $('fbSend').setAttribute('aria-disabled', 'true'); status.textContent = t('fb.sending');
+    const id = Array.from(crypto.getRandomValues(new Uint8Array(20)), (b) => 'abcdefghijklmnopqrstuvwxyz0123456789'[b % 36]).join('');
+    const str = (s) => ({ stringValue: s });
+    const fields = { msg: str(msg.slice(0, 2000)), where: str(fbWhere().slice(0, 200)), lang: str(lang),
+      from: str('site') };
+    if (contact) fields.contact = str(contact.slice(0, 200));
+    if (place?.name) fields.place = str(`${place.mine ? 'near ' : ''}${place.name}, ${place.state || ''}`.slice(0, 120));
+    let sent = false;
+    const stop = new AbortController(), timer = setTimeout(() => stop.abort(), 15000); // no hanging "Sending…"
+    try {
+      const res = await fetch(FB_URL, { method: 'POST', headers: { 'content-type': 'application/json' }, signal: stop.signal,
+        body: JSON.stringify({ writes: [{ update: { name: `projects/telugu-sankalpam/databases/(default)/documents/feedback/${id}`, fields },
+          currentDocument: { exists: false }, updateTransforms: [{ fieldPath: 'at', setToServerValue: 'REQUEST_TIME' }] }] }) });
+      sent = res.ok;
+    } catch {}
+    clearTimeout(timer); fbSending = false;
+    const rest = () => { fbBusy = false; $('fbSend').removeAttribute('aria-disabled'); };
+    if (sent) {
+      $('fbMsg').value = ''; $('fbContact').value = ''; status.textContent = t('fb.sent');
+      setTimeout(rest, 15000); // one report at a time
+    } else { status.textContent = t('fb.fail'); rest(); }
+  });
+
   $('tabs').addEventListener('click', (e) => { const b = e.target.closest('button[data-tab]'); if (b) go(b.dataset.tab); });
   window.addEventListener?.('hashchange', () => showTab(location.hash.slice(1)));
   document.addEventListener('click', (e) => {
@@ -1824,6 +1905,7 @@ footer .dedication::before { content: ""; display: block; width: 120px; height: 
   }
   $('langSel').addEventListener('change', (e) => {
     setLang(e.target.value);
+    $('fbStatus').textContent = ''; // a message in the old language would linger
     renderPlaceBtn(); renderMonth(); renderSheet(); renderPlaceCard(false);
     if (tab === 'sankalpam') renderSankalpam();
     if (tab === 'sandhya') renderSandhya();

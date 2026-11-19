@@ -16,9 +16,10 @@ const APAVITRA = [
 ].join('\n');
 
 // The Apastamba Dharmasutra's rule for achamanam (1.5.16.2-8), GRETIL's text from the first to the
-// last line the site's owner gave, a line per act. A word that ends a line is not joined to the first word of the next.
+// last line the site's owner gave, a line per act; the first line ends with the family's three
+// swahas, said with the sips, which are not the sutra's. A word that ends a line is not joined to the first word of the next.
 const ACHAMANAM_APASTAMBA = [
-  'త్రిరాచామేద్ధృదయంగమాభిరద్భిః',
+  'త్రిరాచామేద్ధృదయంగమాభిరద్భిః, స్వాహా స్వాహా స్వాహా',
   'త్రిరోష్ఠౌ పరిమృజేత్, ద్విరిత్యేకే',
   'సకృదుపస్పృశేత్, ద్విరిత్యేకే',
   'దక్షిణేన పాణినా సవ్యం ప్రోక్ష్య',
@@ -263,15 +264,27 @@ const HARIHARA = [
   'జగద్ధితాయ కృష్ణాయ, గోవిందాయ నమో నమః',
 ].join('\n');
 
-const SAMARPANAM = [
+// The closing samarpanam, as sandhya.js samarpanamLines(k), in the order the site's owner gave it
+// (19 Nov 2026); the sandhya's name (JAPA_NAME_TE) goes in the "anena" line.
+const samarpanamOf = (jn) => [
+  'యస్య స్మృత్యా చ నామోక్త్యా, తపోయజ్ఞక్రియాదిషు',
+  'న్యూనం సంపూర్ణతాం యాతి, సద్యో వందే తమచ్యుతమ్',
+  'మంత్రహీనం క్రియాహీనం, భక్తిహీనం జనార్దన',
+  'యత్కృతం తు మయా దేవ, పరిపూర్ణం తదస్తు మే',
+  `అనేన ${jn}వందనేన భగవాన్సర్వాత్మకః శ్రీ పరమేశ్వరః ప్రీయతామ్`,
+  'ఆబ్రహ్మలోకాదాశేషాత్, ఆలోకాలోకపర్వతాత్',
+  'యే సంతి బ్రాహ్మణా దేవాః, తేభ్యో నిత్యం నమో నమః',
   'కాయేన వాచా మనసేంద్రియైర్వా, బుద్ధ్యాత్మనా వా ప్రకృతేః స్వభావాత్',
   'కరోమి యద్యత్సకలం పరస్మై, నారాయణాయేతి సమర్పయామి',
-  'ఓం తత్సత్, బ్రహ్మార్పణమస్తు',
+  'ఓం తత్సత్, శ్రీ పరమేశ్వరార్పణమస్తు',
+  'ఓం నారాయణాయ నమః, ఓం నారాయణాయ నమః, ఓం నారాయణాయ నమః',
 ].join('\n');
 
 // The sankalpa words for each sandhya, as in the English (sandhya.js SANDHYA_KINDS[k].japaName).
 const MAMOPATTA = 'మమోపాత్త సమస్త దురితక్షయ ద్వారా శ్రీ పరమేశ్వర ప్రీత్యర్థం, ';
 export const JAPA_NAME_TE = { pratah: 'ప్రాతస్సంధ్యా', madhyahnika: 'మాధ్యాహ్నిక సంధ్యా', sayam: 'సాయంసంధ్యా' };
+// The time named in the japa samarpanam, as sandhya.js SANDHYA_KINDS[k].kale.
+const KALE_TE = { pratah: 'ప్రాతఃకాలే', madhyahnika: 'మధ్యాహ్నకాలే', sayam: 'సాయంకాలే' };
 
 // Mantras for each step of one sandhya, keyed by the step ids in sandhya.js sandhyaSteps().
 // Steps whose text is built from the person's details (sankalpam, abhivadanam) are not here.
@@ -301,7 +314,7 @@ export function sandhyaMantrasTe(kindKey) {
     'kala-dhyanam': lines(KALA_DHYANAM[kindKey]),
     'yo-devah': YO_DEVAH,
     japam: GAYATRI,
-    brahmarpanam: 'ఓం తత్సద్బ్రహ్మార్పణమస్తు',
+    brahmarpanam: `${KALE_TE[kindKey]} గాయత్రీ మహామంత్ర జపే సర్వం పరబ్రహ్మార్పణమస్తు`,
     upasthanam: lines(UPASTHANAM[kindKey]),
     digdevata: DIG_DEVATA,
     muni: MUNI_NAMASKARAM,
@@ -309,7 +322,7 @@ export function sandhyaMantrasTe(kindKey) {
     udvasanam: UDVASANAM,
     namaskarams: BHAGAVAN_NAMASKARAM,
     harihara: HARIHARA,
-    samarpanam: SAMARPANAM,
+    samarpanam: samarpanamOf(jn),
   };
 }
 

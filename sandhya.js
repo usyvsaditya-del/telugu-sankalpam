@@ -32,19 +32,19 @@
 
 export const SANDHYA_KINDS = {
   pratah: {
-    label: 'Pratah', title: 'Pratah Sandhyavandanam', japaName: 'pratah sandhya', arghyas: 3,
+    label: 'Pratah', title: 'Pratah Sandhyavandanam', japaName: 'pratah sandhya', kale: 'Pratah kale', arghyas: 3,
     arghyaHow: 'Do pranayamam (step {step:pranayamam}). Then stand facing east, before sunrise. Fill both joined palms with water and let it flow out over the fingertips at the end of each Gayatri.',
     japaHow: 'Stand facing east and do japam until the sun is seen.',
     upasthanaTitle: 'Mitra upasthanam', upasthanaHow: 'Do pranayamam (step {step:pranayamam}). Then stand facing east, palms joined.',
   },
   madhyahnika: {
-    label: 'Madhyah­nikam', title: 'Madhyahnikam', japaName: 'madhyahnika sandhya', arghyas: 2, // soft hyphen for narrow phones
+    label: 'Madhyah­nikam', title: 'Madhyahnikam', japaName: 'madhyahnika sandhya', kale: 'Madhyahna kale', arghyas: 2, // soft hyphen for narrow phones
     arghyaHow: 'Do pranayamam (step {step:pranayamam}). Then stand facing the sun around midday (some families face north). Fill both joined palms with water and let it flow out over the fingertips at the end of each Gayatri. Some families offer three.',
     japaHow: 'Sit facing east or north for japam.',
     upasthanaTitle: 'Surya upasthanam', upasthanaHow: 'Do pranayamam (step {step:pranayamam}). Then stand facing the sun, palms joined.',
   },
   sayam: {
-    label: 'Sayam', title: 'Sayam Sandhyavandanam', japaName: 'sayam sandhya', arghyas: 3,
+    label: 'Sayam', title: 'Sayam Sandhyavandanam', japaName: 'sayam sandhya', kale: 'Sayam kale', arghyas: 3,
     arghyaHow: 'Do pranayamam (step {step:pranayamam}). Then face west while the sun is still above the horizon, seated (some families stand). Fill both joined palms with water and let it flow out over the fingertips at the end of each Gayatri.',
     japaHow: 'Sit facing west and do japam until the stars appear.',
     upasthanaTitle: 'Varuna upasthanam', upasthanaHow: 'Do pranayamam (step {step:pranayamam}). Then sit or stand facing west, palms joined.',
@@ -119,9 +119,10 @@ const APAVITRA = [
 
 // The Apastamba Dharmasutra's rule for achamanam (1.5.16.2-8, GRETIL's text), from the first to the
 // last line the site's owner gave: a line per act, keeping the sutra's own "dvir ity eke" ("some
-// say twice"), which he has not yet said whether his family says aloud.
+// say twice"), which he has not yet said whether his family says aloud. The first line ends with the
+// family's "swaha swaha swaha", said with the three sips (19 Nov 2026); that is not the sutra's.
 const ACHAMANAM_APASTAMBA = [
-  'Trir achamed dhridayangamabhir adbhih',
+  'Trir achamed dhridayangamabhir adbhih, swaha swaha swaha',
   'Trir oshthau parimrijet, dvir ity eke',
   'Sakrid upaspriset, dvir ity eke',
   'Dakshinena panina savyam prokshya',
@@ -405,10 +406,23 @@ const HARIHARA = [
   'Jagad dhitaya krishnaya, govindaya namo namah',
 ].join('\n');
 
-const SAMARPANAM = [
+// The closing samarpanam in the order the site's owner gave it (19 Nov 2026): "yasya smritya",
+// "mantrahinam", the sandhya offered ("anena ... priyatam"), "abrahmalokat", "kayena vacha", then
+// the offering to Parameswara and Narayana's name three times. He named most verses by their first
+// words; the rest is their common wording ("ye santi brahmana devah" as haindavam.org has it), for
+// him to confirm (IDEAS.md).
+const samarpanamLines = (k) => [
+  'Yasya smritya cha namoktya, tapo yajna kriyadishu',
+  'Nyunam sampurnatam yati, sadyo vande tam achyutam',
+  'Mantrahinam kriyahinam, bhaktihinam janardana',
+  'Yat kritam tu maya deva, paripurnam tad astu me',
+  `Anena ${k.japaName}vandanena bhagavan sarvatmakah sri parameswarah priyatam`,
+  'Abrahmalokad aseshat, alokaloka parvatat',
+  'Ye santi brahmana devah, tebhyo nityam namo namah',
   'Kayena vacha manasendriyair va, buddhyatmana va prakriteh svabhavat',
   'Karomi yad yat sakalam parasmai, narayanayeti samarpayami',
-  'Om tat sat, brahmarpanam astu',
+  'Om tat sat, sri parameswararpanam astu',
+  'Om narayanaya namah, om narayanaya namah, om narayanaya namah',
 ].join('\n');
 
 // Gayatri mudras: 24 shown before japam (purva) and 8 after (uttara), in the order of the
@@ -481,8 +495,8 @@ export function sandhyaSteps(kindKey) {
       how: 'Remember Vishnu as you say the verse, and sprinkle a little water on your head three times with the fingers of the right hand.',
       mantra: APAVITRA },
     { id: 'achamanam', title: 'Achamanam: trir achamet',
-      how: 'Sitting, do one thing for each line as you say it: sip a little water from the right palm three times, so that it reaches the heart; wipe the lips three times with the right thumb (some families twice); touch the lips once with the three middle fingers (some twice); sprinkle water on the left hand with the right; sprinkle both feet and the head, then touch the eyes with thumb and ring finger, the nostrils with thumb and forefinger and the ears with thumb and little finger; then wash the hands.',
-      note: 'These lines are the rule for achamanam in the Apastamba Dharmasutra (1.5.16), said a line at a time; as the sutra says, some wipe the lips twice, and some touch them twice. An achamanam by this rule is usually called the smrityachamanam.',
+      how: 'Sitting, do one thing for each line as you say it: sip a little water from the right palm three times, once at each swaha, so that it reaches the heart; wipe the lips three times with the right thumb (some families twice); touch the lips once with the three middle fingers (some twice); sprinkle water on the left hand with the right; sprinkle both feet and the head, then touch the eyes with thumb and ring finger, the nostrils with thumb and forefinger and the ears with thumb and little finger; then wash the hands.',
+      note: 'These lines are the rule for achamanam in the Apastamba Dharmasutra (1.5.16), said a line at a time; as the sutra says, some wipe the lips twice, and some touch them twice. An achamanam by this rule is usually called the smrityachamanam. With the three sips this family says "swaha" three times.',
       mantra: ACHAMANAM_APASTAMBA },
     { id: 'achamanam-kesava', title: 'Achamanam with the Kesava names (in many families)',
       how: 'Most printed Telugu books open with this achamanam, with Vishnu\'s names, in place of the one in step {step:achamanam}; follow your family. Sip a little water from the right palm at each of the first three names. Then touch the face and limbs with the fingers of the right hand as each following name is said.',
@@ -568,7 +582,7 @@ export function sandhyaSteps(kindKey) {
       how: 'After japam, show the 8 closing mudras in this order.' },
     { id: 'brahmarpanam', title: 'Japa samarpanam',
       how: 'Offer the japam with these words.',
-      mantra: 'Om tat sad brahmarpanam astu' },
+      mantra: `${k.kale} gayatri mahamantra jape sarvam parabrahmarpanam astu` }, // the site's owner's words, 19 Nov 2026
     again(7),
     { id: 'upasthanam', title: k.upasthanaTitle, how: k.upasthanaHow, mantra: lines(UPASTHANAM[kindKey]) },
     { id: 'digdevata', title: 'Dig devata namaskaram',
@@ -587,7 +601,7 @@ export function sandhyaSteps(kindKey) {
     { id: 'achamanam8', title: 'Achamanam (Kesava names)', ref: 'achamanam-kesava',
       how: 'Do achamanam with the Kesava names, as in step {step:achamanam-kesava}.' },
     { id: 'samarpanam', title: 'Samarpanam',
-      how: 'Offer the whole act to Narayana.',
-      mantra: SAMARPANAM },
+      how: 'Offer the whole sandhyavandanam with these verses.',
+      mantra: samarpanamLines(k) },
   ];
 }

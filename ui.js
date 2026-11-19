@@ -60,7 +60,7 @@ export const UI_EN = {
   'status.past': 'Its time for today has passed. If you do it now, offer the prayaschitta arghya as well (step {n}).',
   'clock.now': 'By the clock it is now time for {title}.', 'clock.follow': 'Follow the clock',
   'me.summary': 'Your gotram, pravara and name (for sankalpam and abhivadanam)', 'me.device': 'Kept on this device only. Never sent anywhere.',
-  'steps.note': '{n} steps, in the order of Telugu sandhyavandanam books. Families differ in small details; follow your elders where they differ.',
+  'steps.note': "{n} steps, in this family's order.",
   // Shown on the English page only, with the mantras and the sankalpam: how to read the marks.
   // A heading, then one line per item, separated by |.
   'sd.pron': 'How to read the marks|ā ī ū are long, and so are e and o; a is short, as in about.|th, ph, kh, gh, dh, bh are t, p, k, g, d, b with a breath after them: th is never the th of thin.|c is ch as in church; jñ is said gny.|ṭ ḍ ṇ ṣ ḷ are said with the tongue curled back; ś is a soft sh.|ṛ is the vowel said ru; ṅ and ñ are the n of sing and of pinch.|ṃ is a nasal hum; ḥ is a breath that echoes the vowel before it.|There are no svara marks: learn the svaras from a guru.',
@@ -99,7 +99,12 @@ export const UI_EN = {
   'dur.h': '{h} h {m} min', 'dur.m': '{m} min {s} s', 'dur.s': '{s} s',
   // footer
   'foot.times': 'Times are computed for the chosen place (drik ganitam, Lahiri ayanamsa) and checked against drikpanchang.com. Each day carries the tithi running at its sunrise. Vrata days use simple rules; families who follow a matha panchangam may keep Ekadasi a day apart.',
-  'foot.sandhya': 'Sandhyavandanam follows the Krishna Yajurveda, Apastamba order common in Telugu Smarta homes. On this page its Sanskrit is in Roman letters with pronunciation marks, without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.',
+  'foot.sandhya': 'Sandhyavandanam here follows one Telugu Krishna Yajurveda (Apastamba) family\'s practice. On this page its Sanskrit is in Roman letters with pronunciation marks, without svaras. It is a reading aid: learn the mantras and their svaras from your guru. Kshetra wordings are drafted from common usage; confirm with your purohit.',
   'foot.mantras': 'In Tamil, mantras and the sankalpam are shown in English letters for now; a version in Tamil script is being prepared and checked.',
   'foot.open': 'The code is open for anyone to use and build on:',
+  'sd.whose': "This follows one Telugu Krishna Yajurveda (Āpastamba) family's practice; families differ, so follow your elders.", 'sd.suggest': "Suggest your family's version on GitHub.", 'sd.report': 'Report a problem',
+  'fb.open': 'Report a problem or suggest a correction', 'fb.msg': 'What is wrong, or what should it say?', 'fb.contact': 'Your name and phone or email, if you would like a reply (optional)',
+  'fb.privacy': "This goes to the site's owner with the tab you are on, the language and the place set here. Do not write anything you would not want kept.", 'fb.send': 'Send', 'fb.sending': 'Sending…',
+  'fb.sent': 'Sent. Thank you.', 'fb.fail': 'Could not send. Check the connection and try again.', 'fb.empty': 'Write what is wrong first.',
+  'fb.wait': 'Sent. Wait a few seconds before sending another.',
 };

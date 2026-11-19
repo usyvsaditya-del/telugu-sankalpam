@@ -1,0 +1,24 @@
+rules_version = '2';
+// Firestore for the website. Only the feedback form writes here: anyone may add a report with
+// these fields and no others, each kept short; nobody can read, change or delete a report from
+// outside (the site's owner reads them in the Firebase console). Everything else is closed.
+// Anyone can also write here without the page, so a report is kept small; "from" names where it
+// was sent from ("site" for this page). Deploy: cd site && npx -y firebase-tools@13 deploy --only firestore:rules --project <your-firebase-project>
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /feedback/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['msg', 'contact', 'where', 'place', 'lang', 'from', 'at'])
+        && request.resource.data.keys().hasAll(['msg', 'where', 'lang', 'from', 'at'])
+        && request.resource.data.msg is string
+        && request.resource.data.msg.size() > 0 && request.resource.data.msg.size() <= 2000
+        && (!('contact' in request.resource.data)
+            || (request.resource.data.contact is string && request.resource.data.contact.size() <= 200))
+        && (!('place' in request.resource.data)
+            || (request.resource.data.place is string && request.resource.data.place.size() <= 120))
+        && request.resource.data.where is string && request.resource.data.where.size() <= 200
+        && request.resource.data.lang in ['en', 'te', 'ta', 'kn', 'hi']
+        && request.resource.data.from is string && request.resource.data.from.size() > 0 && request.resource.data.from.size() <= 10
+        && request.resource.data.at == request.time;
+    }
+  }
+}

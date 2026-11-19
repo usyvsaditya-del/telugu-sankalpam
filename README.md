@@ -69,6 +69,7 @@ The astronomy:
 | `indic.js` | Writes Telugu-script text in Kannada or Devanagari letters (the three share one Unicode layout), or in Roman letters with pronunciation marks for the English page. |
 | `template.html` | The page: layout, styles and the user-interface script. The design notes are in the comment at the top of its styles. |
 | `build.sh` | Inlines the modules into `site/public/index.html` (and `panchangam.html`, a single-file copy). |
+| `site/firestore.rules` | Who may write to the site's Firestore: anyone may add a feedback report with the form's fields; nobody can read, change or delete one from the site. |
 | `site/public/img/` | The Devi's pictures for the dhyanam step (`DHYANA_PICTURES` in `sandhya.js`): made for the site with an AI image tool, WebP, 720 by 900, without metadata. |
 | `check.mjs` | Prints Bengaluru values to compare with drikpanchang.com. |
 | `check_mudras.mjs` | Checks that every mudra in the sandhya steps has a drawing, and that each draws and moves cleanly. |
@@ -85,6 +86,8 @@ node check_te.mjs
 node check_ui.mjs
 cd site && npx -y firebase-tools@13 deploy --only hosting --project <your-firebase-project>
 ```
+When `site/firestore.rules` changes: `cd site && npx -y firebase-tools@13 deploy --only firestore:rules --project <your-firebase-project>`.
+Feedback reports are in the Firebase console, under Firestore, collection `feedback`.
 
 ## Please help
 - **Mantra text** is without svaras, in Telugu script (from which the Kannada, the Devanagari and

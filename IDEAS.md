@@ -87,10 +87,8 @@ trust it. Each one says what it would take and the main risk.
   achamanam (1.5.16.2-8). Step 2 now recites it, a line per act. Two earlier builds are gone:
   the achamanam with the Gayatri at 24 places, and the Taittiriya Aranyaka's "Hastav avanijya,
   trir achamet …".
-  - For the site's owner: after "trir achamed hridayangamabhir adbhih" your family says three
-    swahas (19 Nov 2026). Which three: "Om kesavaya swaha, Om narayanaya swaha, Om madhavaya
-    swaha", or the Gayatri's three padas, "Om tat savitur varenyagum swaha, bhargo devasya
-    dhimahi swaha, dhiyo yo nah prachodayat swaha"?
+  - Answered 19 Nov 2026: after "trir achamed hridayangamabhir adbhih" the family says just
+    "swaha swaha swaha", one with each sip; the page now has it, and step 2 says so.
   - Answered 19 Nov 2026: the fourth arghya, given when the time has passed, is the prayaschitta
     arghya in the owner's family; the page's own words now call it that and name the
     turiyarghya once. Its sankalpam, as the page reads what he typed ("Kalatitka dosha
@@ -136,9 +134,7 @@ trust it. Each one says what it would take and the main risk.
     savitur varenyagum swaha …", the achamanam with the Gayatri's padas), not the Kesava names
     the page had put there that morning; the page now has it. vignanam.org and hindupad.com say
     the Kesava names there; a Telugu Srauta Saiva text says the Gayatri's padas.
-  - For the site's owner: you numbered pranayamam before this achamanam (20, then 21). The page
-    has the achamanam first, then pranayamam and the japa sankalpam, as "acamya pranan ayamya"
-    and vignanam.org have it. Which order does your family keep?
+  - Answered 19 Nov 2026: achamanam, then pranayamam, as the page has it.
   - Answered 19 Nov 2026: the midday verse stays as it is. The verses give Vishnu's form to
     midday and Siva's to the evening, while the Taittiriya tarpanam names Raudri at midday and
     Vaishnavi in the evening; the owner says this difference is known and both stay. The words
@@ -157,11 +153,31 @@ trust it. Each one says what it would take and the main risk.
   - For the site's owner: haindavam.org's japavasanam also has achamanam, pranayamam and a
     sankalpam before that second nyasam, and the dhyanam and "yo devas savita" after it. Does
     your family say those too?
-  - For the site's owner: the japa samarpanam after the eight mudras is longer, "… gayatri maha
-    mantra japam … tat sat …"; the page has only "Om tat sad brahmarpanam astu". The full words?
-  - For the site's owner: the samarpanam at the end is longer, about six verses with "yasya
-    smrityā ca namoktya …"; the page has "kayena vacha …" and "om tat sat". vignanam.org and
-    haindavam.org have neither the longer form nor that verse. The full words?
+  - Answered 19 Nov 2026: the japa samarpanam names the time, as in the owner's example "pratah
+    kale gayatri maha mantra jape sarvam parabrahmarpanam astu"; at midday the page says "madhyahna
+    kale" and in the evening "sayam kale", on the same pattern (to confirm).
+  - Answered 19 Nov 2026: the closing samarpanam is, in this order, "yasya smritya cha namoktya",
+    "mantrahinam kriyahinam", "anena … sandhyavandanena … priyatam", "abrahmalokat …", "kayena
+    vacha …", then "om tat sat, sri parameswararpanam astu" with a deity's name, which for the page
+    is "om narayanaya namah" three times. The owner named most of these by their first words.
+  - For the site's owner: the page fills in their common wording; are these your family's words?
+    "mantrahinam kriyahinam bhaktihinam janardana, yat kritam tu maya deva paripurnam tad astu me";
+    "anena … sandhyavandanena bhagavan sarvatmakah sri parameswarah priyatam"; and "abrahmalokad
+    aseshat alokaloka parvatat, ye santi brahmana devah tebhyo nityam namo namah" (haindavam.org's
+    words, which it says after "kayena vacha").
+  - Done 19 Nov 2026: a line at the top of the Sandhya tab says it follows one Telugu Krishna
+    Yajurveda (Apastamba) family's practice, that families differ, and to follow one's elders, at
+    the owner's word ("for now": no other family's form goes on the page without someone's own
+    practice behind it). It invites other families to suggest their version on GitHub (an issue
+    template, .github/ISSUE_TEMPLATE/family-version.md), and links to the feedback form.
+  - Done 19 Nov 2026: a "report a problem" form in the footer, at the owner's word. Reports go to
+    Firestore in the site's Firebase project, with the tab, the language and the place; anyone can
+    add one, nobody can read them back except in the Firebase console. The rules are in
+    site/firestore.rules.
+  - Next for the feedback form: anyone can write to the database directly, past the page, so a
+    flood could bury real reports or use up the free daily writes. Worth adding: a budget alert,
+    a time limit after which old reports are deleted, and App Check. How long are reports kept,
+    and how does someone have theirs removed? The page does not say yet.
   - For the site's owner: "35 has brahma" (the Harihara step, 19 Nov 2026). Is that the line
     "నమో బ్రహ్మణ్యదేవాయ …" already there, or a verse to Brahma your family adds?
   - Done 19 Nov 2026: pictures of the Devi for the time-of-day verse (the morning, midday and
@@ -191,7 +207,7 @@ trust it. Each one says what it would take and the main risk.
   line has since been dropped at the owner's word. vignanam says the Kesava names at every
   achamanam.
   - Answered 19 Nov 2026: the owner confirmed seven of the pieces below, now on the page (the third
-    marjanam, "yo devas savita", "tat sad brahmarpanam astu", muni namaskaram, the whole
+    marjanam, "yo devas savita", "tat sad brahmarpanam astu" (since replaced by the owner's japa samarpanam), muni namaskaram, the whole
     sandhyadevata namaskaram, "stuto maya" and the closing namaskarams), and not the Kesava
     last line or the pranayama viniyoga line. The question was:
   - For the site's owner: add vignanam's pieces the page lacks? The third marjanam (హిరణ్యవర్ణాః శుచయః …);
