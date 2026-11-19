@@ -257,7 +257,9 @@ export const NAMES = {
   karanaMoving: ['Bava','Balava','Kaulava','Taitila','Garaja','Vanija','Vishti'],
   vara: ['Aadivaram','Somavaram','Mangalavaram','Budhavaram','Guruvaram','Sukravaram','Sanivaram'],
   varaShort: ['Aadi','Soma','Mangala','Budha','Guru','Sukra','Sani'],
-  varaSankalpa: ['Bhanu','Indu','Bhauma','Saumya','Guru','Bhrigu','Sthira'],
+  // The sankalpam's names of the days, by their lords. Thursday is Brihaspati, as the site's
+  // owner's family says it (19 Nov 2026); it was Guru.
+  varaSankalpa: ['Bhanu','Indu','Bhauma','Saumya','Brihaspati','Bhrigu','Sthira'],
   masa: ['Chaitram','Vaisakham','Jyeshtam','Ashadham','Sravanam','Bhadrapadam','Aswayujam',
     'Karthikam','Margasiram','Pushyam','Magham','Phalgunam'],
   masaSankalpa: ['Chaitra','Vaisakha','Jyeshta','Ashadha','Sravana','Bhadrapada','Aswayuja',

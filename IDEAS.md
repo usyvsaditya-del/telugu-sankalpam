@@ -267,6 +267,9 @@ trust it. Each one says what it would take and the main risk.
   - The month కార్తీక (the everyday Telugu spelling) becomes "kārtīka" on the English page and
     ಕಾರ್ತೀಕ / कार्तीक in Kannada and Hindi; the Sanskrit of a sankalpam is kārtika. The sandhya's
     laghu sankalpam names the month every day. Should the sankalpam say కార్తిక?
+  - Done 19 Nov 2026: Thursday in the sankalpam is బృహస్పతి వాసర (bṛhaspati vāsara), at the
+    owner's word; it was గురు. The other six days already had the names of their lords: bhānu,
+    indu, bhauma, saumya, bhṛgu and sthira.
   - Tamil paksha: வளர்பிறை/தேய்பிறை or சுக்ல/கிருஷ்ண.
   - Tamil Vishti: பத்திரை or விஷ்டி.
   - Tamil sankramana: தை மாதப் பிறப்பு or மகர சங்கராந்தி.
